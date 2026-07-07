@@ -1,4 +1,4 @@
-package Entity;
+package project.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,11 +13,12 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_categories", nullable = false)
-    private Long id_categories;
+    private Long idCategories;
 
     @Column(name="name")
     private String name;
 
     @OneToMany(mappedBy = "category")
     private List<Neuronet> neuronets;
+
 }
