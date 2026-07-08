@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

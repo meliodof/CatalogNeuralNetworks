@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <!-- Поиск -->
+    <section class="search-section">
+        <form action="/neuronets" method="get" class="search-form">
+            <input type="text" name="search" placeholder="Поиск нейросетей..."
+                   class="search-input" th:value="${search}">
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
+    </section>
+
+    <!-- Топ-5 -->
+    <section class="top-section">
+        <h2>🔥 Топ нейросетей</h2>
+        <div class="top-cards">
+            <div class="card card--horizontal" th:each="neuronet : ${topNeuronets}">
+                <img th:src="${neuronet.neuronetIcon}" alt="icon" class="card__icon card__icon--small">
+                <div class="card__info">
+                    <a th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}" class="card__name">
+                        [[${neuronet.name}]]
+                    </a>
+                    <p class="card__desc">[[${neuronet.descriptionNetwork}]]</p>
+                </div>
+                <span class="card__badge" th:if="${neuronet.availableInRussia}">🇷🇺</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Кнопка в каталог -->
+    <div class="center">
+        <a href="/neuronets" class="btn btn--primary">Смотреть все нейросети →</a>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

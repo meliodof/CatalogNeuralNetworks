@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="sidebar">
+    <aside class="sidebar">
+        <h3 class="sidebar__title">Категории</h3>
+        <ul class="sidebar__list">
+            <li>
+                <a href="/neuronets"
+                   th:classappend="${selectedCategoryId == null ? 'active' : ''}">
+                    Все
+                </a>
+            </li>
+            <li th:each="category : ${categories}">
+                <a th:href="@{/neuronets(categoryId=${category.idCategories})}"
+                   th:text="${category.name}"
+                   th:classappend="${selectedCategoryId != null && selectedCategoryId == category.idCategories ? 'active' : ''}">
+                    Категория
+                </a>
+            </li>
+        </ul>
+    </aside>
+</th:block>
+</body>
+</html>

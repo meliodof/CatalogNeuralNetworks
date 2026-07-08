@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container">
+    <a href="/neuronets" class="back-link">← Назад к каталогу</a>
+
+    <!-- Детали -->
+    <section class="detail">
+        <div class="detail__header">
+            <img th:src="${neuronet.neuronetIcon}" class="detail__icon"
+                 onerror="this.src='/images/default-icon.png'">
+            <div>
+                <h1>[[${neuronet.name}]]</h1>
+                <span class="detail__category">[[${neuronet.category?.name}]]</span>
+                <span class="detail__badge" th:if="${neuronet.availableInRussia}">🇷🇺 Доступна в РФ</span>
+                <span class="detail__badge" th:unless="${neuronet.availableInRussia}">🌍 Недоступна в РФ</span>
+            </div>
+        </div>
+
+        <!-- Рейтинг -->
+        <div class="detail__rating">
+            <span class="detail__stars">⭐ [[${avgRating}]]</span>
+            <span class="detail__reviews">([[${reviewCount}]] отзывов)</span>
+        </div>
+
+        <!-- Описание -->
+        <div class="detail__desc">
+            <h3>Описание</h3>
+            <p>[[${neuronet.extendedDescription}]]</p>
+        </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section class="reviews">
+        <h3>Отзывы</h3>
+
+        <div class="review" th:each="review : ${reviews}">
+            <div class="review__header">
+                <span class="review__user">[[${review.user?.username}]]</span>
+                <span class="review__stars">
+                        <th:block th:each="i : ${#numbers.sequence(1, review.rating)}">⭐</th:block>
+                    </span>
+                <span class="review__date">[[${#temporals.format(review.createdAt, 'dd.MM.yyyy')}]]</span>
+            </div>
+            <p class="review__text" th:if="${review.comment != null}">[[${review.comment}]]</p>
+            <p class="review__text review__text--empty" th:unless="${review.comment != null}">
+                Без комментария
+            </p>
+        </div>
+
+        <!-- Форма отзыва -->
+        <div class="review-form">
+            <h4>Оставить отзыв</h4>
+            <form action="/reviews" method="post">
+                <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                <input type="hidden" name="userId" value="1"> <!-- Временно, потом из сессии -->
+
+                <label>Оценка:
+                    <select name="rating" required>
+                        <option value="5">5 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="1">1 ⭐</option>
+                    </select>
+                </label>
+
+                <label>Комментарий:
+                    <textarea name="comment" rows="3" placeholder="Необязательно"></textarea>
+                </label>
+
+                <button type="submit" class="btn btn--primary">Отправить</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

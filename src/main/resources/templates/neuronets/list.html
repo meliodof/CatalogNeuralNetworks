@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="container layout">
+    <!-- Сайдбар -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <!-- Контент -->
+    <section class="content">
+        <!-- Поиск -->
+        <form action="/neuronets" method="get" class="search-form">
+            <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+            <input type="text" name="search" placeholder="Поиск нейросетей..."
+                   class="search-input" th:value="${search}">
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
+
+        <!-- Топ-5 -->
+        <div class="top-cards" th:if="${topNeuronets != null and !topNeuronets.empty}">
+            <div class="card card--horizontal" th:each="neuronet : ${topNeuronets}">
+                <img th:src="${neuronet.neuronetIcon}" alt="icon" class="card__icon card__icon--small">
+                <div class="card__info">
+                    <a th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}" class="card__name">
+                        [[${neuronet.name}]]
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Фильтр -->
+        <div class="filter">
+            <span class="filter__label">Фильтр:</span>
+            <a th:href="@{/neuronets(categoryId=${selectedCategoryId}, search=${search})}"
+               class="filter__btn" th:classappend="${availableInRussia == null ? 'active' : ''}">
+                Все
+            </a>
+            <a th:href="@{/neuronets(availableInRussia=true, categoryId=${selectedCategoryId}, search=${search})}"
+               class="filter__btn" th:classappend="${availableInRussia != null && availableInRussia ? 'active' : ''}">
+                🇷🇺 Доступны в РФ
+            </a>
+            <a th:href="@{/neuronets(availableInRussia=false, categoryId=${selectedCategoryId}, search=${search})}"
+               class="filter__btn" th:classappend="${availableInRussia != null && !availableInRussia ? 'active' : ''}">
+                🌍 Недоступны в РФ
+            </a>
+            <a th:href="@{/neuronets(sortByRating=true, categoryId=${selectedCategoryId}, search=${search}, availableInRussia=${availableInRussia})}"
+               class="filter__btn" th:classappend="${sortByRating ? 'active' : ''}">
+                ⭐ По рейтингу
+            </a>
+        </div>
+
+        <!-- Список нейросетей -->
+        <div class="cards">
+            <div class="card" th:each="neuronet : ${neuronets}">
+                <img th:src="${neuronet.neuronetIcon}"
+                     th:alt="${neuronet.name}"
+                     class="card__icon"
+                     onerror="this.src='/images/default-icon.png'">
+                <div class="card__body">
+                    <a th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}" class="card__name">
+                        [[${neuronet.name}]]
+                    </a>
+                    <p class="card__desc">[[${neuronet.descriptionNetwork}]]</p>
+                    <div class="card__meta">
+                        <span class="card__category">[[${neuronet.category?.name}]]</span>
+                        <span class="card__stars">⭐ 0.0</span>
+                        <span class="card__badge" th:if="${neuronet.availableInRussia}">🇷🇺</span>
+                        <span class="card__badge card__badge--outline" th:unless="${neuronet.availableInRussia}">🌍</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Пустой результат -->
+        <div class="empty" th:if="${neuronets == null || neuronets.empty}">
+            <p>Нейросети не найдены</p>
+            <a href="/neuronets" class="btn">Сбросить фильтры</a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
