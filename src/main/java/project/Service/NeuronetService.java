@@ -14,10 +14,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class NeuronetService {
     private final RepNeuronet repNeuronet;
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
-    public NeuronetService(RepNeuronet repNeuronet){
+    public NeuronetService(RepNeuronet repNeuronet, ReviewService reviewService){
         this.repNeuronet=repNeuronet;
+        this.reviewService = reviewService;
     }
 
     // Пункт 1: Весь список

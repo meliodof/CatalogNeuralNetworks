@@ -1,42 +1,175 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Catalog — Каталог нейросетей</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
+<!-- HEADER -->
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo">
+                <span class="logo__icon">AI</span>
+                AI Catalog
+            </a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+                <a href="/neuronets/top">Топ</a>
+                <a href="#">Блог</a>
+            </nav>
+        </div>
+        <div class="header__right">
+            <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
+            <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+        </div>
+    </div>
+</header>
 
-<main class="container">
-    <!-- Поиск -->
-    <section class="search-section">
-        <form action="/neuronets" method="get" class="search-form">
-            <input type="text" name="search" placeholder="Поиск нейросетей..."
-                   class="search-input" th:value="${search}">
-            <button type="submit" class="search-btn">🔍</button>
-        </form>
-    </section>
+<!-- MAIN -->
+<main class="container layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar__header">
+            <span class="sidebar__title">Категории</span>
+            <span class="sidebar__count" th:text="${#lists.size(categories)}">0</span>
+        </div>
+        <ul class="sidebar__list">
+            <li>
+                <a href="/" th:classappend="${selectedCategoryId == null && availableInRussia == null ? 'active' : ''}">Все нейросети</a>
+            </li>
+            <li th:each="category : ${categories}">
+                <a th:href="@{/(categoryId=${category.idCategories})}"
+                   th:text="${category.name}"
+                   th:classappend="${selectedCategoryId != null && selectedCategoryId == category.idCategories ? 'active' : ''}"></a>
+            </li>
+        </ul>
+    </aside>
 
-    <!-- Топ-5 -->
-    <section class="top-section">
-        <h2>🔥 Топ нейросетей</h2>
-        <div class="top-cards">
-            <div class="card card--horizontal" th:each="neuronet : ${topNeuronets}">
-                <img th:src="${neuronet.neuronetIcon}" alt="icon" class="card__icon card__icon--small">
-                <div class="card__info">
-                    <a th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}" class="card__name">
-                        [[${neuronet.name}]]
-                    </a>
-                    <p class="card__desc">[[${neuronet.descriptionNetwork}]]</p>
-                </div>
-                <span class="card__badge" th:if="${neuronet.availableInRussia}">🇷🇺</span>
+    <!-- CONTENT -->
+    <section class="content">
+        <!-- SEARCH -->
+        <div class="search-bar">
+            <form th:action="@{/}" method="get" class="search-form">
+                    <span class="search-form__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </span>
+                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+                <input type="hidden" name="availableInRussia" th:value="${availableInRussia}">
+                <input type="text" name="search" th:value="${search}" placeholder="Поиск нейросетей...">
+                <button type="submit">Найти</button>
+            </form>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filter-bar">
+            <span class="filter-bar__label">Фильтры</span>
+            <a href="/" class="chip" th:classappend="${availableInRussia == null && !sortByRating ? 'active' : ''}">Все</a>
+            <a th:href="@{/(availableInRussia=true, categoryId=${selectedCategoryId}, search=${search})}"
+               class="chip" th:classappend="${availableInRussia != null && availableInRussia ? 'active' : ''}">Доступны в РФ</a>
+            <a th:href="@{/(availableInRussia=false, categoryId=${selectedCategoryId}, search=${search})}"
+               class="chip" th:classappend="${availableInRussia != null && !availableInRussia ? 'active' : ''}">Требуют VPN</a>
+            <a th:href="@{/(sortByRating=true, categoryId=${selectedCategoryId}, search=${search}, availableInRussia=${availableInRussia})}"
+               class="chip chip--sort" th:classappend="${sortByRating ? 'active' : ''}">По рейтингу</a>
+            <a href="/" class="btn btn--ghost btn--sm" th:if="${availableInRussia != null || sortByRating || search != null}">Сбросить</a>
+        </div>
+
+        <!-- TOP-5 -->
+        <div class="section" th:if="${topNeuronets != null && !topNeuronets.empty}">
+            <div class="section__header">
+                <h2 class="section__title">Лидеры рейтинга</h2>
+                <a href="/neuronets/top" class="section__link">Смотреть все</a>
+            </div>
+            <div class="top-bar">
+                <a th:each="neuronet, iterStat : ${topNeuronets}"
+                   th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}"
+                   class="top-card">
+                    <span class="top-card__position" th:text="${iterStat.index + 1}">1</span>
+                    <img th:src="${neuronet.neuronetIcon}" class="top-card__icon" onerror="this.style.display='none'">
+                    <div class="top-card__info">
+                        <div class="top-card__name" th:text="${neuronet.name}">Name</div>
+                        <div class="top-card__rating">★ 4.5</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- ALL NEURONETS -->
+        <div class="section">
+            <div class="section__header">
+                <h2 class="section__title">Все нейросети</h2>
+            </div>
+
+            <div class="cards-grid">
+                <a th:each="neuronet : ${neuronets}" th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}" class="card">
+                    <div class="card__top">
+                        <img th:src="${neuronet.neuronetIcon}" class="card__icon" onerror="this.style.display='none'">
+                        <div class="card__header">
+                            <div class="card__name" th:text="${neuronet.name}">Name</div>
+                            <div class="card__category" th:text="${neuronet.category?.name}">Category</div>
+                        </div>
+                    </div>
+                    <div class="card__desc" th:text="${neuronet.descriptionNetwork}">Description</div>
+                    <div class="card__footer">
+                        <div class="card__rating">
+                            <span class="card__stars">★ 0.0</span>
+                            <span class="card__reviews">0 отзывов</span>
+                        </div>
+                        <div class="card__badges">
+                            <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">РФ</span>
+                            <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">VPN</span>
+                        </div>
+                    </div>
+                    <span class="card__arrow">→</span>
+                </a>
+            </div>
+
+            <!-- EMPTY -->
+            <div class="empty" th:if="${#lists.isEmpty(neuronets)}">
+                <div class="empty__icon">∅</div>
+                <div class="empty__title">Ничего не найдено</div>
+                <p class="empty__text">Попробуйте изменить параметры поиска или сбросить фильтры</p>
+                <a href="/" class="btn btn--primary">Сбросить фильтры</a>
             </div>
         </div>
     </section>
-
-    <!-- Кнопка в каталог -->
-    <div class="center">
-        <a href="/neuronets" class="btn btn--primary">Смотреть все нейросети →</a>
-    </div>
 </main>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__col">
+            <h4>О проекте</h4>
+            <p>AI Catalog — каталог нейросетей с честными оценками и отзывами. Найдите идеальный инструмент для ваших задач.</p>
+            <div class="footer__social">
+                <a href="#" title="GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg></a>
+                <a href="#" title="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            </div>
+        </div>
+        <div class="footer__col">
+            <h4>Навигация</h4>
+            <a href="/">Каталог</a>
+            <a href="/neuronets/top">Топ нейросетей</a>
+            <a href="#">Блог</a>
+        </div>
+        <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="#">Как пользоваться</a>
+            <a href="#">Частые вопросы</a>
+            <a href="#">Поддержка</a>
+        </div>
+        <div class="footer__col">
+            <h4>Контакты</h4>
+            <a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a>
+            <a href="#">Telegram</a>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <span>&copy; 2026 AI Catalog. Все права защищены.</span>
+        <span>Сделано с любовью к AI</span>
+    </div>
+</footer>
 </body>
 </html>
