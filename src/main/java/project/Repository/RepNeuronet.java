@@ -32,4 +32,5 @@ public interface RepNeuronet extends JpaRepository<Neuronet,Long> {
 
     // Пункт 8: фильтр по доступности в России
     List<Neuronet> findByAvailableInRussia(Boolean available);
+
 }

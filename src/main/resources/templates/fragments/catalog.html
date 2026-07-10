@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="catalog">
+    <th:block th:if="${groupedNeuronets == null || #maps.isEmpty(groupedNeuronets)}">
+        <div class="empty">
+            <div class="empty__icon">∅</div>
+            <div class="empty__title">Ничего не найдено</div>
+            <p class="empty__text">Попробуйте изменить параметры поиска или сбросить фильтры</p>
+            <a href="/"
+               hx-get="/"
+               hx-target="#catalog-content"
+               hx-push-url="true"
+               class="btn btn--primary">Сбросить фильтры</a>
+        </div>
+    </th:block>
+
+    <th:block th:each="entry : ${groupedNeuronets}">
+        <div class="section">
+            <div class="section__header">
+                <h2 class="section__title" th:text="${entry.key}">Категория</h2>
+            </div>
+            <div class="cards-grid">
+                <a th:each="neuronet : ${entry.value}"
+                   th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}"
+                   class="card">
+                    <div class="card__top">
+                        <img th:src="${neuronet.neuronetIcon}"
+                             class="card__icon"
+                             onerror="this.style.display='none'"
+                             alt="">
+                        <div class="card__header">
+                            <div class="card__name" th:text="${neuronet.name}">Name</div>
+                            <div class="card__category" th:text="${neuronet.category?.name}">Category</div>
+                        </div>
+                    </div>
+                    <div class="card__desc" th:text="${neuronet.descriptionNetwork}">Description</div>
+                    <div class="card__footer">
+                        <div class="card__rating">
+                            <span class="card__stars">★ 0.0</span>
+                            <span class="card__reviews">0 отзывов</span>
+                        </div>
+                        <div class="card__badges">
+                            <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">РФ</span>
+                            <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">VPN</span>
+                        </div>
+                    </div>
+                    <span class="card__arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+</body>
+</html>

@@ -16,8 +16,8 @@ public class NeuronetService {
     private final RepNeuronet repNeuronet;
     private final ReviewService reviewService;
 
-    public NeuronetService(RepNeuronet repNeuronet, ReviewService reviewService){
-        this.repNeuronet=repNeuronet;
+    public NeuronetService(RepNeuronet repNeuronet, ReviewService reviewService) {
+        this.repNeuronet = repNeuronet;
         this.reviewService = reviewService;
     }
 
@@ -82,6 +82,13 @@ public class NeuronetService {
                 .toList();
     }
 
+    public Object[] getRatingInfo(Long idNeuronet) {
+        Double avg = reviewService.getAverageRating(idNeuronet);
+        Long count = reviewService.getReviewCount(idNeuronet);
+        return new Object[]{avg != null ? avg : 0.0, count != null ? count : 0L};
+    }
+
+
     @Transactional
     public Neuronet save(Neuronet neuronet) {
         return repNeuronet.save(neuronet);
@@ -91,5 +98,6 @@ public class NeuronetService {
     public void delete(Long id) {
         repNeuronet.deleteById(id);
     }
+
 }
 

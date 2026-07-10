@@ -21,4 +21,5 @@ public interface RepReview extends JpaRepository<Review,Long> {
 
     // Количество отзывов нейросети
     Long countByNeuronet_IdNeuronet(Long neuronetId);
+
 }
