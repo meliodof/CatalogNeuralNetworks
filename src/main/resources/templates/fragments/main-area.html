@@ -3,7 +3,6 @@
 <body>
 <th:block th:fragment="mainArea">
     <main class="container layout">
-        <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar__header">
                 <span class="sidebar__title">Категории</span>
@@ -11,33 +10,28 @@
             </div>
             <ul class="sidebar__list">
                 <li>
-                    <a href="/"
-                       hx-get="@{/(categoryId=${null}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing})}"
+                    <a th:attr="hx-get=@{/(availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing})},data-scroll-to=''"
                        hx-target="#main-area"
+                       hx-swap="innerHTML"
                        hx-push-url="true"
-                       th:classappend="${selectedCategoryId == null && availableInRussia == null && pricing == null ? 'active' : ''}">
-                        Все нейросети
-                    </a>
+                       th:classappend="${selectedCategoryId == null ? 'active' : ''}">Все нейросети</a>
                 </li>
                 <li th:each="category : ${categories}">
-                    <a th:href="@{/(categoryId=${category.idCategories}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing})}"
-                       th:attr="hx-get=@{/(categoryId=${category.idCategories}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing})}"
+                    <a th:attr="hx-get=@{/(categoryId=${category.idCategories}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing})},data-scroll-to='cat-' + ${category.idCategories}"
                        hx-target="#main-area"
+                       hx-swap="innerHTML"
                        hx-push-url="true"
                        th:text="${category.name}"
-                       th:classappend="${selectedCategoryId != null && selectedCategoryId == category.idCategories ? 'active' : ''}">
-                    </a>
+                       th:classappend="${selectedCategoryId != null && selectedCategoryId == category.idCategories ? 'active' : ''}"></a>
                 </li>
             </ul>
         </aside>
 
-        <!-- CONTENT -->
         <section class="content">
-            <!-- SEARCH -->
             <div class="search-bar">
-                <form th:action="@{/}" method="get"
-                      th:attr="hx-get=@{/}"
+                <form th:attr="hx-get=@{/}"
                       hx-target="#main-area"
+                      hx-swap="innerHTML"
                       hx-push-url="true"
                       class="search-form">
                     <span class="search-form__icon">
@@ -45,58 +39,48 @@
                     </span>
                     <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
                     <input type="hidden" name="availableInRussia" th:value="${availableInRussia}">
-                    <input type="hidden" name="sortByRating" th:value="${sortByRating}">
+                    <input type="hidden" name="sortByRating" th:value="${sortByRating ? 'true' : ''}">
                     <input type="hidden" name="pricing" th:value="${pricing}">
-                    <input type="text" name="search" th:value="${search}" placeholder="Поиск нейросетей...">
+                    <input type="text" name="search" placeholder="Поиск нейросетей...">
                     <button type="submit">Найти</button>
                 </form>
             </div>
 
-            <!-- FILTERS -->
             <div class="filter-bar">
                 <span class="filter-bar__label">Фильтры</span>
-                <a href="/"
-                   hx-get="@{/(availableInRussia=${null}, sortByRating=${false}, categoryId=${selectedCategoryId}, search=${search}, pricing=${null})}"
+                <a th:attr="hx-get=${availableInRussia != null && availableInRussia} ? @{/(availableInRussia=${null}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})} : @{/(availableInRussia=true, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
                    hx-target="#main-area"
-                   hx-push-url="true"
-                   class="chip" th:classappend="${availableInRussia == null && !sortByRating && pricing == null ? 'active' : ''}">Все</a>
-                <a th:href="@{/(availableInRussia=true, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
-                   th:attr="hx-get=@{/(availableInRussia=true, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
-                   hx-target="#main-area"
+                   hx-swap="innerHTML"
                    hx-push-url="true"
                    class="chip" th:classappend="${availableInRussia != null && availableInRussia ? 'active' : ''}">Доступны в РФ</a>
-                <a th:href="@{/(availableInRussia=false, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
-                   th:attr="hx-get=@{/(availableInRussia=false, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
+                <a th:attr="hx-get=${availableInRussia != null && !availableInRussia} ? @{/(availableInRussia=${null}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})} : @{/(availableInRussia=false, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
                    hx-target="#main-area"
+                   hx-swap="innerHTML"
                    hx-push-url="true"
                    class="chip" th:classappend="${availableInRussia != null && !availableInRussia ? 'active' : ''}">Требуют VPN</a>
-                <a th:href="@{/(sortByRating=true, availableInRussia=${availableInRussia}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
-                   th:attr="hx-get=@{/(sortByRating=true, availableInRussia=${availableInRussia}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
+                <a th:attr="hx-get=${sortByRating} ? @{/(sortByRating=${false}, availableInRussia=${availableInRussia}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})} : @{/(sortByRating=true, availableInRussia=${availableInRussia}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
                    hx-target="#main-area"
+                   hx-swap="innerHTML"
                    hx-push-url="true"
                    class="chip chip--sort" th:classappend="${sortByRating ? 'active' : ''}">По рейтингу</a>
-                <a th:href="@{/(pricing='free', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
-                   th:attr="hx-get=@{/(pricing='free', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
+                <a th:attr="hx-get=${pricing != null && pricing == 'free'} ? @{/(pricing=${null}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})} : @{/(pricing='free', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
                    hx-target="#main-area"
+                   hx-swap="innerHTML"
                    hx-push-url="true"
                    class="chip" th:classappend="${pricing != null && pricing == 'free' ? 'active' : ''}">Бесплатные</a>
-                <a th:href="@{/(pricing='paid', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
-                   th:attr="hx-get=@{/(pricing='paid', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
+                <a th:attr="hx-get=${pricing != null && pricing == 'paid'} ? @{/(pricing=${null}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})} : @{/(pricing='paid', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
                    hx-target="#main-area"
+                   hx-swap="innerHTML"
                    hx-push-url="true"
                    class="chip" th:classappend="${pricing != null && pricing == 'paid' ? 'active' : ''}">Платные</a>
-                <a href="/"
-                   hx-get="@{/}"
+                <a th:attr="hx-get=@{/(availableInRussia=${null}, sortByRating=${false}, pricing=${null}, categoryId=${selectedCategoryId}, search=${null})}"
                    hx-target="#main-area"
+                   hx-swap="innerHTML"
                    hx-push-url="true"
-                   class="btn btn--ghost btn--sm" style="margin-left: auto;"
-                   th:if="${availableInRussia != null || sortByRating || search != null || pricing != null}">Сбросить</a>
+                   class="btn btn--ghost btn--sm" style="margin-left: auto;">Сбросить</a>
             </div>
 
-            <!-- CATALOG -->
-            <div id="catalog-content">
-                <th:block th:replace="~{fragments/catalog :: catalog}"></th:block>
-            </div>
+            <th:block th:replace="~{fragments/catalog :: catalog}"></th:block>
         </section>
     </main>
 </th:block>

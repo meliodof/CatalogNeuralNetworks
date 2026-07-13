@@ -6,14 +6,8 @@
     <title>AI Catalog — Каталог нейросетей</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-    <style>
-        .top-card__icon[src=""],
-        .card__icon[src=""],
-        img[src=""] { display: none; }
-    </style>
 </head>
 <body>
-<!-- HEADER -->
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -24,7 +18,6 @@
             <nav class="nav">
                 <a href="/">Каталог</a>
                 <a href="/neuronets/top">Топ</a>
-                <a href="#">Блог</a>
             </nav>
         </div>
         <div class="header__right">
@@ -34,92 +27,37 @@
     </div>
 </header>
 
-<!-- MAIN -->
-<main class="container layout">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar__header">
-            <span class="sidebar__title">Категории</span>
-            <span class="sidebar__count" th:text="${#lists.size(categories)}">0</span>
+<!-- ТОП-5 статичный -->
+<div class="top-section" th:if="${topNeuronets != null && !topNeuronets.empty}">
+    <div class="section" style="margin-bottom: 0;">
+        <div class="section__header">
+            <h2 class="section__title">Лидеры рейтинга</h2>
+            <a href="/neuronets/top" class="section__link">Смотреть все</a>
         </div>
-        <ul class="sidebar__list">
-            <li>
-                <a th:href="@{/}" th:classappend="${selectedCategoryId == null && availableInRussia == null && pricing == null ? 'active' : ''}">Все нейросети</a>
-            </li>
-            <li th:each="category : ${categories}">
-                <a th:href="@{/(categoryId=${category.idCategories})}"
-                   th:text="${category.name}"
-                   th:classappend="${selectedCategoryId != null && selectedCategoryId == category.idCategories ? 'active' : ''}"></a>
-            </li>
-        </ul>
-    </aside>
-
-    <!-- CONTENT -->
-    <section class="content">
-        <!-- SEARCH -->
-        <div class="search-bar">
-            <form th:action="@{/}" method="get" class="search-form">
-                <span class="search-form__icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                </span>
-                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
-                <input type="hidden" name="availableInRussia" th:value="${availableInRussia}">
-                <input type="hidden" name="sortByRating" th:value="${sortByRating ? 'true' : ''}">
-                <input type="hidden" name="pricing" th:value="${pricing}">
-                <input type="text" name="search" th:value="${search}" placeholder="Поиск нейросетей...">
-                <button type="submit">Найти</button>
-            </form>
+        <div class="top-bar">
+            <a th:each="neuronet, iterStat : ${topNeuronets}"
+               th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}"
+               class="top-card">
+                <span class="top-card__position" th:text="${iterStat.index + 1}">1</span>
+                <img th:src="${neuronet.neuronetIcon}" class="top-card__icon" alt="">
+                <div class="top-card__info">
+                    <div class="top-card__name" th:text="${neuronet.name}">Name</div>
+                    <div class="top-card__rating">★ 0.0</div>
+                </div>
+            </a>
         </div>
+    </div>
+</div>
 
-        <!-- FILTERS -->
-        <div class="filter-bar">
-            <span class="filter-bar__label">Фильтры</span>
-            <a th:href="@{/}" class="chip" th:classappend="${availableInRussia == null && !sortByRating && pricing == null ? 'active' : ''}">Все</a>
-            <a th:href="@{/(availableInRussia=true)}" class="chip" th:classappend="${availableInRussia != null && availableInRussia ? 'active' : ''}">Доступны в РФ</a>
-            <a th:href="@{/(availableInRussia=false)}" class="chip" th:classappend="${availableInRussia != null && !availableInRussia ? 'active' : ''}">Требуют VPN</a>
-            <a th:href="@{/(sortByRating=true)}" class="chip chip--sort" th:classappend="${sortByRating ? 'active' : ''}">По рейтингу</a>
-            <a th:href="@{/(pricing='free')}" class="chip" th:classappend="${pricing != null && pricing == 'free' ? 'active' : ''}">Бесплатные</a>
-            <a th:href="@{/(pricing='paid')}" class="chip" th:classappend="${pricing != null && pricing == 'paid' ? 'active' : ''}">Платные</a>
-            <a th:href="@{/}" class="btn btn--ghost btn--sm" style="margin-left: auto;"
-               th:if="${availableInRussia != null || sortByRating || pricing != null}">Сбросить</a>
-        </div>
-
-        <!-- TOP-5 -->
-        <div class="section" th:if="${topNeuronets != null && !topNeuronets.empty}">
-            <div class="section__header">
-                <h2 class="section__title">Лидеры рейтинга</h2>
-                <a href="/neuronets/top" class="section__link">Смотреть все</a>
-            </div>
-            <div class="top-bar">
-                <a th:each="neuronet, iterStat : ${topNeuronets}"
-                   th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}"
-                   class="top-card">
-                    <span class="top-card__position" th:text="${iterStat.index + 1}">1</span>
-                    <img th:src="${neuronet.neuronetIcon}" class="top-card__icon" alt="" style="background:#252d36;border-radius:10px;">
-                    <div class="top-card__info">
-                        <div class="top-card__name" th:text="${neuronet.name}">Name</div>
-                        <div class="top-card__rating">★ 0.0</div>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- CATALOG -->
-        <th:block th:replace="~{fragments/catalog :: catalog}"></th:block>
-    </section>
-</main>
-
-<!-- FOOTER -->
+<!-- ВСЁ ОСТАЛЬНОЕ — HTMX-фрагмент -->
+<div id="main-area">
+    <th:block th:include="~{fragments/main-area :: mainArea}"></th:block>
+</div>
 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__col">
             <h4>О проекте</h4>
             <p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p>
-            <div class="footer__social">
-                <a href="#" title="GitHub">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                </a>
-            </div>
         </div>
         <div class="footer__col">
             <h4>Навигация</h4>
@@ -132,8 +70,30 @@
         </div>
     </div>
     <div class="footer__bottom">
-        <span>&copy; 2026 AI Catalog. Все права защищены.</span>
+        <span>&copy; 2026 AI Catalog</span>
     </div>
 </footer>
+<script>
+    var pendingScroll = null;
+
+    document.body.addEventListener('htmx:beforeRequest', function(evt) {
+        var el = evt.target;
+        pendingScroll = el.getAttribute ? el.getAttribute('data-scroll-to') : null;
+    });
+
+    document.body.addEventListener('htmx:afterSwap', function() {
+        if (pendingScroll === '' || pendingScroll === null || pendingScroll === undefined) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            var target = document.getElementById(pendingScroll);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        pendingScroll = null;
+    });
+</script>
 </body>
 </html>

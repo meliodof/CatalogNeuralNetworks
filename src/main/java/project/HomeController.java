@@ -35,21 +35,33 @@ public class HomeController {
                        Model model,
                        HttpServletRequest request) {
 
-        List<Neuronet> filtered = getFilteredNeuronets(categoryId, search, availableInRussia, sortByRating, pricing);
+        List<Neuronet> all = neuronetService.getAll();
+
+        if (availableInRussia != null) {
+            all = all.stream().filter(n -> n.getAvailableInRussia() == availableInRussia).toList();
+        }
+        if (pricing != null) {
+            if ("free".equals(pricing)) {
+                all = all.stream().filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Бесплатно"))).toList();
+            } else if ("paid".equals(pricing)) {
+                all = all.stream().filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Платно"))).toList();
+            }
+        }
+        if (sortByRating) {
+            all = all.stream().sorted((a, b) -> {
+                Double ra = (Double) neuronetService.getRatingInfo(a.getIdNeuronet())[0];
+                Double rb = (Double) neuronetService.getRatingInfo(b.getIdNeuronet())[0];
+                return rb.compareTo(ra);
+            }).toList();
+        }
+        if (search != null && !search.isBlank()) {
+            all = neuronetService.search(search);
+        }
 
         Map<String, List<Neuronet>> grouped = new LinkedHashMap<>();
-        if (categoryId != null) {
-            Category cat = categoryService.getById(categoryId).orElse(null);
-            if (cat != null) {
-                grouped.put(cat.getName(), filtered);
-            }
-        } else if (search != null && !search.isBlank()) {
-            grouped.put("Результаты поиска: «" + search + "»", filtered);
-        } else {
-            Map<Category, List<Neuronet>> byCategory = filtered.stream()
-                    .collect(Collectors.groupingBy(Neuronet::getCategory, LinkedHashMap::new, Collectors.toList()));
-            byCategory.forEach((cat, list) -> grouped.put(cat.getName(), list));
-        }
+        Map<Category, List<Neuronet>> byCategory = all.stream()
+                .collect(Collectors.groupingBy(Neuronet::getCategory, LinkedHashMap::new, Collectors.toList()));
+        byCategory.forEach((cat, list) -> grouped.put(cat.getName(), list));
 
         model.addAttribute("groupedNeuronets", grouped);
         model.addAttribute("topNeuronets", neuronetService.getTopPopular(5));
@@ -64,55 +76,5 @@ public class HomeController {
             return "fragments/main-area :: mainArea";
         }
         return "index";
-    }
-
-    private List<Neuronet> getFilteredNeuronets(Long categoryId, String search,
-                                                Boolean availableInRussia, boolean sortByRating,
-                                                String pricing) {
-        List<Neuronet> filtered;
-
-        // 1. Базовая выборка
-        if (search != null && !search.isBlank()) {
-            filtered = neuronetService.search(search);
-        } else if (categoryId != null) {
-            filtered = neuronetService.getByCategoryId(categoryId);
-        } else {
-            filtered = neuronetService.getAll();
-        }
-
-        // 2. Фильтр по доступности в РФ
-        if (availableInRussia != null) {
-            filtered = filtered.stream()
-                    .filter(n -> n.getAvailableInRussia() == availableInRussia)
-                    .collect(Collectors.toList());
-        }
-
-        // 3. Фильтр по цене (Бесплатно / Платно)
-        if (pricing != null) {
-            if ("free".equals(pricing)) {
-                filtered = filtered.stream()
-                        .filter(n -> n.getTags() != null && n.getTags().stream()
-                                .anyMatch(t -> t.getName().equals("Бесплатно")))
-                        .collect(Collectors.toList());
-            } else if ("paid".equals(pricing)) {
-                filtered = filtered.stream()
-                        .filter(n -> n.getTags() != null && n.getTags().stream()
-                                .anyMatch(t -> t.getName().equals("Платно")))
-                        .collect(Collectors.toList());
-            }
-        }
-
-        // 4. Сортировка по рейтингу
-        if (sortByRating) {
-            filtered = filtered.stream()
-                    .sorted((a, b) -> {
-                        Double ratingA = (Double) neuronetService.getRatingInfo(a.getIdNeuronet())[0];
-                        Double ratingB = (Double) neuronetService.getRatingInfo(b.getIdNeuronet())[0];
-                        return ratingB.compareTo(ratingA);
-                    })
-                    .collect(Collectors.toList());
-        }
-
-        return filtered;
     }
 }

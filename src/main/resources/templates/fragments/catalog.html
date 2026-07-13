@@ -7,16 +7,16 @@
             <div class="empty__icon">∅</div>
             <div class="empty__title">Ничего не найдено</div>
             <p class="empty__text">Попробуйте изменить параметры поиска или сбросить фильтры</p>
-            <a href="/"
-               hx-get="/"
-               hx-target="#catalog-content"
+            <a th:attr="hx-get=@{/}"
+               hx-target="#main-area"
+               hx-swap="outerHTML"
                hx-push-url="true"
                class="btn btn--primary">Сбросить фильтры</a>
         </div>
     </th:block>
 
     <th:block th:each="entry : ${groupedNeuronets}">
-        <div class="section">
+        <div class="section" th:attr="id='cat-' + ${entry.value[0].category.idCategories}">
             <div class="section__header">
                 <h2 class="section__title" th:text="${entry.key}">Категория</h2>
             </div>
@@ -25,10 +25,7 @@
                    th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}"
                    class="card">
                     <div class="card__top">
-                        <img th:src="${neuronet.neuronetIcon}"
-                             class="card__icon"
-                             onerror="this.style.display='none'"
-                             alt="">
+                        <img th:src="${neuronet.neuronetIcon}" class="card__icon" alt="">
                         <div class="card__header">
                             <div class="card__name" th:text="${neuronet.name}">Name</div>
                             <div class="card__category" th:text="${neuronet.category?.name}">Category</div>
