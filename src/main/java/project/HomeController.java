@@ -36,6 +36,17 @@ public class HomeController {
                        HttpServletRequest request) {
 
         List<Neuronet> all = neuronetService.getAll();
+        // Данные для инлайн-подсказки: имя + количество отзывов
+        List<Map<String, Object>> namesWithReviews = neuronetService.getAll().stream()
+                .map(n -> {
+                    Map<String, Object> map = new LinkedHashMap<>();
+                    map.put("name", n.getName());
+                    map.put("reviews", neuronetService.getRatingInfo(n.getIdNeuronet())[1]); // [0]=avg, [1]=count
+                    return map;
+                })
+                .sorted((a, b) -> Long.compare((Long) b.get("reviews"), (Long) a.get("reviews")))
+                .toList();
+        model.addAttribute("neuronetNamesData", namesWithReviews);
 
         if (availableInRussia != null) {
             all = all.stream().filter(n -> n.getAvailableInRussia() == availableInRussia).toList();
@@ -63,6 +74,14 @@ public class HomeController {
                 .collect(Collectors.groupingBy(Neuronet::getCategory, LinkedHashMap::new, Collectors.toList()));
         byCategory.forEach((cat, list) -> grouped.put(cat.getName(), list));
 
+        // Список названий для автодополнения
+        List<String> allNames = neuronetService.getAll().stream()
+                .map(Neuronet::getName)
+                .distinct()
+                .sorted()
+                .toList();
+
+        model.addAttribute("neuronetNames", allNames);
         model.addAttribute("groupedNeuronets", grouped);
         model.addAttribute("topNeuronets", neuronetService.getTopPopular(5));
         model.addAttribute("categories", categoryService.getAll());

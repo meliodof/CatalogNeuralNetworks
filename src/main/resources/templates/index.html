@@ -6,6 +6,9 @@
     <title>AI Catalog — Каталог нейросетей</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script th:inline="javascript" id="neuronet-data" type="application/json">
+        /*[[${neuronetNamesData}]]*/
+    </script>
 </head>
 <body>
 <header class="header">
@@ -73,27 +76,6 @@
         <span>&copy; 2026 AI Catalog</span>
     </div>
 </footer>
-<script>
-    var pendingScroll = null;
-
-    document.body.addEventListener('htmx:beforeRequest', function(evt) {
-        var el = evt.target;
-        pendingScroll = el.getAttribute ? el.getAttribute('data-scroll-to') : null;
-    });
-
-    document.body.addEventListener('htmx:afterSwap', function() {
-        if (pendingScroll === '' || pendingScroll === null || pendingScroll === undefined) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-            var target = document.getElementById(pendingScroll);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-        pendingScroll = null;
-    });
-</script>
+<script src="/js/search.js"></script>
 </body>
 </html>
