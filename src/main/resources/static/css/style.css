@@ -4,6 +4,7 @@ html {
     scroll-behavior: smooth;
 }
 
+
 * {
     margin: 0;
     padding: 0;
@@ -488,4 +489,12 @@ img { max-width: 100%; display: block; }
     .cards-grid { grid-template-columns: 1fr; }
     .nav { display: none; }
     .footer__inner { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* games */
+#game-score {
+    font-variant-numeric: tabular-nums;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
