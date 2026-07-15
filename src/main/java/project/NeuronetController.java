@@ -101,4 +101,21 @@ public class NeuronetController {
         model.addAttribute("categories", categoryService.getAll());
         return "neuronets/list";
     }
+
+    @GetMapping("/neuronets/{id}")
+    public String detail(@PathVariable Long id, Model model) {
+        Neuronet neuronet = neuronetService.getById(id)
+                .orElseThrow(() -> new RuntimeException("Нейросеть не найдена"));
+
+        List<Review> reviews = reviewService.getByNeuronetId(id);
+        Double avgRating = reviewService.getAverageRating(id);
+        Long reviewCount = reviewService.getReviewCount(id);
+
+        model.addAttribute("neuronet", neuronet);
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("avgRating", avgRating != null ? avgRating : 0.0);
+        model.addAttribute("reviewCount", reviewCount != null ? reviewCount : 0);
+
+        return "neuronet-detail";
+    }
 }

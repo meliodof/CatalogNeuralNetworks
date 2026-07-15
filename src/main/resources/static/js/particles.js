@@ -7,24 +7,44 @@
     var ctx = canvas.getContext('2d');
     var particles = [];
     var particleCount = 70;
-    var clusterRadius = 45;       // радиус для сбора кластера при клике
-    var connectionDistance = 80;  // расстояние, на котором рисуются линии
+    var clusterRadius = 45;
     var score = 0;
     var multiplier = 1;
     var lastClickTime = 0;
     var comboWindow = 1500;
+    var gameStarted = false;
+    var hideTimer = null;
 
+    // Счётчик
     var scoreEl = document.createElement('div');
     scoreEl.id = 'game-score';
-    scoreEl.style.cssText = 'position:fixed; top:80px; left:20px; z-index:10; color:#e6edf3; font-family:Inter,sans-serif; font-size:14px; font-weight:500; background:rgba(24,31,38,0.9); padding:8px 14px; border-radius:8px; border:1px solid #252d36; pointer-events:none; user-select:none; transition:transform 0.1s;';
+    scoreEl.style.cssText = 'position:fixed; top:80px; left:20px; z-index:10; color:#e6edf3; font-family:Inter,sans-serif; font-size:14px; font-weight:500; background:rgba(24,31,38,0.9); padding:8px 14px; border-radius:8px; border:1px solid #252d36; pointer-events:none; user-select:none; transition:opacity 0.3s; opacity:0;';
     scoreEl.innerHTML = 'Очки: 0';
     document.body.appendChild(scoreEl);
 
+    function showScore() {
+        gameStarted = true;
+        scoreEl.style.opacity = '1';
+        resetHideTimer();
+    }
+
+    function hideScore() {
+        scoreEl.style.opacity = '0';
+        gameStarted = false;
+    }
+
+    function resetHideTimer() {
+        if (hideTimer) clearTimeout(hideTimer);
+        hideTimer = setTimeout(hideScore, 5000);
+    }
+
     function updateScore(points) {
+        if (!gameStarted) showScore();
         score += points;
         scoreEl.innerHTML = 'Очки: ' + score;
         scoreEl.style.transform = 'scale(1.15)';
         setTimeout(function() { scoreEl.style.transform = 'scale(1)'; }, 100);
+        resetHideTimer();
     }
 
     function resize() {
@@ -49,7 +69,7 @@
         }
     }
 
-    // Притяжение между частицами (слабое, для образования кластеров)
+    // Притяжение между частицами (для образования кластеров)
     function attractBetweenParticles() {
         for (var i = 0; i < particles.length; i++) {
             for (var j = i + 1; j < particles.length; j++) {
@@ -130,9 +150,9 @@
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        // Убрано отталкивание от мыши (pushFromMouse)
         attractBetweenParticles();
 
-        // Обновляем позиции
         for (var i = 0; i < particles.length; i++) {
             var p = particles[i];
             p.x += p.vx;
@@ -143,27 +163,6 @@
             p.vy *= 0.999;
         }
 
-        // Рисуем линии между близкими частицами
-        ctx.lineWidth = 1;
-        for (var i = 0; i < particles.length; i++) {
-            for (var j = i + 1; j < particles.length; j++) {
-                var a = particles[i];
-                var b = particles[j];
-                var dx = a.x - b.x;
-                var dy = a.y - b.y;
-                var dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < connectionDistance) {
-                    var alpha = 0.3 * (1 - dist / connectionDistance); // прозрачность от 0 до 0.3
-                    ctx.beginPath();
-                    ctx.moveTo(a.x, a.y);
-                    ctx.lineTo(b.x, b.y);
-                    ctx.strokeStyle = 'rgba(88, 166, 255, ' + alpha + ')';
-                    ctx.stroke();
-                }
-            }
-        }
-
-        // Рисуем сами частицы (поверх линий)
         for (var i = 0; i < particles.length; i++) {
             var p = particles[i];
             ctx.beginPath();
@@ -181,6 +180,10 @@
     window.addEventListener('resize', function() {
         resize();
         createParticles();
+    });
+
+    document.addEventListener('mousemove', function(e) {
+
     });
 
     resize();

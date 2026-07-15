@@ -4,6 +4,10 @@ html {
     scroll-behavior: smooth;
 }
 
+.search-form {
+    position: relative;
+    z-index: 2;
+}
 
 * {
     margin: 0;

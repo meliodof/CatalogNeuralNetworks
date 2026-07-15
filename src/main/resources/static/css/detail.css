@@ -1,0 +1,337 @@
+/* =================================================
+   detail.css — Стили для страницы деталей
+   Система оценки "Звездопад"
+   ================================================= */
+
+/* ---------- BACK LINK ---------- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 24px 0 18px 0;
+    transition: color var(--transition);
+}
+.back-link:hover {
+    color: var(--accent);
+}
+
+/* ---------- DETAIL CARD ---------- */
+.detail {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    transition: border-color var(--transition);
+}
+.detail:hover {
+    border-color: var(--accent);
+}
+.detail__header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+.detail__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    object-fit: contain;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    padding: 6px;
+}
+.detail__title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+}
+.detail__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.detail__rating {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0 16px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+}
+.detail__stars {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--star);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.detail__stars span {
+    color: var(--text);
+    font-weight: 600;
+}
+.detail__reviews {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.detail__desc h3 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+.detail__desc p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 720px;
+}
+
+/* ---------- REVIEWS ---------- */
+.reviews {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+}
+.reviews > h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.2px;
+}
+
+.review {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+.review:last-of-type {
+    border-bottom: none;
+}
+.review__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.review__user {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+}
+.review__stars {
+    color: var(--star);
+    font-size: 14px;
+    letter-spacing: 1px;
+    display: flex;
+    gap: 1px;
+}
+.review__date {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+.review__text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    line-height: 1.6;
+}
+.review__text--empty {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* ---------- FORM ---------- */
+.form-card {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+.form-card__title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+.form-group textarea {
+    width: 100%;
+    max-width: 560px;
+    padding: 9px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+    transition: border var(--transition), box-shadow var(--transition);
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+}
+.form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.15);
+}
+.form-card .btn--primary {
+    padding: 8px 32px;
+}
+
+/* =================================================
+   СИСТЕМА "ЗВЕЗДОПАД"
+   ================================================= */
+.starfall-group {
+    margin-bottom: 20px;
+}
+
+.starfall-container {
+    position: relative;
+    background: var(--bg);
+    padding: 20px 20px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    text-align: center;
+    overflow: hidden;
+    min-height: 250px;
+    transition: border-color var(--transition);
+}
+
+.starfall-container:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-muted);
+}
+
+.starfall-display {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 16px;
+}
+
+.starfall-emoji {
+    font-size: 2.8rem;
+    display: block;
+    margin-bottom: 4px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.starfall-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: block;
+}
+
+.starfall-stars {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.star {
+    font-size: 2.2rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: var(--text-muted);
+    user-select: none;
+    position: relative;
+}
+
+.star:hover {
+    transform: scale(1.3) rotate(-10deg);
+}
+
+.star.active {
+    color: var(--star);
+    text-shadow: 0 0 20px rgba(227, 179, 65, 0.4);
+}
+
+.star.active:hover {
+    transform: scale(1.4) rotate(10deg);
+}
+
+/* Canvas для звёздопада */
+#starfallCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    border-radius: var(--radius);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .detail {
+        padding: 20px;
+    }
+    .reviews {
+        padding: 20px;
+    }
+    .detail__title {
+        font-size: 22px;
+    }
+    .starfall-stars {
+        gap: 8px;
+    }
+    .star {
+        font-size: 1.8rem;
+    }
+    .starfall-container {
+        min-height: 220px;
+        padding: 16px;
+    }
+    .starfall-emoji {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .detail__icon {
+        width: 48px;
+        height: 48px;
+    }
+    .detail__rating {
+        flex-wrap: wrap;
+    }
+    .star {
+        font-size: 1.5rem;
+    }
+    .starfall-stars {
+        gap: 6px;
+    }
+}

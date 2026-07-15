@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGPT — AI Catalog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <!-- Основной стиль каталога -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Стиль для страницы деталей -->
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo">
+                <span class="logo__icon">AI</span>
+                AI Catalog
+            </a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+                <a href="/neuronets/top">Топ</a>
+            </nav>
+        </div>
+        <div class="header__right">
+            <a href="#" class="btn btn--ghost btn--sm">Войти</a>
+            <a href="#" class="btn btn--primary btn--sm">Регистрация</a>
+        </div>
+    </div>
+</header>
+
+<!-- ========== MAIN ========== -->
+<main class="container">
+    <!-- Назад к каталогу -->
+    <a href="/" class="back-link">← Назад к каталогу</a>
+
+    <!-- ===== Детали нейросети ===== -->
+    <section class="detail">
+        <div class="detail__header">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/openai/openai-original.svg" class="detail__icon" alt="ChatGPT" />
+            <div>
+                <h1 class="detail__title">ChatGPT</h1>
+                <div class="detail__meta">
+                    <span class="badge badge--vpn">Требуется VPN</span>
+                    <span>Генерация текста</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail__rating">
+            <span class="detail__stars">★ <span>5.0</span></span>
+            <span class="detail__reviews">(1 отзыв)</span>
+        </div>
+
+        <div class="detail__desc">
+            <h3>Описание</h3>
+            <p>Большая языковая модель, разработанная OpenAI. Способна вести диалог, отвечать на вопросы, писать тексты, код и многое другое.</p>
+        </div>
+    </section>
+
+    <!-- ===== Отзывы ===== -->
+    <section class="reviews">
+        <h3>Отзывы</h3>
+
+        <!-- Существующий отзыв -->
+        <div class="review">
+            <div class="review__header">
+                <span class="review__user">testuser</span>
+                <span class="review__stars">★★★★★</span>
+                <span class="review__date">15.07.2026</span>
+            </div>
+            <p class="review__text">Отличный помощник! Быстро генерирует ответы и помогает с кодом.</p>
+        </div>
+
+        <!-- ===== СИСТЕМА "ЗВЕЗДОПАД" ===== -->
+        <div class="form-card">
+            <h4 class="form-card__title">Оставить отзыв</h4>
+            <form action="#" method="post" id="reviewForm">
+                <input type="hidden" name="neuronetId" value="1" />
+
+                <!-- ЗВЕЗДОПАД -->
+                <div class="form-group starfall-group">
+                    <label>Ваша оценка</label>
+                    <div class="starfall-container" id="starfallContainer">
+                        <div class="starfall-display">
+                            <span class="starfall-emoji" id="starfallEmoji">⭐</span>
+                            <span class="starfall-text" id="starfallText">Нажмите на звезду, чтобы оценить</span>
+                        </div>
+                        <div class="starfall-stars" id="starfallStars">
+                            <div class="star" data-value="1">⭐</div>
+                            <div class="star" data-value="2">⭐</div>
+                            <div class="star" data-value="3">⭐</div>
+                            <div class="star" data-value="4">⭐</div>
+                            <div class="star" data-value="5">⭐</div>
+                        </div>
+                        <div class="starfall-canvas-wrapper">
+                            <canvas id="starfallCanvas"></canvas>
+                        </div>
+                        <input type="hidden" name="rating" id="starfallRating" value="0" />
+                    </div>
+                </div>
+
+                <!-- Комментарий -->
+                <div class="form-group">
+                    <label for="comment">Комментарий (необязательно)</label>
+                    <textarea id="comment" name="comment" rows="3" placeholder="Поделитесь впечатлениями..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn--primary">Отправить</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__col">
+            <h4>О проекте</h4>
+            <p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p>
+        </div>
+        <div class="footer__col">
+            <h4>Навигация</h4>
+            <a href="/">Каталог</a>
+            <a href="/neuronets/top">Топ нейросетей</a>
+        </div>
+        <div class="footer__col">
+            <h4>Контакты</h4>
+            <a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <span>&copy; 2026 AI Catalog</span>
+        <span>Активация Windows</span>
+    </div>
+</footer>
+
+<script src="/js/detail.js"></script>
+
+</body>
+</html>

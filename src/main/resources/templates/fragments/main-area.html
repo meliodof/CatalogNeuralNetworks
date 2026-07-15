@@ -29,26 +29,20 @@
 
         <section class="content">
             <div class="search-bar">
-                <form class="search-form" id="search-form"
-                      th:attr="hx-get=@{/}" hx-target="#main-area" hx-swap="innerHTML" hx-push-url="true">
-                    <div class="search-icon-wrapper">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                    </div>
+                <form th:attr="hx-get=@{/}"
+                      hx-target="#main-area"
+                      hx-swap="innerHTML"
+                      hx-push-url="true"
+                      class="search-form">
+        <span class="search-form__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
                     <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
                     <input type="hidden" name="availableInRussia" th:value="${availableInRussia}">
                     <input type="hidden" name="sortByRating" th:value="${sortByRating ? 'true' : ''}">
                     <input type="hidden" name="pricing" th:value="${pricing}">
-                    <input type="text" name="search" th:value="${search}" placeholder="Поиск нейросетей..."
-                           id="search-input" autocomplete="off">
-                    <button type="button" id="search-clear" class="search-clear" title="Очистить"
-                            th:if="${search != null && !search.isEmpty()}">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                    </button>
-                    <button type="submit" class="search-submit-btn">Найти</button>
+                    <input type="text" name="search" th:value="${search}" placeholder="Поиск нейросетей...">
+                    <button type="submit">Найти</button>
                 </form>
             </div>
 
