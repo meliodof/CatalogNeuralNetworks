@@ -1,15 +1,23 @@
 package project;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.Entity.Neuronet;
+import project.Entity.Review;
+import project.Entity.ReviewVote;
 import project.Entity.User;
+import project.Repository.RepReview;
+import project.Repository.RepReviewVote;
+import project.Repository.RepUser;
 import project.Service.NeuronetService;
 import project.Service.ReviewService;
 import project.Service.UserService;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/reviews")
@@ -17,13 +25,15 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final NeuronetService neuronetService;
     private final UserService userService;
+    private final RepReviewVote voteRepository;
 
     public ReviewController(ReviewService reviewService,
                             NeuronetService neuronetService,
-                            UserService userService) {
+                            UserService userService, RepReviewVote voteRepository) {
         this.reviewService = reviewService;
         this.neuronetService = neuronetService;
         this.userService = userService;
+        this.voteRepository = voteRepository;
     }
 
     // Пункт 4: Поставить оценку (с комментарием или без)

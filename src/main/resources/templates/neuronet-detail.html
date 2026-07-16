@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChatGPT — AI Catalog</title>
+    <title th:text="${neuronet.name} + ' — AI Catalog'">Детали нейросети</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
-    <!-- Основной стиль каталога -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- Стиль для страницы деталей -->
     <link rel="stylesheet" th:href="@{/css/detail.css}">
 </head>
 <body>
 
-<!-- ========== HEADER ========== -->
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -28,96 +25,115 @@
             </nav>
         </div>
         <div class="header__right">
-            <a href="#" class="btn btn--ghost btn--sm">Войти</a>
-            <a href="#" class="btn btn--primary btn--sm">Регистрация</a>
+            <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
+            <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
         </div>
     </div>
 </header>
 
-<!-- ========== MAIN ========== -->
 <main class="container">
-    <!-- Назад к каталогу -->
     <a href="/" class="back-link">← Назад к каталогу</a>
 
-    <!-- ===== Детали нейросети ===== -->
     <section class="detail">
         <div class="detail__header">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/openai/openai-original.svg" class="detail__icon" alt="ChatGPT" />
+            <img th:src="${neuronet.neuronetIcon}" class="detail__icon" onerror="this.style.display='none'" alt="">
             <div>
-                <h1 class="detail__title">ChatGPT</h1>
+                <h1 class="detail__title" th:text="${neuronet.name}">ChatGPT</h1>
                 <div class="detail__meta">
-                    <span class="badge badge--vpn">Требуется VPN</span>
-                    <span>Генерация текста</span>
+                    <span class="badge" th:classappend="${neuronet.availableInRussia ? 'badge--rf' : 'badge--vpn'}"
+                          th:text="${neuronet.availableInRussia ? 'Доступна в РФ' : 'Требуется VPN'}"></span>
+                    <span th:text="${neuronet.category?.name}">Генерация текста</span>
                 </div>
             </div>
         </div>
 
         <div class="detail__rating">
-            <span class="detail__stars">★ <span>5.0</span></span>
-            <span class="detail__reviews">(1 отзыв)</span>
+            <span class="detail__stars">★ <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}">5.0</span></span>
+            <span class="detail__reviews" th:text="'(' + ${reviewCount} + ' отзывов)'">(1 отзыв)</span>
         </div>
 
         <div class="detail__desc">
             <h3>Описание</h3>
-            <p>Большая языковая модель, разработанная OpenAI. Способна вести диалог, отвечать на вопросы, писать тексты, код и многое другое.</p>
+            <p th:text="${neuronet.extendedDescription}">Описание нейросети</p>
         </div>
     </section>
 
-    <!-- ===== Отзывы ===== -->
+    <!-- Отзывы -->
     <section class="reviews">
         <h3>Отзывы</h3>
 
-        <!-- Существующий отзыв -->
-        <div class="review">
+        <div class="review" th:each="review : ${reviews}">
             <div class="review__header">
-                <span class="review__user">testuser</span>
-                <span class="review__stars">★★★★★</span>
-                <span class="review__date">15.07.2026</span>
+                <span class="review__user" th:text="${review.user?.username}">Пользователь</span>
+                <span class="review__stars">
+                    <span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
+                </span>
+                <span class="review__date" th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy')}">01.01.2026</span>
             </div>
-            <p class="review__text">Отличный помощник! Быстро генерирует ответы и помогает с кодом.</p>
+            <p class="review__text" th:if="${review.comment != null}" th:text="${review.comment}">Комментарий</p>
+            <p class="review__text review__text--empty" th:unless="${review.comment != null}">Без комментария</p>
+
+            <div class="review-votes">
+                <form th:action="@{/reviews/{id}/vote(id=${review.idReview})}" method="post" style="display:inline">
+                    <input type="hidden" name="userId" value="1">
+                    <input type="hidden" name="vote" value="1">
+                    <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                    <button type="submit" class="vote-btn">
+                        👍 <span th:text="${voteScores[review.idReview] != null ? voteScores[review.idReview] : 0}">0</span>
+                    </button>
+                </form>
+                <form th:action="@{/reviews/{id}/vote(id=${review.idReview})}" method="post" style="display:inline">
+                    <input type="hidden" name="userId" value="1">
+                    <input type="hidden" name="vote" value="-1">
+                    <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                    <button type="submit" class="vote-btn">👎</button>
+                </form>
+            </div>
         </div>
 
-        <!-- ===== СИСТЕМА "ЗВЕЗДОПАД" ===== -->
-        <div class="form-card">
-            <h4 class="form-card__title">Оставить отзыв</h4>
-            <form action="#" method="post" id="reviewForm">
-                <input type="hidden" name="neuronetId" value="1" />
-
-                <!-- ЗВЕЗДОПАД -->
-                <div class="form-group starfall-group">
-                    <label>Ваша оценка</label>
-                    <div class="starfall-container" id="starfallContainer">
-                        <div class="starfall-display">
-                            <span class="starfall-emoji" id="starfallEmoji">⭐</span>
-                            <span class="starfall-text" id="starfallText">Нажмите на звезду, чтобы оценить</span>
-                        </div>
-                        <div class="starfall-stars" id="starfallStars">
-                            <div class="star" data-value="1">⭐</div>
-                            <div class="star" data-value="2">⭐</div>
-                            <div class="star" data-value="3">⭐</div>
-                            <div class="star" data-value="4">⭐</div>
-                            <div class="star" data-value="5">⭐</div>
-                        </div>
-                        <div class="starfall-canvas-wrapper">
-                            <canvas id="starfallCanvas"></canvas>
-                        </div>
-                        <input type="hidden" name="rating" id="starfallRating" value="0" />
-                    </div>
-                </div>
-
-                <!-- Комментарий -->
-                <div class="form-group">
-                    <label for="comment">Комментарий (необязательно)</label>
-                    <textarea id="comment" name="comment" rows="3" placeholder="Поделитесь впечатлениями..."></textarea>
-                </div>
-
-                <button type="submit" class="btn btn--primary">Отправить</button>
-            </form>
+        <div th:if="${#lists.isEmpty(reviews)}" class="review-card__empty">
+            Пока нет отзывов. Будьте первым!
         </div>
     </section>
+
+    <!-- Форма отзыва -->
+    <div class="form-card">
+        <h4 class="form-card__title">Оставить отзыв</h4>
+        <form action="/reviews" method="post" id="reviewForm">
+            <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+            <input type="hidden" name="userId" value="1">
+
+            <div class="form-group starfall-group">
+                <label>Ваша оценка</label>
+                <div class="starfall-container" id="starfallContainer">
+                    <div class="starfall-display">
+                        <span class="starfall-emoji" id="starfallEmoji">⭐</span>
+                        <span class="starfall-text" id="starfallText">Нажмите на звезду, чтобы оценить</span>
+                    </div>
+                    <div class="starfall-stars" id="starfallStars">
+                        <div class="star" data-value="1">⭐</div>
+                        <div class="star" data-value="2">⭐</div>
+                        <div class="star" data-value="3">⭐</div>
+                        <div class="star" data-value="4">⭐</div>
+                        <div class="star" data-value="5">⭐</div>
+                    </div>
+                    <div class="starfall-canvas-wrapper">
+                        <canvas id="starfallCanvas"></canvas>
+                    </div>
+                    <input type="hidden" name="rating" id="starfallRating" value="0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Комментарий (необязательно)</label>
+                <textarea id="comment" name="comment" rows="3" placeholder="Поделитесь впечатлениями..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--primary">Отправить</button>
+        </form>
+    </div>
 </main>
 
-<!-- ========== FOOTER ========== -->
 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__col">
@@ -136,7 +152,6 @@
     </div>
     <div class="footer__bottom">
         <span>&copy; 2026 AI Catalog</span>
-        <span>Активация Windows</span>
     </div>
 </footer>
 

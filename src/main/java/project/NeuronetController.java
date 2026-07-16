@@ -1,9 +1,11 @@
 package project;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import project.Entity.Neuronet;
 import project.Entity.Review;
@@ -11,7 +13,9 @@ import project.Service.CategoryService;
 import project.Service.NeuronetService;
 import project.Service.ReviewService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -29,11 +33,6 @@ public class NeuronetController {
         this.reviewService = reviewService;
     }
 
-    // Пункт 1: Весь список
-    // Пункт 2: По категории
-    // Пункт 5: Сортировка по рейтингу
-    // Пункт 6: Поиск
-    // Пункт 8: Доступность в РФ
     @GetMapping("/neuronets")
     public String getAll(@RequestParam(required = false) Long categoryId,
                          @RequestParam(required = false, defaultValue = "false") boolean sortByRating,
@@ -44,22 +43,16 @@ public class NeuronetController {
         List<Neuronet> neuronets;
 
         if (search != null && !search.isEmpty()) {
-            // Пункт 6: поиск
             neuronets = neuronetService.search(search);
         } else if (categoryId != null && availableInRussia != null) {
-            // Комбинированный фильтр
             neuronets = neuronetService.getByCategoryAndAvailability(categoryId, availableInRussia);
         } else if (categoryId != null) {
-            // Пункт 2: по категории
             neuronets = neuronetService.getByCategoryId(categoryId);
         } else if (availableInRussia != null) {
-            // Пункт 8: доступность в РФ
             neuronets = neuronetService.getByAvailableInRussia(availableInRussia);
         } else if (sortByRating) {
-            // Пункт 5: сортировка по рейтингу
             neuronets = neuronetService.getAllSortedByRating();
         } else {
-            // Пункт 1: всё
             neuronets = neuronetService.getAll();
         }
 
@@ -73,28 +66,6 @@ public class NeuronetController {
         return "neuronets/list";
     }
 
-    // Пункт 3: Карточка нейросети
-    @GetMapping("/{id}")
-    public String getById(@PathVariable Long id, Model model) {
-        Optional<Neuronet> neuronet = neuronetService.getById(id);
-        if (neuronet.isEmpty()) {
-            return "redirect:/neuronets";
-        }
-
-        Neuronet n = neuronet.get();
-        List<Review> reviews = reviewService.getByNeuronetId(id);
-        Double avgRating = reviewService.getAverageRating(id);
-        Long reviewCount = reviewService.getReviewCount(id);
-
-        model.addAttribute("neuronet", n);
-        model.addAttribute("reviews", reviews);
-        model.addAttribute("avgRating", avgRating != null ? avgRating : 0.0);
-        model.addAttribute("reviewCount", reviewCount);
-
-        return "neuronets/detail";
-    }
-
-    // Пункт 7: Топ популярных
     @GetMapping("/top")
     public String getTopPopular(@RequestParam(defaultValue = "10") int limit, Model model) {
         model.addAttribute("neuronets", neuronetService.getTopPopular(limit));
@@ -108,14 +79,34 @@ public class NeuronetController {
                 .orElseThrow(() -> new RuntimeException("Нейросеть не найдена"));
 
         List<Review> reviews = reviewService.getByNeuronetId(id);
+        reviews.sort((a, b) -> Long.compare(
+                reviewService.getVoteScore(b.getIdReview()),
+                reviewService.getVoteScore(a.getIdReview())
+        ));
+
+        Map<Long, Long> voteScores = new HashMap<>();
+        for (Review r : reviews) {
+            voteScores.put(r.getIdReview(), reviewService.getVoteScore(r.getIdReview()));
+        }
+
         Double avgRating = reviewService.getAverageRating(id);
         Long reviewCount = reviewService.getReviewCount(id);
 
         model.addAttribute("neuronet", neuronet);
         model.addAttribute("reviews", reviews);
+        model.addAttribute("voteScores", voteScores);
         model.addAttribute("avgRating", avgRating != null ? avgRating : 0.0);
         model.addAttribute("reviewCount", reviewCount != null ? reviewCount : 0);
 
         return "neuronet-detail";
+    }
+
+    @PostMapping("/reviews/{id}/vote")
+    public String vote(@PathVariable Long id,
+                       @RequestParam Long userId,
+                       @RequestParam int vote,
+                       @RequestParam Long neuronetId) {
+        reviewService.vote(id, userId, vote);
+        return "redirect:/neuronets/" + neuronetId;
     }
 }

@@ -3,9 +3,11 @@ package project;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import project.Entity.Category;
 import project.Entity.Neuronet;
+import project.Entity.Review;
 import project.Service.CategoryService;
 import project.Service.NeuronetService;
 
@@ -20,6 +22,7 @@ public class HomeController {
 
     private final NeuronetService neuronetService;
     private final CategoryService categoryService;
+
 
     public HomeController(NeuronetService neuronetService, CategoryService categoryService) {
         this.neuronetService = neuronetService;
