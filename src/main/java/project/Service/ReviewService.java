@@ -103,4 +103,12 @@ public class ReviewService { ;
     public boolean hasUserVoted(Long reviewId, Long userId) {
         return repReviewVote.existsByReview_IdReviewAndUser_IdUser(reviewId, userId);
     }
+
+    public Long countLikes(Long reviewId) {
+        return repReviewVote.countLikesByReviewId(reviewId);
+    }
+
+    public Long countDislikes(Long reviewId) {
+        return repReviewVote.countDislikesByReviewId(reviewId);
+    }
 }

@@ -147,36 +147,56 @@
         }
     });
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Убрано отталкивание от мыши (pushFromMouse)
-        attractBetweenParticles();
+    attractBetweenParticles();
 
-        for (var i = 0; i < particles.length; i++) {
-            var p = particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0 || p.x > canvas.width) p.vx = -p.vx;
-            if (p.y < 0 || p.y > canvas.height) p.vy = -p.vy;
-            p.vx *= 0.999;
-            p.vy *= 0.999;
+    // Отрисовка линий между близкими частицами
+    for (var i = 0; i < particles.length; i++) {
+        for (var j = i + 1; j < particles.length; j++) {
+            var a = particles[i];
+            var b = particles[j];
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+                var opacity = (1 - dist / 120) * 0.15;
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.strokeStyle = 'rgba(88, 166, 255, ' + opacity + ')';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
         }
-
-        for (var i = 0; i < particles.length; i++) {
-            var p = particles[i];
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(88, 166, 255, 0.7)';
-            ctx.shadowColor = 'rgba(88, 166, 255, 0.5)';
-            ctx.shadowBlur = 4;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-
-        requestAnimationFrame(draw);
     }
 
+    // Обновление позиций
+    for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx = -p.vx;
+        if (p.y < 0 || p.y > canvas.height) p.vy = -p.vy;
+        p.vx *= 0.999;
+        p.vy *= 0.999;
+    }
+
+    // Отрисовка частиц
+    for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(88, 166, 255, 0.7)';
+        ctx.shadowColor = 'rgba(88, 166, 255, 0.5)';
+        ctx.shadowBlur = 4;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    }
+
+    requestAnimationFrame(draw);
+}
     window.addEventListener('resize', function() {
         resize();
         createParticles();

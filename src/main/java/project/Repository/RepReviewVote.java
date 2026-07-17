@@ -14,4 +14,10 @@ public interface RepReviewVote extends JpaRepository<ReviewVote, Long> {
     Long getScoreByReviewId(@Param("reviewId") Long reviewId);
 
     boolean existsByReview_IdReviewAndUser_IdUser(Long reviewId, Long userId);
+
+    @Query("SELECT COUNT(rv) FROM ReviewVote rv WHERE rv.review.idReview = :reviewId AND rv.vote = 1")
+    Long countLikesByReviewId(@Param("reviewId") Long reviewId);
+
+    @Query("SELECT COUNT(rv) FROM ReviewVote rv WHERE rv.review.idReview = :reviewId AND rv.vote = -1")
+    Long countDislikesByReviewId(@Param("reviewId") Long reviewId);
 }

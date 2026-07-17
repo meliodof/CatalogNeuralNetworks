@@ -40,6 +40,29 @@ public class Neuronet {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    // Как использовать
+    @Column(name = "usage_registration", columnDefinition = "TEXT")
+    private String usageRegistration;
+
+    @Column(name = "usage_setup", columnDefinition = "TEXT")
+    private String usageSetup;
+
+    @Column(name = "usage_general", columnDefinition = "TEXT")
+    private String usageGeneral;
+
+    // Ссылки
+    @Column(name = "official_url", length = 500)
+    private String officialUrl;
+
+    @Column(name = "api_url", length = 500)
+    private String apiUrl;
+
+    @Column(name = "github_url", length = 500)
+    private String githubUrl;
+
+    @Column(name = "pricing_info", columnDefinition = "TEXT")
+    private String pricingInfo;
+
     // Связь с отзывами (один ко многим)
     @OneToMany(mappedBy = "neuronet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;

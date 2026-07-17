@@ -89,6 +89,15 @@ public class NeuronetController {
             voteScores.put(r.getIdReview(), reviewService.getVoteScore(r.getIdReview()));
         }
 
+        Map<Long, Long> likeScores = new HashMap<>();
+        Map<Long, Long> dislikeScores = new HashMap<>();
+        for (Review r : reviews) {
+            likeScores.put(r.getIdReview(), reviewService.countLikes(r.getIdReview()));
+            dislikeScores.put(r.getIdReview(), reviewService.countDislikes(r.getIdReview()));
+        }
+        model.addAttribute("likeScores", likeScores);
+        model.addAttribute("dislikeScores", dislikeScores);
+
         Double avgRating = reviewService.getAverageRating(id);
         Long reviewCount = reviewService.getReviewCount(id);
 
@@ -109,4 +118,5 @@ public class NeuronetController {
         reviewService.vote(id, userId, vote);
         return "redirect:/neuronets/" + neuronetId;
     }
+
 }
