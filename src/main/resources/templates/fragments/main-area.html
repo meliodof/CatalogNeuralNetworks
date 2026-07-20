@@ -48,31 +48,50 @@
 
             <div class="filter-bar">
                 <span class="filter-bar__label">Фильтры</span>
+
+                <!-- Без VPN -->
                 <a th:attr="hx-get=${availableInRussia != null && availableInRussia} ? @{/(availableInRussia=${null}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})} : @{/(availableInRussia=true, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
                    hx-target="#main-area"
                    hx-swap="innerHTML"
                    hx-push-url="true"
-                   class="chip" th:classappend="${availableInRussia != null && availableInRussia ? 'active' : ''}">Доступны в РФ</a>
+                   class="chip" th:classappend="${availableInRussia != null && availableInRussia ? 'active' : ''}">Без VPN</a>
+
+                <!-- Требуется VPN -->
                 <a th:attr="hx-get=${availableInRussia != null && !availableInRussia} ? @{/(availableInRussia=${null}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})} : @{/(availableInRussia=false, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
                    hx-target="#main-area"
                    hx-swap="innerHTML"
                    hx-push-url="true"
-                   class="chip" th:classappend="${availableInRussia != null && !availableInRussia ? 'active' : ''}">Требуют VPN</a>
+                   class="chip" th:classappend="${availableInRussia != null && !availableInRussia ? 'active' : ''}">Требуется VPN</a>
+
+                <!-- По рейтингу -->
                 <a th:attr="hx-get=${sortByRating} ? @{/(sortByRating=${false}, availableInRussia=${availableInRussia}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})} : @{/(sortByRating=true, availableInRussia=${availableInRussia}, categoryId=${selectedCategoryId}, search=${search}, pricing=${pricing})}"
                    hx-target="#main-area"
                    hx-swap="innerHTML"
                    hx-push-url="true"
                    class="chip chip--sort" th:classappend="${sortByRating ? 'active' : ''}">По рейтингу</a>
+
+                <!-- Бесплатно -->
                 <a th:attr="hx-get=${pricing != null && pricing == 'free'} ? @{/(pricing=${null}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})} : @{/(pricing='free', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
                    hx-target="#main-area"
                    hx-swap="innerHTML"
                    hx-push-url="true"
-                   class="chip" th:classappend="${pricing != null && pricing == 'free' ? 'active' : ''}">Бесплатные</a>
+                   class="chip" th:classappend="${pricing != null && pricing == 'free' ? 'active' : ''}">Бесплатно</a>
+
+                <!-- Частично бесплатно -->
+                <a th:attr="hx-get=${pricing != null && pricing == 'freemium'} ? @{/(pricing=${null}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})} : @{/(pricing='freemium', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
+                   hx-target="#main-area"
+                   hx-swap="innerHTML"
+                   hx-push-url="true"
+                   class="chip" th:classappend="${pricing != null && pricing == 'freemium' ? 'active' : ''}">Частично бесплатно</a>
+
+                <!-- Только платно -->
                 <a th:attr="hx-get=${pricing != null && pricing == 'paid'} ? @{/(pricing=${null}, availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})} : @{/(pricing='paid', availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, categoryId=${selectedCategoryId}, search=${search})}"
                    hx-target="#main-area"
                    hx-swap="innerHTML"
                    hx-push-url="true"
-                   class="chip" th:classappend="${pricing != null && pricing == 'paid' ? 'active' : ''}">Платные</a>
+                   class="chip" th:classappend="${pricing != null && pricing == 'paid' ? 'active' : ''}">Только платно</a>
+
+                <!-- Сбросить -->
                 <a th:attr="hx-get=@{/(availableInRussia=${null}, sortByRating=${false}, pricing=${null}, categoryId=${selectedCategoryId}, search=${null})}"
                    hx-target="#main-area"
                    hx-swap="innerHTML"

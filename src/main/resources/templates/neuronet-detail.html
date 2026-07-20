@@ -12,7 +12,6 @@
 </head>
 <body>
 
-
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -44,9 +43,14 @@
                     <div>
                         <h1 class="detail__title" th:text="${neuronet.name}">Название</h1>
                         <div class="detail__meta">
-                            <span class="badge" th:classappend="${neuronet.availableInRussia ? 'badge--rf' : 'badge--vpn'}"
-                                  th:text="${neuronet.availableInRussia ? 'Доступна в РФ' : 'Требуется VPN'}"></span>
-                            <span th:text="${neuronet.category?.name}">Категория</span>
+                            <!-- Бейдж доступности -->
+                            <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">Без VPN</span>
+                            <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">Требуется VPN</span>
+
+                            <!-- Бейдж цены -->
+                            <span class="badge badge--free" th:if="${#lists.contains(neuronet.tags.![name], 'Бесплатно')}">Бесплатно</span>
+                            <span class="badge badge--freemium" th:if="${#lists.contains(neuronet.tags.![name], 'Частично бесплатно')}">Частично бесплатно</span>
+                            <span class="badge badge--paid" th:if="${#lists.contains(neuronet.tags.![name], 'Платно')}">Только платно</span>
                         </div>
                     </div>
                 </div>
@@ -56,7 +60,6 @@
                     <span class="detail__reviews" th:text="'(' + ${reviewCount} + ' отзывов)'">(0 отзывов)</span>
                 </div>
 
-                <!-- Расширенное описание с табами -->
                 <!-- Раздел "Описание" -->
                 <div class="detail-section">
                     <h3>Описание</h3>

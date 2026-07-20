@@ -331,18 +331,19 @@ img { max-width: 100%; display: block; }
 /* cards grid */
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 14px;
 }
 .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 18px;
+    padding: 22px;
     transition: all var(--transition);
     position: relative;
     display: flex;
     flex-direction: column;
+    min-height: 180px;
 }
 .card:hover {
     border-color: var(--accent);
@@ -369,6 +370,7 @@ img { max-width: 100%; display: block; }
     font-size: 13px;
     color: var(--text-secondary);
     line-height: 1.5;
+    flex: 1;
     margin-bottom: 12px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -386,7 +388,7 @@ img { max-width: 100%; display: block; }
 .card__rating { display: flex; align-items: center; gap: 5px; }
 .card__stars { color: var(--star); font-size: 13px; font-weight: 600; }
 .card__reviews { font-size: 11px; color: var(--text-muted); }
-.card__badges { display: flex; gap: 5px; }
+.card__badges { display: flex; gap: 5px; flex-wrap: wrap; }
 .card__arrow {
     position: absolute;
     right: 16px;
@@ -501,4 +503,22 @@ img { max-width: 100%; display: block; }
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.badge--free {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid rgba(63, 185, 80, 0.2);
+}
+
+.badge--freemium {
+    background: rgba(227, 179, 65, 0.1);
+    color: var(--star);
+    border: 1px solid rgba(227, 179, 65, 0.2);
+}
+
+.badge--paid {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1px solid rgba(248, 81, 73, 0.2);
 }

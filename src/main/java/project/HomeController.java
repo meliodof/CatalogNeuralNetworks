@@ -56,9 +56,17 @@ public class HomeController {
         }
         if (pricing != null) {
             if ("free".equals(pricing)) {
-                all = all.stream().filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Бесплатно"))).toList();
+                all = all.stream()
+                        .filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Бесплатно")))
+                        .toList();
+            } else if ("freemium".equals(pricing)) {
+                all = all.stream()
+                        .filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Частично бесплатно")))
+                        .toList();
             } else if ("paid".equals(pricing)) {
-                all = all.stream().filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Платно"))).toList();
+                all = all.stream()
+                        .filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Платно")))
+                        .toList();
             }
         }
         if (sortByRating) {

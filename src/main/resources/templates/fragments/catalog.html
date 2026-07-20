@@ -38,8 +38,14 @@
                             <span class="card__reviews">0 отзывов</span>
                         </div>
                         <div class="card__badges">
-                            <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">РФ</span>
-                            <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">VPN</span>
+                            <!-- Бейдж доступности -->
+                            <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">Без VPN</span>
+                            <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">Требуется VPN</span>
+
+                            <!-- Бейдж цены -->
+                            <span class="badge badge--free" th:if="${#lists.contains(neuronet.tags.![name], 'Бесплатно')}">Бесплатно</span>
+                            <span class="badge badge--freemium" th:if="${#lists.contains(neuronet.tags.![name], 'Частично бесплатно')}">Частично бесплатно</span>
+                            <span class="badge badge--paid" th:if="${#lists.contains(neuronet.tags.![name], 'Платно')}">Только платно</span>
                         </div>
                     </div>
                     <span class="card__arrow">→</span>
