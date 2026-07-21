@@ -1,13 +1,49 @@
 /* =================================================
    detail.css — Стили для страницы деталей нейросети
    ================================================= */
-
-
 .header,
 .container,
 .footer {
     position: relative;
     z-index: 1;
+}
+
+/* Родительские контейнеры — подсветка при наведении */
+.detail,
+.reviews,
+.form-card {
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+}
+
+.detail:hover,
+.reviews:hover,
+.form-card:hover {
+    border-color: var(--accent);
+}
+
+/* Вложенные элементы — без рамок и без hover */
+.review,
+.detail-section {
+    border: none;
+    border-radius: 0;
+    padding: 14px 0;
+    margin: 0;
+    transition: none;
+}
+
+.review:hover,
+.detail-section:hover {
+    border-color: transparent !important;
+}
+
+.detail-section {
+    margin-top: 16px;
+}
+
+.review {
+    margin-bottom: 8px;
 }
 
 /* ---------- BACK LINK ---------- */
@@ -440,4 +476,29 @@
 .link-card:hover .link-card__arrow {
     color: var(--accent);
     transform: translateX(2px);
-}
+}/* =================================================
+    ФОН: НЕЙРОННАЯ СЕТЬ С СОЕДИНЁННЫМИ ТОЧКАМИ (SVG)
+    ================================================= */
+
+ .neuronet-detail-body {
+     background: #07060c;
+     position: relative;
+     overflow-x: hidden;
+ }
+
+ .neuronet-detail-body::before {
+     content: '';
+     position: fixed;
+     inset: 0;
+     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='none'%3E%3C!-- Линии --%3E%3Cline x1='25' y1='40' x2='85' y2='70' stroke='%2358a6ff' stroke-width='0.5' opacity='0.2'/%3E%3Cline x1='85' y1='70' x2='140' y2='25' stroke='%2358a6ff' stroke-width='0.5' opacity='0.2'/%3E%3Cline x1='140' y1='25' x2='210' y2='80' stroke='%237940ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='210' y1='80' x2='270' y1='40' stroke='%237940ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='25' y1='40' x2='60' y2='150' stroke='%2358a6ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='60' y1='150' x2='140' y2='25' stroke='%2358a6ff' stroke-width='0.5' opacity='0.12'/%3E%3Cline x1='85' y1='70' x2='180' y2='130' stroke='%23a0a0ff' stroke-width='0.5' opacity='0.12'/%3E%3Cline x1='180' y1='130' x2='210' y2='80' stroke='%23a0a0ff' stroke-width='0.5' opacity='0.12'/%3E%3Cline x1='60' y1='150' x2='140' y2='220' stroke='%2358a6ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='140' y1='220' x2='250' y2='190' stroke='%237940ff' stroke-width='0.5' opacity='0.12'/%3E%3Cline x1='180' y1='130' x2='250' y2='190' stroke='%2358a6ff' stroke-width='0.5' opacity='0.12'/%3E%3Cline x1='210' y1='80' x2='270' y2='160' stroke='%2358a6ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='140' y1='220' x2='40' y2='250' stroke='%23a0a0ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='250' y1='190' x2='270' y2='160' stroke='%237940ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='40' y1='250' x2='120' y2='275' stroke='%2358a6ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='120' y1='275' x2='220' y2='260' stroke='%2358a6ff' stroke-width='0.5' opacity='0.12'/%3E%3Cline x1='220' y1='260' x2='280' y2='280' stroke='%237940ff' stroke-width='0.5' opacity='0.15'/%3E%3Cline x1='85' y1='70' x2='180' y1='130' stroke='%23a0a0ff' stroke-width='0.3' opacity='0.08'/%3E%3Cline x1='140' y1='25' x2='60' y1='150' stroke='%2358a6ff' stroke-width='0.3' opacity='0.1'/%3E%3Cline x1='270' y1='40' x2='250' y2='190' stroke='%2358a6ff' stroke-width='0.5' opacity='0.1'/%3E%3Cline x1='40' y1='250' x2='25' y2='40' stroke='%237940ff' stroke-width='0.3' opacity='0.08'/%3E%3Cline x1='270' y1='160' x2='280' y2='280' stroke='%2358a6ff' stroke-width='0.5' opacity='0.1'/%3E%3Cline x1='120' y1='275' x2='180' y2='130' stroke='%237940ff' stroke-width='0.3' opacity='0.08'/%3E%3Cline x1='60' y1='150' x2='40' y2='250' stroke='%23a0a0ff' stroke-width='0.5' opacity='0.1'/%3E%3C!-- Точки --%3E%3Ccircle cx='25' cy='40' r='2.5' fill='%2358a6ff' opacity='0.8'/%3E%3Ccircle cx='85' cy='70' r='2.5' fill='%2358a6ff' opacity='0.7'/%3E%3Ccircle cx='140' cy='25' r='3' fill='%2358a6ff' opacity='0.9'/%3E%3Ccircle cx='210' cy='80' r='2' fill='%237940ff' opacity='0.7'/%3E%3Ccircle cx='270' cy='40' r='2.5' fill='%237940ff' opacity='0.8'/%3E%3Ccircle cx='60' cy='150' r='2' fill='%23a0a0ff' opacity='0.6'/%3E%3Ccircle cx='180' cy='130' r='2.5' fill='%2358a6ff' opacity='0.7'/%3E%3Ccircle cx='140' cy='220' r='3' fill='%2358a6ff' opacity='0.8'/%3E%3Ccircle cx='250' cy='190' r='2' fill='%237940ff' opacity='0.7'/%3E%3Ccircle cx='270' cy='160' r='2.5' fill='%2358a6ff' opacity='0.7'/%3E%3Ccircle cx='40' cy='250' r='2.5' fill='%237940ff' opacity='0.8'/%3E%3Ccircle cx='120' cy='275' r='2' fill='%2358a6ff' opacity='0.7'/%3E%3Ccircle cx='220' cy='260' r='2.5' fill='%2358a6ff' opacity='0.8'/%3E%3Ccircle cx='280' cy='280' r='3' fill='%237940ff' opacity='0.9'/%3E%3C/g%3E%3C/svg%3E");
+     background-size: 300px 300px;
+     pointer-events: none;
+     z-index: 0;
+ }
+
+ .neuronet-detail-body .header,
+ .neuronet-detail-body .container,
+ .neuronet-detail-body .footer {
+     position: relative;
+     z-index: 1;
+ }

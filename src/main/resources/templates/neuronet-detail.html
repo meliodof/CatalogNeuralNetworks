@@ -9,8 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/detail.css}">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
-<body>
+<body class="neuronet-detail-body">
 
 <header class="header">
     <div class="header__inner">
@@ -43,11 +44,8 @@
                     <div>
                         <h1 class="detail__title" th:text="${neuronet.name}">Название</h1>
                         <div class="detail__meta">
-                            <!-- Бейдж доступности -->
                             <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">Без VPN</span>
                             <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">Требуется VPN</span>
-
-                            <!-- Бейдж цены -->
                             <span class="badge badge--free" th:if="${#lists.contains(neuronet.tags.![name], 'Бесплатно')}">Бесплатно</span>
                             <span class="badge badge--freemium" th:if="${#lists.contains(neuronet.tags.![name], 'Частично бесплатно')}">Частично бесплатно</span>
                             <span class="badge badge--paid" th:if="${#lists.contains(neuronet.tags.![name], 'Платно')}">Только платно</span>
@@ -60,13 +58,11 @@
                     <span class="detail__reviews" th:text="'(' + ${reviewCount} + ' отзывов)'">(0 отзывов)</span>
                 </div>
 
-                <!-- Раздел "Описание" -->
                 <div class="detail-section">
                     <h3>Описание</h3>
                     <p th:text="${neuronet.extendedDescription}">Подробное описание нейросети...</p>
                 </div>
 
-                <!-- Раздел "Как использовать" -->
                 <div class="detail-section">
                     <h3>Как использовать</h3>
                     <div class="usage-steps">
@@ -94,7 +90,6 @@
                     </div>
                 </div>
 
-                <!-- Раздел "Цена и тарифы" -->
                 <div class="detail-section">
                     <h3>Цена и тарифы</h3>
                     <div class="detail-section__text" th:utext="${neuronet.pricingInfo}">
@@ -104,7 +99,6 @@
                     </div>
                 </div>
 
-                <!-- Раздел "Ссылки" -->
                 <div class="detail-section">
                     <h3>Ссылки</h3>
                     <div class="links-list">
@@ -139,7 +133,10 @@
             <!-- Форма отзыва -->
             <div class="form-card">
                 <h4 class="form-card__title">Оставить отзыв</h4>
-                <form action="/reviews" method="post">
+                <form th:action="@{/reviews}" method="post"
+                      th:attr="hx-post=@{/reviews}"
+                      hx-target="#reviews-container"
+                      hx-swap="innerHTML">
                     <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
                     <input type="hidden" name="userId" value="1">
 
@@ -166,7 +163,7 @@
 
         <!-- ПРАВАЯ КОЛОНКА: популярные отзывы -->
         <aside class="detail-sidebar">
-            <section class="reviews">
+            <section class="reviews" id="reviews-container">
                 <h3>Отзывы</h3>
 
                 <div class="review" th:each="review : ${reviews}">
@@ -181,20 +178,31 @@
                     <p class="review__text review__text--empty" th:unless="${review.comment != null}">Без комментария</p>
 
                     <div class="review-votes">
-                        <form th:action="@{/reviews/{id}/vote(id=${review.idReview})}" method="post" style="display:inline">
+                        <form method="post"
+                              hx-post="/reviews/vote"
+                              hx-target="#reviews-container"
+                              hx-swap="innerHTML"
+                              hx-include="this"
+                              style="display:inline">
                             <input type="hidden" name="userId" value="1">
                             <input type="hidden" name="vote" value="1">
                             <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                            <input type="hidden" name="reviewId" th:value="${review.idReview}">
                             <button type="submit" class="vote-btn">👍 <span th:text="${likeScores[review.idReview] != null ? likeScores[review.idReview] : 0}">0</span></button>
                         </form>
-                        <form th:action="@{/reviews/{id}/vote(id=${review.idReview})}" method="post" style="display:inline">
+                        <form method="post"
+                              hx-post="/reviews/vote"
+                              hx-target="#reviews-container"
+                              hx-swap="innerHTML"
+                              hx-include="this"
+                              style="display:inline">
                             <input type="hidden" name="userId" value="1">
                             <input type="hidden" name="vote" value="-1">
                             <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                            <input type="hidden" name="reviewId" th:value="${review.idReview}">   <!-- ← И ЗДЕСЬ -->
                             <button type="submit" class="vote-btn">👎 <span th:text="${dislikeScores[review.idReview] != null ? dislikeScores[review.idReview] : 0}">0</span></button>
                         </form>
                     </div>
-                </div>
 
                 <div th:if="${#lists.isEmpty(reviews)}" class="review-card__empty">
                     Пока нет отзывов. Будьте первым!

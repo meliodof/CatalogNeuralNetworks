@@ -109,14 +109,4 @@ public class NeuronetController {
 
         return "neuronet-detail";
     }
-
-    @PostMapping("/reviews/{id}/vote")
-    public String vote(@PathVariable Long id,
-                       @RequestParam Long userId,
-                       @RequestParam int vote,
-                       @RequestParam Long neuronetId) {
-        reviewService.vote(id, userId, vote);
-        return "redirect:/neuronets/" + neuronetId;
-    }
-
 }
