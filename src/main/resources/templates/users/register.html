@@ -8,13 +8,11 @@
     <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
 <body>
-<!-- HEADER -->
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
             <a href="/" class="logo">
-                <span class="logo__icon">AI</span>
-                AI Catalog
+                <span class="logo__icon">AI</span> AI Catalog
             </a>
             <nav class="nav">
                 <a href="/">Каталог</a>
@@ -27,38 +25,71 @@
     </div>
 </header>
 
-<!-- MAIN -->
 <main class="auth-wrapper">
     <div class="auth-card">
         <h1 class="auth-card__title">Регистрация</h1>
-        <p class="auth-card__subtitle">Создайте аккаунт, чтобы оценивать нейросети и оставлять отзывы</p>
+        <p class="auth-card__subtitle">Создайте аккаунт, чтобы оценивать нейросети и нас</p>
 
-        <form th:action="@{/users/register}" method="post" class="auth-form">
+
+
+        <form th:action="@{/users/register}" method="post" class="auth-form" id="registerForm">
+            <!-- Имя пользователя -->
             <div class="form-group">
                 <label for="username">Имя пользователя</label>
                 <input type="text" id="username" name="username" required
+                       th:value="${username}"
                        placeholder="Придумайте имя" autocomplete="username">
+                <span class="form-hint">От 3 до 30 символов: буквы, цифры, _ и -</span>
             </div>
 
+            <!-- Email -->
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required
+                       th:value="${email}"
                        placeholder="your@email.com" autocomplete="email">
             </div>
 
+            <!-- Пароль -->
             <div class="form-group">
                 <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" required
-                       placeholder="Минимум 6 символов" autocomplete="new-password">
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required
+                           th:value="${password}"
+                           placeholder="Минимум 8 символов" autocomplete="new-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('password')" tabindex="-1">
+                        <span class="eye-icon">👁</span>
+                    </button>
+                </div>
+                <div class="password-requirements">
+                    <span id="req-length">✓ Минимум 8 символов</span>
+                    <span id="req-uppercase">✓ Заглавная буква</span>
+                    <span id="req-lowercase">✓ Строчная буква</span>
+                    <span id="req-digit">✓ Цифра</span>
+                    <span id="req-special">✓ Спецсимвол (!@#$%^&*)</span>
+                </div>
+                <!-- Шкала надёжности -->
+                <div class="password-strength">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <span class="strength-text" id="strengthText">Надёжность: —</span>
+                </div>
             </div>
 
+            <!-- Подтверждение пароля -->
             <div class="form-group">
                 <label for="confirmPassword">Подтвердите пароль</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required
-                       placeholder="Повторите пароль" autocomplete="new-password">
+                <div class="password-wrapper">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                           th:value="${confirmPassword}"
+                           placeholder="Повторите пароль" autocomplete="new-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')" tabindex="-1">
+                        <span class="eye-icon">👁</span>
+                    </button>
+                </div>
+                <span id="matchHint" class="form-hint" style="display:none; color: var(--red);">Пароли не совпадают</span>
             </div>
-
-            <div th:if="${error}" class="auth-error" th:text="${error}"></div>
 
             <button type="submit" class="btn btn--primary auth-form__btn">Зарегистрироваться</button>
         </form>
@@ -69,7 +100,6 @@
     </div>
 </main>
 
-<!-- FOOTER -->
 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__col">
@@ -90,5 +120,6 @@
         <span>&copy; 2026 AI Catalog</span>
     </div>
 </footer>
+    <script src="/js/register.js"></script>
 </body>
 </html>

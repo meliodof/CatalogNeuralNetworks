@@ -23,7 +23,7 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash", length = 255, nullable = false)
     private String passwordHash;
 
     @OneToMany(mappedBy = "user")

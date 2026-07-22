@@ -1,26 +1,79 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — AI Catalog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo">
+                <span class="logo__icon">AI</span>
+                AI Catalog
+            </a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+                <a href="/neuronets/top">Топ</a>
+            </nav>
+        </div>
+        <div class="header__right">
+            <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+        </div>
+    </div>
+</header>
 
-<main class="container">
-    <div class="form-wrapper">
-        <h2>Вход</h2>
-        <form action="/users/login" method="post" class="auth-form">
-            <label>Имя пользователя
-                <input type="text" name="username" required>
-            </label>
-            <label>Пароль
-                <input type="password" name="password" required>
-            </label>
-            <div th:if="${error}" class="error">[[${error}]]</div>
-            <button type="submit" class="btn btn--primary">Войти</button>
+<main class="auth-wrapper">
+    <div class="auth-card">
+        <h1 class="auth-card__title">Вход</h1>
+        <p class="auth-card__subtitle">Войдите в аккаунт, чтобы оценивать нейросети</p>
+
+        <div th:if="${message}" class="auth-message" th:text="${message}"></div>
+        <div th:if="${error}" class="auth-error" th:text="${error}"></div>
+
+        <form th:action="@{/users/login}" method="post" class="auth-form">
+            <div class="form-group">
+                <label for="username">Имя пользователя</label>
+                <input type="text" id="username" name="username" required
+                       placeholder="Ваше имя" autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required
+                       placeholder="Ваш пароль" autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn btn--primary auth-form__btn">Войти</button>
         </form>
-        <p>Нет аккаунта? <a href="/users/register">Зарегистрироваться</a></p>
+
+        <p class="auth-card__footer">
+            Нет аккаунта? <a href="/users/register">Зарегистрироваться</a>
+        </p>
     </div>
 </main>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__col">
+            <h4>О проекте</h4>
+            <p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p>
+        </div>
+        <div class="footer__col">
+            <h4>Навигация</h4>
+            <a href="/">Каталог</a>
+            <a href="/neuronets/top">Топ нейросетей</a>
+        </div>
+        <div class="footer__col">
+            <h4>Контакты</h4>
+            <a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <span>&copy; 2026 AI Catalog</span>
+    </div>
+</footer>
 </body>
 </html>

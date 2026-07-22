@@ -1,5 +1,6 @@
 package project.Service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.Entity.User;
@@ -11,43 +12,40 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private final RepUser repUser;
+    private final RepUser userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(RepUser repUser){
-        this.repUser=repUser;
+    public UserService(RepUser userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Optional<User> getById(Long id) {
-        return repUser.findById(id);
+        return userRepository.findById(id);
     }
 
     public Optional<User> getByUsername(String username) {
-        return repUser.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     public Optional<User> getByEmail(String email) {
-        return repUser.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Transactional
     public User register(String username, String email, String rawPassword) {
-        if (repUser.findByUsername(username).isPresent()) {
+        if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalStateException("Пользователь с таким именем уже существует");
         }
-        if (repUser.findByEmail(email).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalStateException("Пользователь с таким email уже существует");
         }
 
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
-        user.setPasswordHash(hashPassword(rawPassword));  // временный хеш, позже Spring Security
+        user.setPasswordHash(passwordEncoder.encode(rawPassword));
 
-        return repUser.save(user);
-    }
-
-    private String hashPassword(String rawPassword) {
-        // TODO: заменить на BCryptPasswordEncoder из Spring Security
-        return "{noop}" + rawPassword;  // временно, для разработки
+        return userRepository.save(user);
     }
 }
