@@ -214,3 +214,95 @@
     color: var(--text-muted);
     margin-top: 4px;
 }
+
+/* ================================================================
+   ФОН РЕГИСТРАЦИИ: СЕТКА ИЗ РАЗМЫТЫХ ИКОНОК
+   ================================================================ */
+.register-body {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+}
+
+/* Сетка иконок */
+.register-bg-grid {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(2px);        /* ← было 6px, стало 2px */
+    opacity: 0.6;             /* ← было 0.3, стало 0.5 */
+}
+
+.register-bg-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 20px;
+    background: rgba(10, 14, 20, 0.8);
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    border-radius: 8px;
+}
+
+/* Линии поверх сетки */
+.register-body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(to right, rgba(88, 166, 255, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(88, 166, 255, 0.15) 1px, transparent 1px);
+    background-size: calc(25% - 1px) calc(33.333% - 1px);
+    background-position: 0 0;
+}
+
+/* Тёмный оверлей для контраста */
+.register-body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 11, 16, 0.75);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Надпись */
+.register-hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin: 40px 0 20px;
+}
+
+.register-hero h1 {
+    font-size: 46px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(88, 166, 255, 0.7), 0 0 80px rgba(88, 166, 255, 0.3);
+}
+
+/* Контент поверх фона */
+.register-body .header,
+.register-body .footer,
+.register-body .auth-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .register-bg-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+    }
+    .register-hero h1 {
+        font-size: 28px;
+    }
+}

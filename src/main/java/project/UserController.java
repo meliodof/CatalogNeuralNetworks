@@ -5,7 +5,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import project.Service.UserService;
+
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -55,5 +58,47 @@ public class UserController {
             model.addAttribute("message", "Регистрация успешна! Войдите в аккаунт.");
         }
         return "users/login";
+    }
+
+    @GetMapping("/users/check-username")
+    @ResponseBody
+    public Map<String, Object> checkUsername(@RequestParam String username) {
+        Map<String, Object> result = new HashMap<>();
+        boolean exists = userService.getByUsername(username).isPresent();
+        result.put("available", !exists);
+
+        if (exists) {
+            List<String> suggestions = generateSuggestions(username);
+            result.put("suggestions", suggestions);
+        }
+        return result;
+    }
+
+    private List<String> generateSuggestions(String username) {
+        List<String> suggestions = new ArrayList<>();
+        Random random = new Random();
+
+        for (int i = 0; i < 5; i++) {
+            String suggestion = username;
+            suggestion += random.nextInt(9999);
+            suggestions.add(suggestion);
+        }
+
+        suggestions.add(username + "_official");
+        suggestions.add(username + "_ai");
+
+        return suggestions.stream()
+                .filter(s -> !userService.getByUsername(s).isPresent())
+                .limit(3)
+                .toList();
+    }
+
+    @GetMapping("/users/check-email")
+    @ResponseBody
+    public Map<String, Object> checkEmail(@RequestParam String email) {
+        Map<String, Object> result = new HashMap<>();
+        boolean exists = userService.getByEmail(email).isPresent();
+        result.put("available", !exists);
+        return result;
     }
 }

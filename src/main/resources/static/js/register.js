@@ -89,3 +89,86 @@
             el.classList.add('invalid');
         }
     }
+
+// Проверка доступности имени пользователя
+var usernameTimeout = null;
+
+function checkUsername() {
+    var input = document.getElementById('username');
+    var hint = document.getElementById('username-hint');
+    var suggestions = document.getElementById('username-suggestions');
+    var val = input.value.trim();
+
+    // Скрываем подсказки, если пусто
+    if (val.length < 3) {
+        hint.style.display = 'block';
+        hint.className = 'form-hint';
+        hint.textContent = 'От 3 до 30 символов: буквы, цифры, _ и -';
+        suggestions.style.display = 'none';
+        return;
+    }
+
+    // Задержка перед запросом (debounce)
+    if (usernameTimeout) clearTimeout(usernameTimeout);
+    usernameTimeout = setTimeout(function() {
+        fetch('/users/check-username?username=' + encodeURIComponent(val))
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.available) {
+                    hint.className = 'form-hint form-hint--success';
+                    hint.textContent = '✓ Имя свободно';
+                    suggestions.style.display = 'none';
+                } else {
+                    hint.className = 'form-hint form-hint--error';
+                    hint.textContent = '✗ Имя занято';
+
+                    // Показываем варианты
+                    if (data.suggestions && data.suggestions.length > 0) {
+                        var html = '<span class="suggestions-title">Свободные варианты:</span><div class="suggestions-list">';
+                        data.suggestions.forEach(function(s) {
+                            html += '<button type="button" class="suggestion-btn" onclick="useSuggestion(\'' + s + '\')">' + s + '</button>';
+                        });
+                        html += '</div>';
+                        suggestions.innerHTML = html;
+                        suggestions.style.display = 'block';
+                    }
+                }
+            });
+    }, 500);
+}
+
+function useSuggestion(name) {
+    document.getElementById('username').value = name;
+    document.getElementById('username-suggestions').style.display = 'none';
+    checkUsername();
+}
+
+// Проверка доступности email
+var emailTimeout = null;
+
+function checkEmail() {
+    var input = document.getElementById('email');
+    var hint = document.getElementById('email-hint');
+    var val = input.value.trim();
+
+    if (val.length < 5 || !val.includes('@')) {
+        hint.className = 'form-hint';
+        hint.textContent = '';
+        return;
+    }
+
+    if (emailTimeout) clearTimeout(emailTimeout);
+    emailTimeout = setTimeout(function() {
+        fetch('/users/check-email?email=' + encodeURIComponent(val))
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.available) {
+                    hint.className = 'form-hint form-hint--success';
+                    hint.textContent = '✓ Email свободен';
+                } else {
+                    hint.className = 'form-hint form-hint--error';
+                    hint.textContent = '✗ Эта почта уже занята';
+                }
+            });
+    }, 500);
+}

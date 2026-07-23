@@ -7,7 +7,24 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/register.css}">
 </head>
-<body>
+<body class="register-body">
+<!-- Фоновая сетка из иконок -->
+<div class="register-bg-grid">
+    <img th:src="@{/images/chatgpt.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/claude.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/gigachat.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/midjourney.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/kandinsky.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/copilot.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/yandex_code.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/whisper.png}" alt="" class="register-bg-icon">
+    <!-- Дублируем для заполнения сетки -->
+    <img th:src="@{/images/chatgpt.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/claude.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/gigachat.png}" alt="" class="register-bg-icon">
+    <img th:src="@{/images/midjourney.png}" alt="" class="register-bg-icon">
+</div>
+
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -38,8 +55,10 @@
                 <label for="username">Имя пользователя</label>
                 <input type="text" id="username" name="username" required
                        th:value="${username}"
-                       placeholder="Придумайте имя" autocomplete="username">
-                <span class="form-hint">От 3 до 30 символов: буквы, цифры, _ и -</span>
+                       placeholder="Придумайте имя" autocomplete="username"
+                       oninput="checkUsername()">
+                <span class="form-hint" id="username-hint">От 3 до 30 символов: буквы, цифры, _ и -</span>
+                <div id="username-suggestions" class="username-suggestions" style="display:none;"></div>
             </div>
 
             <!-- Email -->
@@ -47,7 +66,9 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required
                        th:value="${email}"
-                       placeholder="your@email.com" autocomplete="email">
+                       placeholder="your@email.com" autocomplete="email"
+                       oninput="checkEmail()">
+                <span class="form-hint" id="email-hint"></span>
             </div>
 
             <!-- Пароль -->

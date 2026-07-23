@@ -522,3 +522,51 @@ img { max-width: 100%; display: block; }
     color: var(--red);
     border: 1px solid rgba(248, 81, 73, 0.2);
 }
+
+/* Подсказки валидации имени */
+.form-hint--success {
+    color: var(--green) !important;
+}
+
+.form-hint--error {
+    color: var(--red) !important;
+}
+
+/* Блок с предложениями имён */
+.username-suggestions {
+    margin-top: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+}
+
+.suggestions-title {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.suggestions-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.suggestion-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    transition: all var(--transition);
+}
+
+.suggestion-btn:hover {
+    background: var(--accent-muted);
+    border-color: var(--accent);
+}

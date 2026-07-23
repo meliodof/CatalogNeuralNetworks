@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход — AI Catalog</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/vhod.css}">
 </head>
 <body>
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
             <a href="/" class="logo">
-                <span class="logo__icon">AI</span>
-                AI Catalog
+                <span class="logo__icon">AI</span> AI Catalog
             </a>
             <nav class="nav">
                 <a href="/">Каталог</a>
@@ -27,11 +27,11 @@
 
 <main class="auth-wrapper">
     <div class="auth-card">
-        <h1 class="auth-card__title">Вход</h1>
-        <p class="auth-card__subtitle">Войдите в аккаунт, чтобы оценивать нейросети</p>
+        <h2 class="auth-card__title">Вход</h2>
+        <p class="auth-card__subtitle">Войдите в аккаунт, чтобы оценивать нейросети и оставлять отзывы</p>
 
-        <div th:if="${message}" class="auth-message" th:text="${message}"></div>
         <div th:if="${error}" class="auth-error" th:text="${error}"></div>
+        <div th:if="${message}" class="auth-message" th:text="${message}"></div>
 
         <form th:action="@{/users/login}" method="post" class="auth-form">
             <div class="form-group">
@@ -42,8 +42,13 @@
 
             <div class="form-group">
                 <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" required
-                       placeholder="Ваш пароль" autocomplete="current-password">
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required
+                           placeholder="Ваш пароль" autocomplete="current-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('password')" tabindex="-1">
+                        <span class="eye-icon">👁</span>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="btn btn--primary auth-form__btn">Войти</button>
@@ -75,5 +80,19 @@
         <span>&copy; 2026 AI Catalog</span>
     </div>
 </footer>
+
+<script>
+    function togglePassword(id) {
+        var input = document.getElementById(id);
+        var btn = input.parentElement.querySelector('.password-toggle');
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerHTML = '<span class="eye-icon">🔒</span>';
+        } else {
+            input.type = 'password';
+            btn.innerHTML = '<span class="eye-icon">👁</span>';
+        }
+    }
+</script>
 </body>
 </html>
