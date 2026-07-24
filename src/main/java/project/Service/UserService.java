@@ -48,4 +48,26 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    @Transactional
+    public void changeEmail(String username, String newEmail) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        if (userRepository.findByEmail(newEmail).isPresent()) {
+            throw new IllegalStateException("Этот email уже используется");
+        }
+        user.setEmail(newEmail);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(String username, String currentPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new IllegalStateException("Неверный текущий пароль");
+        }
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

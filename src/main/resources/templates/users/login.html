@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход — AI Catalog</title>
+    <!-- Подключаем внешние стили (оставляем как есть) -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/vhod.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+    <style>
+    </style>
 </head>
 <body>
+
+<!-- Космический фон (два слоя) -->
+<div class="cosmic-bg"></div>
+<div class="stars"></div>
+
+<!-- ===== ХЕДЕР ===== -->
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -19,21 +29,46 @@
                 <a href="/neuronets/top">Топ</a>
             </nav>
         </div>
-        <div class="header__right">
-            <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+        <div class="header__right" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+            <!-- Не авторизован -->
+            <th:block sec:authorize="!isAuthenticated()">
+                <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
+                <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+            </th:block>
+
+            <!-- Авторизован -->
+            <th:block sec:authorize="isAuthenticated()">
+                <div class="user-menu" onclick="toggleUserMenu()">
+                    <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown__info">
+                            <div class="user-dropdown__name" th:text="${#authentication.name}">Username</div>
+                        </div>
+                        <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
+                        <a href="/users/settings" class="user-dropdown__link">Настройки</a>
+                        <div class="user-dropdown__divider"></div>
+                        <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
+                    </div>
+                </div>
+            </th:block>
         </div>
     </div>
 </header>
 
+<!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
 <main class="auth-wrapper">
     <div class="auth-card">
+
         <h2 class="auth-card__title">Вход</h2>
         <p class="auth-card__subtitle">Войдите в аккаунт, чтобы оценивать нейросети и оставлять отзывы</p>
 
+        <!-- Блоки ошибок / сообщений (Thymeleaf) -->
         <div th:if="${error}" class="auth-error" th:text="${error}"></div>
         <div th:if="${message}" class="auth-message" th:text="${message}"></div>
 
+        <!-- Форма входа -->
         <form th:action="@{/users/login}" method="post" class="auth-form">
+
             <div class="form-group">
                 <label for="username">Имя пользователя</label>
                 <input type="text" id="username" name="username" required
@@ -51,7 +86,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn--primary auth-form__btn">Войти</button>
+            <button type="submit" class="auth-form__btn">Войти</button>
         </form>
 
         <p class="auth-card__footer">
@@ -60,6 +95,7 @@
     </div>
 </main>
 
+<!-- ===== ФУТЕР ===== -->
 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__col">
@@ -81,6 +117,7 @@
     </div>
 </footer>
 
+<!-- ===== СКРИПТ ПОКАЗА ПАРОЛЯ ===== -->
 <script>
     function togglePassword(id) {
         var input = document.getElementById(id);
@@ -94,5 +131,6 @@
         }
     }
 </script>
+<script src="/js/account.js"></script>
 </body>
 </html>

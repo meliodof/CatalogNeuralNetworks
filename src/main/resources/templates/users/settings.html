@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки — AI Catalog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+    <style>
+        .settings-wrapper {
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .settings-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 28px;
+        }
+        .settings-card__title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .settings-card__subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .settings-form .form-group {
+            margin-bottom: 20px;
+        }
+        .settings-form .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .settings-form .form-group input {
+            width: 100%;
+            max-width: 420px;
+            padding: 11px 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color var(--transition);
+        }
+        .settings-form .form-group input:focus {
+            border-color: var(--accent);
+        }
+        .settings-form .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+        .settings-form .btn {
+            padding: 11px 28px;
+            font-size: 14px;
+        }
+        .settings-message {
+            font-size: 13px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+        }
+        .settings-message--success {
+            background: var(--green-bg);
+            color: var(--green);
+            border: 1px solid rgba(63, 185, 80, 0.2);
+        }
+        .settings-message--error {
+            background: var(--red-bg);
+            color: var(--red);
+            border: 1px solid rgba(248, 81, 73, 0.2);
+        }
+        @media (max-width: 768px) {
+            .settings-card {
+                padding: 22px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo"><span class="logo__icon">AI</span> AI Catalog</a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+                <a href="/neuronets/top">Топ</a>
+            </nav>
+        </div>
+        <div class="header__right" sec:authorize="isAuthenticated()">
+            <div class="user-menu" onclick="toggleUserMenu()">
+                <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown__info">
+                        <div class="user-dropdown__name" th:text="${#authentication.name}">Username</div>
+                    </div>
+                    <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
+                    <a href="/users/settings" class="user-dropdown__link">Настройки</a>
+                    <div class="user-dropdown__divider"></div>
+                    <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="settings-wrapper">
+    <h1 style="font-size:28px; font-weight:700; margin-bottom: 24px; color: var(--text);">Настройки</h1>
+
+    <!-- Смена email -->
+    <div class="settings-card">
+        <h2 class="settings-card__title">Сменить email</h2>
+        <p class="settings-card__subtitle">Укажите новый адрес электронной почты</p>
+        <div th:if="${success}" class="settings-message settings-message--success" th:text="${success}"></div>
+        <div th:if="${error}" class="settings-message settings-message--error" th:text="${error}"></div>
+        <form th:action="@{/users/settings/email}" method="post" class="settings-form">
+            <div class="form-group">
+                <label for="newEmail">Новый email</label>
+                <input type="email" id="newEmail" name="newEmail" required placeholder="new@email.com">
+            </div>
+            <button type="submit" class="btn btn--primary">Сохранить email</button>
+        </form>
+    </div>
+
+    <!-- Смена пароля -->
+    <div class="settings-card">
+        <h2 class="settings-card__title">Сменить пароль</h2>
+        <p class="settings-card__subtitle">Введите текущий пароль и придумайте новый</p>
+        <div th:if="${passwordSuccess}" class="settings-message settings-message--success" th:text="${passwordSuccess}"></div>
+        <div th:if="${passwordError}" class="settings-message settings-message--error" th:text="${passwordError}"></div>
+        <form th:action="@{/users/settings/password}" method="post" class="settings-form">
+            <div class="form-group">
+                <label for="currentPassword">Текущий пароль</label>
+                <input type="password" id="currentPassword" name="currentPassword" required placeholder="Введите текущий пароль">
+            </div>
+            <div class="form-group">
+                <label for="newPassword">Новый пароль</label>
+                <input type="password" id="newPassword" name="newPassword" required placeholder="Новый пароль">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Подтвердите пароль</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Повторите пароль">
+            </div>
+            <button type="submit" class="btn btn--primary">Сменить пароль</button>
+        </form>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__col"><h4>О проекте</h4><p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p></div>
+        <div class="footer__col"><h4>Навигация</h4><a href="/">Каталог</a><a href="/neuronets/top">Топ нейросетей</a></div>
+        <div class="footer__col"><h4>Контакты</h4><a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a></div>
+    </div>
+    <div class="footer__bottom"><span>&copy; 2026 AI Catalog</span></div>
+</footer>
+<script src="/js/account.js"></script>
+</body>
+</html>

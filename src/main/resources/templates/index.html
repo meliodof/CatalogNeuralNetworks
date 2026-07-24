@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Catalog — Каталог нейросетей</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
@@ -20,9 +21,28 @@
                 <a href="/neuronets/top">Топ</a>
             </nav>
         </div>
-        <div class="header__right">
-            <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
-            <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+        <div class="header__right" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+            <!-- Не авторизован -->
+            <th:block sec:authorize="!isAuthenticated()">
+                <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
+                <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+            </th:block>
+
+            <!-- Авторизован -->
+            <th:block sec:authorize="isAuthenticated()">
+                <div class="user-menu" onclick="toggleUserMenu()">
+                    <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown__info">
+                            <div class="user-dropdown__name" th:text="${#authentication.name}">Username</div>
+                        </div>
+                        <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
+                        <a href="/users/settings" class="user-dropdown__link">Настройки</a>
+                        <div class="user-dropdown__divider"></div>
+                        <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
+                    </div>
+                </div>
+            </th:block>
         </div>
     </div>
 </header>
@@ -96,5 +116,6 @@
     });
 </script>
 <script src="/js/particles.js"></script>
+<script src="/js/account.js"></script>
 </body>
 </html>

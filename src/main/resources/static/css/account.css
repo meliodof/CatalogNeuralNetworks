@@ -1,0 +1,103 @@
+/* ================================================================
+   МЕНЮ АККАУНТА (GOOGLE-СТИЛЬ)
+   ================================================================ */
+
+.user-menu {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #3fb950);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    transition: box-shadow var(--transition);
+}
+
+.user-avatar:hover {
+    box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.25);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 8px 0;
+    min-width: 240px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+    z-index: 200;
+}
+
+.user-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown__info {
+    padding: 12px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+}
+
+.user-dropdown__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.user-dropdown__email {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.user-dropdown__logout {
+    display: block;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background var(--transition), color var(--transition);
+}
+
+.user-dropdown__logout:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.user-dropdown__link {
+    display: block;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: background var(--transition), color var(--transition);
+}
+
+.user-dropdown__link:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.user-dropdown__divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+}

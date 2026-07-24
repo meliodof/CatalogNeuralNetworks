@@ -111,4 +111,8 @@ public class ReviewService { ;
     public Long countDislikes(Long reviewId) {
         return repReviewVote.countDislikesByReviewId(reviewId);
     }
+
+    public List<Review> getByUserId(Long userId) {
+        return repReview.findByUser_IdUser(userId);
+    }
 }

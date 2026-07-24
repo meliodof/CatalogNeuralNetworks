@@ -1,11 +1,16 @@
 package project;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import project.Entity.Review;
+import project.Entity.User;
+import project.Service.ReviewService;
 import project.Service.UserService;
 
 import java.util.*;
@@ -14,9 +19,11 @@ import java.util.*;
 public class UserController {
 
     private final UserService userService;
+    private final ReviewService reviewService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ReviewService reviewService) {
         this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/users/register")
@@ -100,5 +107,50 @@ public class UserController {
         boolean exists = userService.getByEmail(email).isPresent();
         result.put("available", !exists);
         return result;
+    }
+
+    @GetMapping("/users/profile")
+    public String profile(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName()).orElseThrow();
+        List<Review> reviews = reviewService.getByUserId(user.getIdUser()); // нужно создать метод
+        model.addAttribute("reviews", reviews);
+        return "users/profile";
+    }
+
+    @GetMapping("/users/settings")
+    public String settingsForm() {
+        return "users/settings";
+    }
+
+    @PostMapping("/users/settings/email")
+    public String changeEmail(@RequestParam String newEmail, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            userService.changeEmail(auth.getName(), newEmail);
+            model.addAttribute("success", "Email успешно изменён");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "users/settings";
+    }
+
+    @PostMapping("/users/settings/password")
+    public String changePassword(@RequestParam String currentPassword,
+                                 @RequestParam String newPassword,
+                                 @RequestParam String confirmPassword,
+                                 Model model) {
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("error", "Пароли не совпадают");
+            return "users/settings";
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            userService.changePassword(auth.getName(), currentPassword, newPassword);
+            model.addAttribute("success", "Пароль успешно изменён");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "users/settings";
     }
 }

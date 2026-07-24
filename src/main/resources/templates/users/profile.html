@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои отзывы — AI Catalog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+    <style>
+        .profile-wrapper {
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .profile-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+        .profile-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+        .profile-review {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin-bottom: 12px;
+            transition: border-color var(--transition);
+        }
+        .profile-review:hover {
+            border-color: var(--accent);
+        }
+        .profile-review__header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .profile-review__name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .profile-review__name:hover {
+            text-decoration: underline;
+        }
+        .profile-review__stars {
+            color: var(--star);
+            font-size: 14px;
+        }
+        .profile-review__date {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        .profile-review__text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .profile-review__text--empty {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .profile-empty {
+            color: var(--text-muted);
+            font-size: 15px;
+            text-align: center;
+            padding: 40px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+        @media (max-width: 768px) {
+            .profile-review {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo"><span class="logo__icon">AI</span> AI Catalog</a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+                <a href="/neuronets/top">Топ</a>
+            </nav>
+        </div>
+        <div class="header__right" sec:authorize="isAuthenticated()">
+            <div class="user-menu" onclick="toggleUserMenu()">
+                <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown__info">
+                        <div class="user-dropdown__name" th:text="${#authentication.name}">Username</div>
+                    </div>
+                    <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
+                    <a href="/users/settings" class="user-dropdown__link">Настройки</a>
+                    <div class="user-dropdown__divider"></div>
+                    <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="profile-wrapper">
+    <h1 class="profile-title">Мои отзывы</h1>
+    <p class="profile-subtitle">Отзывы, которые вы оставили</p>
+
+    <div th:if="${#lists.isEmpty(reviews)}" class="profile-empty">
+        Вы пока не оставили ни одного отзыва.
+    </div>
+
+    <div th:each="review : ${reviews}" class="profile-review">
+        <div class="profile-review__header">
+            <a th:href="@{/neuronets/{id}(id=${review.neuronet.idNeuronet})}" class="profile-review__name" th:text="${review.neuronet.name}">Нейросеть</a>
+            <span class="profile-review__stars">
+                <span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
+            </span>
+            <span class="profile-review__date" th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy')}">01.01.2026</span>
+        </div>
+        <p class="profile-review__text" th:if="${review.comment != null}" th:text="${review.comment}"></p>
+        <p class="profile-review__text profile-review__text--empty" th:unless="${review.comment != null}">Без комментария</p>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__col"><h4>О проекте</h4><p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p></div>
+        <div class="footer__col"><h4>Навигация</h4><a href="/">Каталог</a><a href="/neuronets/top">Топ нейросетей</a></div>
+        <div class="footer__col"><h4>Контакты</h4><a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a></div>
+    </div>
+    <div class="footer__bottom"><span>&copy; 2026 AI Catalog</span></div>
+</footer>
+<script src="/js/account.js"></script>
+</body>
+</html>
