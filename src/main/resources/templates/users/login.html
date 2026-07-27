@@ -1,136 +1,166 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход — AI Catalog</title>
-    <!-- Подключаем внешние стили (оставляем как есть) -->
+    <title>Вход / Регистрация — AI Catalog</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/vhod.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
-    <style>
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
-<!-- Космический фон (два слоя) -->
-<div class="cosmic-bg"></div>
-<div class="stars"></div>
-
-<!-- ===== ХЕДЕР ===== -->
+<!-- HEADER -->
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
-            <a href="/" class="logo">
-                <span class="logo__icon">AI</span> AI Catalog
-            </a>
+            <a href="/" class="logo"><span class="logo__icon">AI</span> AI Catalog</a>
             <nav class="nav">
                 <a href="/">Каталог</a>
                 <a href="/neuronets/top">Топ</a>
             </nav>
         </div>
-        <div class="header__right" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-            <!-- Не авторизован -->
-            <th:block sec:authorize="!isAuthenticated()">
-                <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
-                <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
-            </th:block>
-
-            <!-- Авторизован -->
-            <th:block sec:authorize="isAuthenticated()">
-                <div class="user-menu" onclick="toggleUserMenu()">
-                    <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
-                    <div class="user-dropdown" id="userDropdown">
-                        <div class="user-dropdown__info">
-                            <div class="user-dropdown__name" th:text="${#authentication.name}">Username</div>
-                        </div>
-                        <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
-                        <a href="/users/settings" class="user-dropdown__link">Настройки</a>
-                        <div class="user-dropdown__divider"></div>
-                        <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
-                    </div>
+        <div class="header__right" sec:authorize="!isAuthenticated()">
+            <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регистрация</a>
+        </div>
+        <div class="header__right" sec:authorize="isAuthenticated()">
+            <div class="user-menu" onclick="toggleUserMenu()">
+                <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="user-dropdown__info"><div class="user-dropdown__name" th:text="${#authentication.name}">Username</div></div>
+                    <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
+                    <a href="/users/settings" class="user-dropdown__link">Настройки</a>
+                    <div class="user-dropdown__divider"></div>
+                    <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
                 </div>
-            </th:block>
+            </div>
         </div>
     </div>
 </header>
 
-<!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
-<main class="auth-wrapper">
-    <div class="auth-card">
+<!-- MAIN -->
+<main class="auth-dual-wrapper">
+    <div class="auth-dual">
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Вход</button>
+            <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Регистрация</button>
+        </div>
 
-        <h2 class="auth-card__title">Вход</h2>
-        <p class="auth-card__subtitle">Войдите в аккаунт, чтобы оценивать нейросети и оставлять отзывы</p>
-
-        <!-- Блоки ошибок / сообщений (Thymeleaf) -->
-        <div th:if="${error}" class="auth-error" th:text="${error}"></div>
-        <div th:if="${message}" class="auth-message" th:text="${message}"></div>
-
-        <!-- Форма входа -->
-        <form th:action="@{/users/login}" method="post" class="auth-form">
-
-            <div class="form-group">
-                <label for="username">Имя пользователя</label>
-                <input type="text" id="username" name="username" required
-                       placeholder="Ваше имя" autocomplete="username">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Пароль</label>
-                <div class="password-wrapper">
-                    <input type="password" id="password" name="password" required
-                           placeholder="Ваш пароль" autocomplete="current-password">
-                    <button type="button" class="password-toggle" onclick="togglePassword('password')" tabindex="-1">
-                        <span class="eye-icon">👁</span>
-                    </button>
+        <!-- ВХОД -->
+        <div id="panelLogin" class="auth-panel active">
+            <h2 class="auth-card__title">С возвращением</h2>
+            <p class="auth-card__subtitle">Войдите, чтобы продолжить</p>
+            <div th:if="${errorLogin}" class="auth-error" th:text="${errorLogin}"></div>
+            <div th:if="${messageLogin}" class="auth-message" th:text="${messageLogin}"></div>
+            <form th:action="@{/users/login}" method="post" class="auth-form">
+                <div class="form-group">
+                    <label for="loginUsername">Имя пользователя</label>
+                    <input type="text" id="loginUsername" name="username" required placeholder="Ваше имя" autocomplete="username">
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" name="password" required placeholder="Ваш пароль" autocomplete="current-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')" tabindex="-1">👁</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn--primary">Войти</button>
+            </form>
+        </div>
 
-            <button type="submit" class="auth-form__btn">Войти</button>
-        </form>
+        <!-- РЕГИСТРАЦИЯ -->
+        <div id="panelRegister" class="auth-panel">
+            <h2 class="auth-card__title">Создать аккаунт</h2>
+            <p class="auth-card__subtitle">Присоединяйтесь к AI Catalog</p>
+            <div th:if="${errorRegister}" class="auth-error" th:text="${errorRegister}"></div>
+            <div th:if="${messageRegister}" class="auth-message" th:text="${messageRegister}"></div>
+            <form th:action="@{/users/register}" method="post" class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="username">Имя пользователя</label>
+                    <input type="text" id="username" name="username" required th:value="${username}" placeholder="Придумайте имя" autocomplete="username" oninput="checkUsername()">
+                    <span class="form-hint" id="username-hint">От 3 до 30 символов: буквы, цифры, _ и -</span>
+                    <div id="username-suggestions" class="username-suggestions" style="display:none;"></div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required th:value="${email}" placeholder="your@email.com" autocomplete="email" oninput="checkEmail()">
+                    <span class="form-hint" id="email-hint"></span>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required th:value="${password}" placeholder="Минимум 8 символов" autocomplete="new-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')" tabindex="-1">👁</button>
+                    </div>
+                    <div class="password-requirements">
+                        <span id="req-length">✓ Минимум 8 символов</span>
+                        <span id="req-uppercase">✓ Заглавная буква</span>
+                        <span id="req-lowercase">✓ Строчная буква</span>
+                        <span id="req-digit">✓ Цифра</span>
+                        <span id="req-special">✓ Спецсимвол (!@#$%^&*)</span>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                        <span class="strength-text" id="strengthText">Надёжность: —</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Подтвердите пароль</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required th:value="${confirmPassword}" placeholder="Повторите пароль" autocomplete="new-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')" tabindex="-1">👁</button>
+                    </div>
+                    <span id="matchHint" class="form-hint" style="display:none; color: var(--red);">Пароли не совпадают</span>
+                </div>
+                <button type="submit" class="btn--primary">Зарегистрироваться</button>
+            </form>
+        </div>
 
         <p class="auth-card__footer">
-            Нет аккаунта? <a href="/users/register">Зарегистрироваться</a>
+            <span id="footerText">Нет аккаунта? <a href="#" onclick="switchTab('register');return false;">Зарегистрироваться</a></span>
         </p>
     </div>
 </main>
 
-<!-- ===== ФУТЕР ===== -->
+<!-- FOOTER -->
 <footer class="footer">
     <div class="footer__inner">
-        <div class="footer__col">
-            <h4>О проекте</h4>
-            <p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p>
-        </div>
-        <div class="footer__col">
-            <h4>Навигация</h4>
-            <a href="/">Каталог</a>
-            <a href="/neuronets/top">Топ нейросетей</a>
-        </div>
-        <div class="footer__col">
-            <h4>Контакты</h4>
-            <a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a>
-        </div>
+        <div class="footer__col"><h4>О проекте</h4><p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p></div>
+        <div class="footer__col"><h4>Навигация</h4><a href="/">Каталог</a><a href="/neuronets/top">Топ нейросетей</a></div>
+        <div class="footer__col"><h4>Контакты</h4><a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a></div>
     </div>
-    <div class="footer__bottom">
-        <span>&copy; 2026 AI Catalog</span>
-    </div>
+    <div class="footer__bottom"><span>&copy; 2026 AI Catalog</span></div>
 </footer>
 
-<!-- ===== СКРИПТ ПОКАЗА ПАРОЛЯ ===== -->
+<script src="/js/account.js"></script>
+<script src="/js/register.js"></script>
 <script>
+    function switchTab(tab) {
+        const isLogin = (tab === 'login');
+        document.getElementById('tabLogin').classList.toggle('active', isLogin);
+        document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+        document.getElementById('panelLogin').classList.toggle('active', isLogin);
+        document.getElementById('panelRegister').classList.toggle('active', !isLogin);
+        document.getElementById('footerText').innerHTML = isLogin ?
+            'Нет аккаунта? <a href="#" onclick="switchTab(\'register\');return false;">Зарегистрироваться</a>' :
+            'Уже есть аккаунт? <a href="#" onclick="switchTab(\'login\');return false;">Войти</a>';
+    }
+
     function togglePassword(id) {
-        var input = document.getElementById(id);
-        var btn = input.parentElement.querySelector('.password-toggle');
+        const input = document.getElementById(id);
+        const btn = input.parentElement.querySelector('.password-toggle');
         if (input.type === 'password') {
             input.type = 'text';
-            btn.innerHTML = '<span class="eye-icon">🔒</span>';
+            btn.textContent = '🔒';
         } else {
             input.type = 'password';
-            btn.innerHTML = '<span class="eye-icon">👁</span>';
+            btn.textContent = '👁';
         }
     }
 </script>
-<script src="/js/account.js"></script>
 </body>
 </html>

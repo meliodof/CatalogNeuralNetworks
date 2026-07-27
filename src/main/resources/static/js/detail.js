@@ -98,3 +98,60 @@
     resize();
     draw();
 })();
+
+document.body.addEventListener('htmx:afterRequest', function(evt) {
+    if (evt.detail.target.id === 'review-form' && evt.detail.successful) {
+        var stars = document.querySelectorAll('#star-input input[type="radio"]');
+        stars.forEach(function(star) {
+            star.checked = false;
+        });
+        document.getElementById('comment').value = '';
+    }
+});
+
+// Сохраняем рейтинг в sessionStorage перед отправкой
+function saveRating(value) {
+    sessionStorage.setItem('savedRating', value);
+}
+
+// Восстанавливаем рейтинг после загрузки страницы
+document.addEventListener('DOMContentLoaded', function() {
+    var saved = sessionStorage.getItem('savedRating');
+    if (saved) {
+        var star = document.getElementById('star' + saved);
+        if (star) {
+            star.checked = true;
+        }
+    }
+});
+
+// После HTMX-обновления восстанавливаем рейтинг
+document.body.addEventListener('htmx:afterSwap', function() {
+    var saved = sessionStorage.getItem('savedRating');
+    if (saved) {
+        var star = document.getElementById('star' + saved);
+        if (star) {
+            star.checked = true;
+        }
+    }
+});
+
+// После успешной отправки — сбрасываем
+document.body.addEventListener('htmx:afterRequest', function(evt) {
+    if (evt.detail.target.id === 'review-form' && evt.detail.successful) {
+        sessionStorage.removeItem('savedRating');
+        var stars = document.querySelectorAll('#star-input input[type="radio"]');
+        stars.forEach(function(s) { s.checked = false; });
+        document.getElementById('comment').value = '';
+    }
+});
+
+function shakeLock() {
+    var overlay = document.getElementById('form-lock-overlay');
+    if (overlay) {
+        overlay.classList.add('shake');
+        setTimeout(function() {
+            overlay.classList.remove('shake');
+        }, 500);
+    }
+}

@@ -1,5 +1,7 @@
 package project;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,19 +33,22 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     public String addReview(@RequestParam Long neuronetId,
-                            @RequestParam Long userId,
                             @RequestParam int rating,
                             @RequestParam(required = false) String comment,
                             Model model) {
+        // Получаем текущего пользователя
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        User user = userService.getByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
         Neuronet neuronet = neuronetService.getById(neuronetId)
                 .orElseThrow(() -> new RuntimeException("Нейросеть не найдена"));
-        User user = userService.getById(userId)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
         reviewService.addReview(neuronet, user, rating, comment);
 
         return getReviewsFragment(neuronetId, model);
     }
-
     @PostMapping("/reviews/vote")
     public String vote(@RequestParam Long reviewId,
                        @RequestParam Long userId,

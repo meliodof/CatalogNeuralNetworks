@@ -476,7 +476,8 @@
 .link-card:hover .link-card__arrow {
     color: var(--accent);
     transform: translateX(2px);
-}/* =================================================
+}
+/* =================================================
     ФОН: НЕЙРОННАЯ СЕТЬ С СОЕДИНЁННЫМИ ТОЧКАМИ (SVG)
     ================================================= */
 
@@ -502,3 +503,107 @@
      position: relative;
      z-index: 1;
  }
+
+.star-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 2px;
+}
+
+.star-input label {
+    font-size: 28px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: transform 0.15s, color 0.15s;
+    line-height: 1;
+    order: 1;
+}
+
+.star-input input {
+    display: none;
+}
+
+.star-input input:checked ~ label,
+.star-input label:hover,
+.star-input label:hover ~ label {
+    color: var(--star);
+    transform: scale(1.2);
+}
+
+/* ========== БЛОКИРОВКА ФОРМЫ (ЦЕПИ С ЗАМКОМ) ========== */
+.form-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 160px; /* ← чтобы замок точно влез */
+}
+
+.form-lock-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 15, 20, 0.85);
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+}
+
+.form-lock-icon {
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    padding: 10px;
+}
+
+.lock-chains {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.lock-body {
+    font-size: 40px;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.chain {
+    position: absolute;
+    top: 6px;
+    width: 36px;
+    height: 6px;
+    background: #8b949e;
+    border-radius: 3px;
+    z-index: 1;
+}
+
+.chain--left {
+    right: calc(50% + 3px);
+    transform: rotate(-45deg);
+}
+
+.chain--right {
+    left: calc(50% + 3px);
+    transform: rotate(45deg);
+}
+
+.form-lock-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+.form-lock-overlay.shake {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+}

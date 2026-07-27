@@ -24,8 +24,7 @@
         <div class="header__right" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
             <!-- Не авторизован -->
             <th:block sec:authorize="!isAuthenticated()">
-                <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
-                <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+                <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регестрация</a>
             </th:block>
 
             <!-- Авторизован -->

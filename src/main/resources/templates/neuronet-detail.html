@@ -29,8 +29,7 @@
         <div class="header__right" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
             <!-- Не авторизован -->
             <th:block sec:authorize="!isAuthenticated()">
-                <a href="/users/login" class="btn btn--ghost btn--sm">Войти</a>
-                <a href="/users/register" class="btn btn--primary btn--sm">Регистрация</a>
+                <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регистрация</a>
             </th:block>
 
             <!-- Авторизован -->
@@ -151,33 +150,45 @@
             </section>
 
             <!-- Форма отзыва -->
-            <div class="form-card">
-                <h4 class="form-card__title">Оставить отзыв</h4>
-                <form th:action="@{/reviews}" method="post"
-                      th:attr="hx-post=@{/reviews}"
-                      hx-target="#reviews-container"
-                      hx-swap="innerHTML">
-                    <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
-                    <input type="hidden" name="userId" value="1">
-
-                    <div class="form-group">
-                        <label>Ваша оценка</label>
-                        <div class="star-input">
-                            <label><input type="radio" name="rating" value="5" required> ★</label>
-                            <label><input type="radio" name="rating" value="4"> ★</label>
-                            <label><input type="radio" name="rating" value="3"> ★</label>
-                            <label><input type="radio" name="rating" value="2"> ★</label>
-                            <label><input type="radio" name="rating" value="1"> ★</label>
+            <div class="form-card" id="review-form-card">
+                <!-- Блокировка для неавторизованных -->
+                <th:block sec:authorize="!isAuthenticated()">
+                    <div class="form-lock-overlay" id="form-lock-overlay">
+                        <div class="form-lock-icon" onclick="shakeLock()">
+                            <div class="lock-chains">
+                                <span class="lock-body">🔒</span>
+                            </div>
+                            <p class="form-lock-text">Войдите, чтобы оставить отзыв</p>
                         </div>
                     </div>
+                </th:block>
 
-                    <div class="form-group">
-                        <label for="comment">Комментарий (необязательно)</label>
-                        <textarea id="comment" name="comment" rows="3" placeholder="Поделитесь впечатлениями..."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn--primary">Отправить</button>
-                </form>
+                <!-- Форма (только для авторизованных) -->
+                <th:block sec:authorize="isAuthenticated()">
+                    <h4 class="form-card__title">Оставить отзыв</h4>
+                    <form th:action="@{/reviews}" method="post"
+                          hx-post="/reviews"
+                          hx-target="#reviews-container"
+                          hx-swap="innerHTML"
+                          id="review-form">
+                        <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                        <div class="form-group">
+                            <label>Ваша оценка</label>
+                            <div class="star-input">
+                                <input type="radio" id="star5" name="rating" value="5" onchange="saveRating(5)"><label for="star5">★</label>
+                                <input type="radio" id="star4" name="rating" value="4" onchange="saveRating(4)"><label for="star4">★</label>
+                                <input type="radio" id="star3" name="rating" value="3" onchange="saveRating(3)"><label for="star3">★</label>
+                                <input type="radio" id="star2" name="rating" value="2" onchange="saveRating(2)"><label for="star2">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" onchange="saveRating(1)"><label for="star1">★</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Комментарий (необязательно)</label>
+                            <textarea id="comment" name="comment" rows="3" placeholder="Поделитесь впечатлениями..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn--primary">Отправить</button>
+                    </form>
+                </th:block>
             </div>
         </div>
 
