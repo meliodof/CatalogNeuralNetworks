@@ -10,10 +10,10 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/detail.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/light.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body class="neuronet-detail-body">
-
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -23,16 +23,21 @@
             </a>
             <nav class="nav">
                 <a href="/">Каталог</a>
-                <a href="/neuronets/top">Топ</a>
             </nav>
         </div>
-        <div class="header__right" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-            <!-- Не авторизован -->
+        <div class="header__right">
+            <!-- Кнопка переключения темы -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                <span class="theme-text theme-text--dark">Светлая сторона</span>
+                <span class="theme-text theme-text--light">Тёмная сторона</span>
+            </button>
+
+            <!-- Если не авторизован -->
             <th:block sec:authorize="!isAuthenticated()">
-                <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регистрация</a>
+                <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регестрация</a>
             </th:block>
 
-            <!-- Авторизован -->
+            <!-- Если авторизован -->
             <th:block sec:authorize="isAuthenticated()">
                 <div class="user-menu" onclick="toggleUserMenu()">
                     <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
@@ -197,46 +202,48 @@
             <section class="reviews" id="reviews-container">
                 <h3>Отзывы</h3>
 
-                <div class="review" th:each="review : ${reviews}">
-                    <div class="review__header">
-                        <span class="review__user" th:text="${review.user?.username}">Пользователь</span>
-                        <span class="review__stars">
-                            <span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
-                        </span>
-                        <span class="review__date" th:text="${#temporals.format(review.createdAt, 'dd.MM.yyyy')}">01.01.2026</span>
-                    </div>
-                    <p class="review__text" th:if="${review.comment != null}" th:text="${review.comment}"></p>
-                    <p class="review__text review__text--empty" th:unless="${review.comment != null}">Без комментария</p>
+                <div class="reviews-list">
+                    <div class="review" th:each="review : ${reviews}">
+                        <div class="review__header">
+                            <span class="review__user" th:text="${review.user?.username}">Пользователь</span>
+                            <span class="review__stars">
+                        <span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
+                    </span>
+                        </div>
+                        <p class="review__text" th:if="${review.comment != null}" th:text="${review.comment}"></p>
+                        <p class="review__text review__text--empty" th:unless="${review.comment != null}">Без комментария</p>
 
-                    <div class="review-votes">
-                        <form method="post"
-                              hx-post="/reviews/vote"
-                              hx-target="#reviews-container"
-                              hx-swap="innerHTML"
-                              hx-include="this"
-                              style="display:inline">
-                            <input type="hidden" name="userId" value="1">
-                            <input type="hidden" name="vote" value="1">
-                            <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
-                            <input type="hidden" name="reviewId" th:value="${review.idReview}">
-                            <button type="submit" class="vote-btn">👍 <span th:text="${likeScores[review.idReview] != null ? likeScores[review.idReview] : 0}">0</span></button>
-                        </form>
-                        <form method="post"
-                              hx-post="/reviews/vote"
-                              hx-target="#reviews-container"
-                              hx-swap="innerHTML"
-                              hx-include="this"
-                              style="display:inline">
-                            <input type="hidden" name="userId" value="1">
-                            <input type="hidden" name="vote" value="-1">
-                            <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
-                            <input type="hidden" name="reviewId" th:value="${review.idReview}">   <!-- ← И ЗДЕСЬ -->
-                            <button type="submit" class="vote-btn">👎 <span th:text="${dislikeScores[review.idReview] != null ? dislikeScores[review.idReview] : 0}">0</span></button>
-                        </form>
+                        <div class="review-votes">
+                            <form method="post"
+                                  hx-post="/reviews/vote"
+                                  hx-target="#reviews-container"
+                                  hx-swap="innerHTML"
+                                  hx-include="this"
+                                  style="display:inline">
+                                <input type="hidden" name="userId" value="1">
+                                <input type="hidden" name="vote" value="1">
+                                <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                                <input type="hidden" name="reviewId" th:value="${review.idReview}">
+                                <button type="submit" class="vote-btn">👍 <span th:text="${likeScores[review.idReview] != null ? likeScores[review.idReview] : 0}">0</span></button>
+                            </form>
+                            <form method="post"
+                                  hx-post="/reviews/vote"
+                                  hx-target="#reviews-container"
+                                  hx-swap="innerHTML"
+                                  hx-include="this"
+                                  style="display:inline">
+                                <input type="hidden" name="userId" value="1">
+                                <input type="hidden" name="vote" value="-1">
+                                <input type="hidden" name="neuronetId" th:value="${neuronet.idNeuronet}">
+                                <input type="hidden" name="reviewId" th:value="${review.idReview}">
+                                <button type="submit" class="vote-btn">👎 <span th:text="${dislikeScores[review.idReview] != null ? dislikeScores[review.idReview] : 0}">0</span></button>
+                            </form>
+                        </div>
                     </div>
 
-                <div th:if="${#lists.isEmpty(reviews)}" class="review-card__empty">
-                    Пока нет отзывов. Будьте первым!
+                    <div th:if="${#lists.isEmpty(reviews)}" class="review-card__empty">
+                        Пока нет отзывов. Будьте первым!
+                    </div>
                 </div>
             </section>
         </aside>
@@ -265,5 +272,6 @@
 </footer>
 <script src="/js/detail.js"></script>
 <script src="/js/account.js"></script>
+<script src="/js/theme.js"></script>
 </body>
 </html>

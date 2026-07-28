@@ -1,0 +1,115 @@
+/* ================================================================
+   СВЕТЛАЯ ТЕМА
+   ================================================================ */
+.light-theme {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface-hover: #f0f0f2;
+    --border: #d1d1d6;
+    --text: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-muted: #86868b;
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-muted: rgba(0, 113, 227, 0.1);
+    --star: #e3b341;
+    --green: #34c759;
+    --green-bg: rgba(52, 199, 89, 0.1);
+    --red: #ff3b30;
+    --red-bg: rgba(255, 59, 48, 0.1);
+}
+
+/* Хедер в светлой теме */
+.light-theme .header {
+    background: rgba(245, 245, 247, 0.85);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-theme .logo {
+    color: #1d1d1f;
+}
+
+.light-theme .nav a {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.light-theme .nav a:hover {
+    color: #1d1d1f;
+}
+
+.light-theme .header__right .btn {
+    background: linear-gradient(135deg, #0071e3, #5e5ce6);
+    color: #fff;
+}
+
+/* Сайдбар (категории) */
+.light-theme .sidebar__list a {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.light-theme .sidebar__list a:hover {
+    color: #1d1d1f;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.light-theme .sidebar__list a.active {
+    color: #0071e3;
+    background: rgba(0, 113, 227, 0.08);
+    font-weight: 500;
+}
+
+/* Карточки */
+.light-theme .card:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .top-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.light-theme .review:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Футер */
+.light-theme .footer {
+    background: rgba(245, 245, 247, 0.9);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.light-theme .footer__col h4 {
+    color: #1d1d1f;
+}
+
+.light-theme .footer__col p,
+.light-theme .footer__col a {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.light-theme .footer__col a:hover {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.light-theme .footer__bottom {
+    color: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Бейджи */
+.light-theme .badge--free {
+    background: rgba(52, 199, 89, 0.1);
+    color: #34c759;
+    border: 1px solid rgba(52, 199, 89, 0.2);
+}
+
+.light-theme .badge--freemium {
+    background: rgba(227, 179, 65, 0.1);
+    color: #e3b341;
+    border: 1px solid rgba(227, 179, 65, 0.2);
+}
+
+.light-theme .badge--paid {
+    background: rgba(255, 59, 48, 0.1);
+    color: #ff3b30;
+    border: 1px solid rgba(255, 59, 48, 0.2);
+}

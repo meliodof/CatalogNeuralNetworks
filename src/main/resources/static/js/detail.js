@@ -10,6 +10,33 @@
     var nodeCount = 100;
     var time = 0;
 
+    // Проверка темы
+    function isLightTheme() {
+        return document.body.classList.contains('light-theme');
+    }
+
+    // Цвета для тёмной темы
+    var darkColors = {
+        line: 'rgba(88, 166, 255, 0.5)',
+        signalFill: 'rgba(255, 255, 255, 1)',
+        signalShadow: 'rgba(88, 166, 255, 1)',
+        nodeFill: function(alpha) { return 'rgba(88, 166, 255, ' + alpha + ')'; },
+        nodeShadow: function(alpha) { return 'rgba(88, 166, 255, ' + alpha + ')'; }
+    };
+
+    // Цвета для светлой темы
+    var lightColors = {
+        line: 'rgba(30, 30, 35, 0.4)',
+        signalFill: 'rgba(30, 30, 35, 0.8)',
+        signalShadow: 'rgba(30, 30, 35, 0.6)',
+        nodeFill: function(alpha) { return 'rgba(30, 30, 35, ' + alpha + ')'; },
+        nodeShadow: function(alpha) { return 'rgba(30, 30, 35, ' + alpha + ')'; }
+    };
+
+    function getColors() {
+        return isLightTheme() ? lightColors : darkColors;
+    }
+
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -33,8 +60,10 @@
         time += 0.01;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        var colors = getColors();
+
         // Линии
-        ctx.strokeStyle = 'rgba(88, 166, 255, 0.5)';
+        ctx.strokeStyle = colors.line;
         ctx.lineWidth = 1;
         for (var i = 0; i < nodes.length; i++) {
             for (var j = i + 1; j < nodes.length; j++) {
@@ -70,8 +99,8 @@
             var y = sig.from.y + (sig.to.y - sig.from.y) * sig.progress;
             ctx.beginPath();
             ctx.arc(x, y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255, 255, 255, 1)';
-            ctx.shadowColor = 'rgba(88, 166, 255, 1)';
+            ctx.fillStyle = colors.signalFill;
+            ctx.shadowColor = colors.signalShadow;
             ctx.shadowBlur = 12;
             ctx.fill();
             ctx.shadowBlur = 0;
@@ -84,8 +113,8 @@
             var alpha = 0.6 + Math.sin(time * 2 + nodes[i].phase) * 0.4;
             ctx.beginPath();
             ctx.arc(nodes[i].x, nodes[i].y, r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(88, 166, 255, ' + alpha + ')';
-            ctx.shadowColor = 'rgba(88, 166, 255, ' + alpha + ')';
+            ctx.fillStyle = colors.nodeFill(alpha);
+            ctx.shadowColor = colors.nodeShadow(alpha);
             ctx.shadowBlur = 12;
             ctx.fill();
             ctx.shadowBlur = 0;
@@ -99,6 +128,8 @@
     draw();
 })();
 
+// --- Остальные функции ---
+
 document.body.addEventListener('htmx:afterRequest', function(evt) {
     if (evt.detail.target.id === 'review-form' && evt.detail.successful) {
         var stars = document.querySelectorAll('#star-input input[type="radio"]');
@@ -106,15 +137,14 @@ document.body.addEventListener('htmx:afterRequest', function(evt) {
             star.checked = false;
         });
         document.getElementById('comment').value = '';
+        sessionStorage.removeItem('savedRating');
     }
 });
 
-// Сохраняем рейтинг в sessionStorage перед отправкой
 function saveRating(value) {
     sessionStorage.setItem('savedRating', value);
 }
 
-// Восстанавливаем рейтинг после загрузки страницы
 document.addEventListener('DOMContentLoaded', function() {
     var saved = sessionStorage.getItem('savedRating');
     if (saved) {
@@ -125,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// После HTMX-обновления восстанавливаем рейтинг
 document.body.addEventListener('htmx:afterSwap', function() {
     var saved = sessionStorage.getItem('savedRating');
     if (saved) {
@@ -133,16 +162,6 @@ document.body.addEventListener('htmx:afterSwap', function() {
         if (star) {
             star.checked = true;
         }
-    }
-});
-
-// После успешной отправки — сбрасываем
-document.body.addEventListener('htmx:afterRequest', function(evt) {
-    if (evt.detail.target.id === 'review-form' && evt.detail.successful) {
-        sessionStorage.removeItem('savedRating');
-        var stars = document.querySelectorAll('#star-input input[type="radio"]');
-        stars.forEach(function(s) { s.checked = false; });
-        document.getElementById('comment').value = '';
     }
 });
 

@@ -6,6 +6,7 @@
     <title>AI Catalog — Каталог нейросетей</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/light.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
@@ -18,16 +19,20 @@
             </a>
             <nav class="nav">
                 <a href="/">Каталог</a>
-                <a href="/neuronets/top">Топ</a>
             </nav>
         </div>
-        <div class="header__right" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-            <!-- Не авторизован -->
+        <div class="header__right">
+            <!-- Кнопка переключения темы -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                <span class="theme-text theme-text--dark">Светлая сторона</span>
+                <span class="theme-text theme-text--light">Тёмная сторона</span>
+            </button>
+            <!-- Если не авторизован -->
             <th:block sec:authorize="!isAuthenticated()">
                 <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регестрация</a>
             </th:block>
 
-            <!-- Авторизован -->
+            <!-- Если авторизован -->
             <th:block sec:authorize="isAuthenticated()">
                 <div class="user-menu" onclick="toggleUserMenu()">
                     <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
@@ -116,5 +121,6 @@
 </script>
 <script src="/js/particles.js"></script>
 <script src="/js/account.js"></script>
+<script src="/js/theme.js"></script>
 </body>
 </html>

@@ -529,3 +529,136 @@
     background: rgba(255, 255, 255, 0.05);
     color: var(--text, #e6edf3);
 }
+
+/* ================================================================
+   СВЕТЛАЯ ТЕМА — СТРАНИЦА ВХОДА/РЕГИСТРАЦИИ
+   ================================================================ */
+
+/* Фон */
+.light-theme .auth-dual-wrapper {
+    background: #f0f2f5;
+}
+
+/* Карточка */
+.light-theme .auth-dual {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+/* Табы */
+.light-theme .auth-tabs {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.light-theme .auth-tab {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.light-theme .auth-tab.active {
+    background: #e0e0e8;
+    color: #1d1d1f;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Заголовки */
+.light-theme .auth-card__title {
+    color: #1d1d1f;
+}
+
+.light-theme .auth-card__subtitle {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+/* Поля ввода */
+.light-theme .auth-form .form-group label {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.light-theme .auth-form .form-group input {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1d1d1f;
+}
+
+.light-theme .auth-form .form-group input::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+/* Ошибки и сообщения */
+.light-theme .auth-error {
+    background: rgba(255, 59, 48, 0.1);
+    color: #d93025;
+}
+
+.light-theme .auth-message {
+    background: rgba(52, 199, 89, 0.1);
+    color: #1b8a3d;
+}
+
+/* Футер карточки */
+.light-theme .auth-card__footer {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.light-theme .auth-card__footer a {
+    color: #0071e3;
+}
+
+/* Подсказки пароля */
+.light-theme .password-requirements .invalid {
+    color: #d93025;
+}
+
+.light-theme .password-requirements .valid {
+    color: #1b8a3d;
+}
+
+.light-theme .strength-bar {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .strength-text {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.light-theme .form-hint {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.light-theme .form-hint--error {
+    color: #d93025;
+}
+
+.light-theme .form-hint--success {
+    color: #1b8a3d;
+}
+
+/* Предложения имён */
+.light-theme .username-suggestions {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.light-theme .suggestions-title {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.light-theme .suggestion-btn {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #0071e3;
+}
+
+.light-theme .suggestion-btn:hover {
+    background: rgba(0, 113, 227, 0.08);
+}
+
+/* Пароль-глазик */
+.light-theme .password-toggle {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.light-theme .password-toggle:hover {
+    color: rgba(0, 0, 0, 0.7);
+}

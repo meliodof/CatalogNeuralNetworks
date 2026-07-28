@@ -7,6 +7,7 @@
     <title>Настройки — AI Catalog</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/light.css}">
     <style>
         .settings-wrapper {
             max-width: 720px;
@@ -96,7 +97,6 @@
             <a href="/" class="logo"><span class="logo__icon">AI</span> AI Catalog</a>
             <nav class="nav">
                 <a href="/">Каталог</a>
-                <a href="/neuronets/top">Топ</a>
             </nav>
         </div>
         <div class="header__right" sec:authorize="isAuthenticated()">

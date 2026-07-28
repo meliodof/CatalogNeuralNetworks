@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap');
 
+.header__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -596,3 +602,41 @@ img { max-width: 100%; display: block; }
     border-color: var(--accent);
 }
 
+/* ========== КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ========== */
+.theme-toggle {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    padding: 6px 14px;
+    margin-right: 8px;
+    border-radius: 20px;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.theme-toggle:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.theme-text {
+    display: none;
+}
+
+/* В тёмной теме показываем "Светлая сторона" (белый текст) */
+body:not(.light-theme) .theme-text--dark {
+    display: inline;
+}
+
+/* В светлой теме показываем "Тёмная сторона" (тёмный текст) */
+body.light-theme .theme-text--light {
+    display: inline;
+}
