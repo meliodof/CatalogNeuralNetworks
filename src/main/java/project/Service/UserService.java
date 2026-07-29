@@ -3,6 +3,9 @@ package project.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.DTO.ChangeEmailRequest;
+import project.DTO.ChangePasswordRequest;
+import project.DTO.RegisterRequest;
 import project.Entity.User;
 import project.Repository.RepUser;
 
@@ -33,41 +36,41 @@ public class UserService {
     }
 
     @Transactional
-    public User register(String username, String email, String rawPassword) {
-        if (userRepository.findByUsername(username).isPresent()) {
+    public User register(RegisterRequest request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new IllegalStateException("Пользователь с таким именем уже существует");
         }
-        if (userRepository.findByEmail(email).isPresent()) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalStateException("Пользователь с таким email уже существует");
         }
 
         User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPasswordHash(passwordEncoder.encode(rawPassword));
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
         return userRepository.save(user);
     }
 
     @Transactional
-    public void changeEmail(String username, String newEmail) {
+    public void changeEmail(String username, ChangeEmailRequest request) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-        if (userRepository.findByEmail(newEmail).isPresent()) {
+        if (userRepository.findByEmail(request.getNewEmail()).isPresent()) {
             throw new IllegalStateException("Этот email уже используется");
         }
-        user.setEmail(newEmail);
+        user.setEmail(request.getNewEmail());
         userRepository.save(user);
     }
 
     @Transactional
-    public void changePassword(String username, String currentPassword, String newPassword) {
+    public void changePassword(String username, ChangePasswordRequest request) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
             throw new IllegalStateException("Неверный текущий пароль");
         }
-        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
 }

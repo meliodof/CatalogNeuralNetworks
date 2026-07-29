@@ -7,7 +7,12 @@
     <title>Настройки — AI Catalog</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
     <link rel="stylesheet" th:href="@{/css/light.css}">
+    
+    <!-- CSRF-токен для HTMX -->
+    <meta name="_csrf" th:content="${_csrf?.token}" />
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
     <style>
         .settings-wrapper {
             max-width: 720px;
@@ -90,7 +95,8 @@
         }
     </style>
 </head>
-<body>
+<body class="user-page-body">
+<div class="network-glitter"></div>
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -100,6 +106,11 @@
             </nav>
         </div>
         <div class="header__right" sec:authorize="isAuthenticated()">
+            <!-- Кнопка переключения темы -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                <span class="theme-text theme-text--dark">Светлая сторона</span>
+                <span class="theme-text theme-text--light">Тёмная сторона</span>
+            </button>
             <div class="user-menu" onclick="toggleUserMenu()">
                 <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
                 <div class="user-dropdown" id="userDropdown">
@@ -116,7 +127,7 @@
     </div>
 </header>
 
-<main class="settings-wrapper">
+<main class="main-wrapper settings-wrapper">
     <h1 style="font-size:28px; font-weight:700; margin-bottom: 24px; color: var(--text);">Настройки</h1>
 
     <!-- Смена email -->
@@ -126,6 +137,7 @@
         <div th:if="${success}" class="settings-message settings-message--success" th:text="${success}"></div>
         <div th:if="${error}" class="settings-message settings-message--error" th:text="${error}"></div>
         <form th:action="@{/users/settings/email}" method="post" class="settings-form">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
             <div class="form-group">
                 <label for="newEmail">Новый email</label>
                 <input type="email" id="newEmail" name="newEmail" required placeholder="new@email.com">
@@ -141,6 +153,7 @@
         <div th:if="${passwordSuccess}" class="settings-message settings-message--success" th:text="${passwordSuccess}"></div>
         <div th:if="${passwordError}" class="settings-message settings-message--error" th:text="${passwordError}"></div>
         <form th:action="@{/users/settings/password}" method="post" class="settings-form">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
             <div class="form-group">
                 <label for="currentPassword">Текущий пароль</label>
                 <input type="password" id="currentPassword" name="currentPassword" required placeholder="Введите текущий пароль">
@@ -166,6 +179,21 @@
     </div>
     <div class="footer__bottom"><span>&copy; 2026 AI Catalog</span></div>
 </footer>
+<script>
+    // ===== CSRF для HTMX =====
+    function getCsrfToken() {
+        const meta = document.querySelector('meta[name="_csrf"]');
+        return meta ? meta.content : '';
+    }
+    function getCsrfHeader() {
+        const meta = document.querySelector('meta[name="_csrf_header"]');
+        return meta ? meta.content : 'X-CSRF-TOKEN';
+    }
+    document.body.addEventListener('htmx:configRequest', function(event) {
+        event.detail.headers[getCsrfHeader()] = getCsrfToken();
+    });
+</script>
 <script src="/js/account.js"></script>
+<script src="/js/theme.js"></script>
 </body>
 </html>

@@ -1,17 +1,21 @@
 package project;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import project.DTO.CategoryGroupDto;
+import project.DTO.NeuronetCardDto;
+import project.DTO.NeuronetNameDto;
 import project.Entity.Category;
 import project.Entity.Neuronet;
-import project.Entity.Review;
 import project.Service.CategoryService;
 import project.Service.NeuronetService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +23,8 @@ import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
+
+    private static final int DEFAULT_PAGE_SIZE = 12;
 
     private final NeuronetService neuronetService;
     private final CategoryService categoryService;
@@ -30,71 +36,59 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(@RequestParam(required = false) Long categoryId,
-                       @RequestParam(required = false) String search,
-                       @RequestParam(required = false) Boolean availableInRussia,
-                       @RequestParam(required = false, defaultValue = "false") boolean sortByRating,
-                       @RequestParam(required = false) String pricing,
-                       Model model,
-                       HttpServletRequest request) {
+    public String home(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean availableInRussia,
+            @RequestParam(required = false, defaultValue = "false") boolean sortByRating,
+            @RequestParam(required = false) String pricing,
+            Model model) {
 
-        List<Neuronet> all = neuronetService.getAll();
         // Данные для инлайн-подсказки: имя + количество отзывов
-        List<Map<String, Object>> namesWithReviews = neuronetService.getAll().stream()
-                .map(n -> {
-                    Map<String, Object> map = new LinkedHashMap<>();
-                    map.put("name", n.getName());
-                    map.put("reviews", neuronetService.getRatingInfo(n.getIdNeuronet())[1]); // [0]=avg, [1]=count
-                    return map;
-                })
-                .sorted((a, b) -> Long.compare((Long) b.get("reviews"), (Long) a.get("reviews")))
-                .toList();
+        List<NeuronetNameDto> namesWithReviews = neuronetService.getNeuronetNamesWithReviews();
         model.addAttribute("neuronetNamesData", namesWithReviews);
 
-        if (availableInRussia != null) {
-            all = all.stream().filter(n -> n.getAvailableInRussia() == availableInRussia).toList();
-        }
-        if (pricing != null) {
-            if ("free".equals(pricing)) {
-                all = all.stream()
-                        .filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Бесплатно")))
-                        .toList();
-            } else if ("freemium".equals(pricing)) {
-                all = all.stream()
-                        .filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Частично бесплатно")))
-                        .toList();
-            } else if ("paid".equals(pricing)) {
-                all = all.stream()
-                        .filter(n -> n.getTags().stream().anyMatch(t -> t.getName().equals("Платно")))
-                        .toList();
-            }
-        }
-        if (sortByRating) {
-            all = all.stream().sorted((a, b) -> {
-                Double ra = (Double) neuronetService.getRatingInfo(a.getIdNeuronet())[0];
-                Double rb = (Double) neuronetService.getRatingInfo(b.getIdNeuronet())[0];
-                return rb.compareTo(ra);
-            }).toList();
-        }
+        // Пагинация с фильтрами (N+1 FIX + пагинация + hardcoded FIX)
+        Pageable pageable = PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("name").ascending());
+        Page<NeuronetCardDto> neuronetPage;
+        
         if (search != null && !search.isBlank()) {
-            all = neuronetService.search(search);
+            // Поиск — без пагинации, возвращаем все результаты
+            List<Neuronet> results = neuronetService.search(search);
+            List<NeuronetCardDto> cardDtos = results.stream()
+                    .map(this::toCardDto)
+                    .toList();
+            Map<String, List<NeuronetCardDto>> grouped = cardDtos.stream()
+                    .collect(java.util.stream.Collectors.groupingBy(
+                            n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
+                            java.util.LinkedHashMap::new,
+                            java.util.stream.Collectors.toList()
+                    ));
+            model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
+                    .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
+                    .toList());
+            model.addAttribute("totalResults", cardDtos.size());
+        } else {
+            neuronetPage = neuronetService.getAllPaged(page, DEFAULT_PAGE_SIZE,
+                    categoryId, availableInRussia, pricing, sortByRating);
+            // Группировка по категориям для шаблона
+            Map<String, List<NeuronetCardDto>> grouped = neuronetPage.getContent().stream()
+                    .collect(Collectors.groupingBy(
+                            n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
+                            LinkedHashMap::new,
+                            Collectors.toList()
+                    ));
+            model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
+                    .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
+                    .toList());
+            model.addAttribute("totalResults", neuronetPage.getTotalElements());
         }
 
-        Map<String, List<Neuronet>> grouped = new LinkedHashMap<>();
-        Map<Category, List<Neuronet>> byCategory = all.stream()
-                .collect(Collectors.groupingBy(Neuronet::getCategory, LinkedHashMap::new, Collectors.toList()));
-        byCategory.forEach((cat, list) -> grouped.put(cat.getName(), list));
-
-        // Список названий для автодополнения
-        List<String> allNames = neuronetService.getAll().stream()
-                .map(Neuronet::getName)
-                .distinct()
-                .sorted()
-                .toList();
-
-        model.addAttribute("neuronetNames", allNames);
-        model.addAttribute("groupedNeuronets", grouped);
+        // Топ-5 популярных
         model.addAttribute("topNeuronets", neuronetService.getTopPopular(5));
+        
+        // Категории
         model.addAttribute("categories", categoryService.getAll());
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("search", search);
@@ -102,9 +96,29 @@ public class HomeController {
         model.addAttribute("sortByRating", sortByRating);
         model.addAttribute("pricing", pricing);
 
-        if ("true".equals(request.getHeader("HX-Request"))) {
-            return "fragments/main-area :: mainArea";
-        }
+        // Данные для autocomplete
+        List<String> allNames = neuronetService.getAll().stream()
+                .map(Neuronet::getName)
+                .distinct()
+                .sorted()
+                .toList();
+        model.addAttribute("neuronetNames", allNames);
+
         return "index";
+    }
+
+    private NeuronetCardDto toCardDto(Neuronet n) {
+        List<String> tagNames = n.getTags() != null
+                ? n.getTags().stream().map(tag -> tag.getName()).toList()
+                : List.of();
+        String categoryName = n.getCategory() != null ? n.getCategory().getName() : null;
+        Double avg = neuronetService.getRatingInfo(n.getIdNeuronet()).getAverageRating();
+        Long count = neuronetService.getRatingInfo(n.getIdNeuronet()).getReviewCount();
+        
+        return new NeuronetCardDto(
+                n.getIdNeuronet(), n.getName(), n.getDescriptionNetwork(),
+                n.getNeuronetIcon(), n.getAvailableInRussia(),
+                categoryName, tagNames, avg, count
+        );
     }
 }

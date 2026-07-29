@@ -2,6 +2,7 @@ package project.Service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.DTO.ReviewWithVotesDto;
 import project.Entity.Neuronet;
 import project.Entity.Review;
 import project.Entity.ReviewVote;
@@ -11,19 +12,18 @@ import project.Repository.RepReviewVote;
 import project.Repository.RepUser;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
-public class ReviewService { ;
+public class ReviewService {
 
     private final RepReview repReview;
     private final RepReviewVote repReviewVote;
     private final RepUser repUser;
 
-    public ReviewService (RepReview review,
-                          RepReview repReview, RepReviewVote repReviewVote, RepUser repUser){
+    public ReviewService(RepReview repReview, RepReviewVote repReviewVote, RepUser repUser){
         this.repReview = repReview;
         this.repReviewVote = repReviewVote;
         this.repUser = repUser;
@@ -114,5 +114,94 @@ public class ReviewService { ;
 
     public List<Review> getByUserId(Long userId) {
         return repReview.findByUser_IdUser(userId);
+    }
+
+    // ===== Дублирование логики FIX: централизованный сбор vote stats =====
+
+    /**
+     * Получает список отзывов с подсчитанными голосами.
+     * Сортирует по vote score (убывание).
+     * Использует batch-запрос для оптимизации.
+     */
+    public List<ReviewWithVotesDto> getReviewsWithVotes(Long neuronetId) {
+        List<Review> reviews = repReview.findByNeuronet_IdNeuronet(neuronetId);
+        if (reviews.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Batch-запрос для всех голосов
+        List<Long> reviewIds = reviews.stream().map(Review::getIdReview).toList();
+        Map<Long, Object[]> voteStatsMap = new HashMap<>();
+        
+        List<Object[]> batchStats = repReviewVote.getBatchVoteStats(reviewIds);
+        for (Object[] row : batchStats) {
+            voteStatsMap.put(((Number) row[0]).longValue(), row);
+        }
+
+        List<ReviewWithVotesDto> result = reviews.stream()
+                .map(review -> {
+                    Long rid = review.getIdReview();
+                    Object[] stats = voteStatsMap.get(rid);
+                    
+                    long likes = stats != null ? ((Number) stats[1]).longValue() : 0;
+                    long dislikes = stats != null ? ((Number) stats[2]).longValue() : 0;
+                    long voteScore = stats != null ? ((Number) stats[3]).longValue() : 0;
+
+                    return new ReviewWithVotesDto(
+                            rid,
+                            review.getUser() != null ? review.getUser().getUsername() : "Аноним",
+                            review.getRating(),
+                            review.getComment(),
+                            review.getCreatedAt(),
+                            likes,
+                            dislikes,
+                            voteScore
+                    );
+                })
+                .sorted(Comparator.comparingLong(ReviewWithVotesDto::getVoteScore).reversed())
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
+    /**
+     * Получает vote stats map для существующих Review-объектов.
+     * Используется в NeuronetController для передачи в шаблон.
+     */
+    public Map<Long, ReviewWithVotesDto> getReviewVotesMap(List<Review> reviews) {
+        if (reviews == null || reviews.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Long> reviewIds = reviews.stream().map(Review::getIdReview).toList();
+        Map<Long, Object[]> voteStatsMap = new HashMap<>();
+        
+        List<Object[]> batchStats = repReviewVote.getBatchVoteStats(reviewIds);
+        for (Object[] row : batchStats) {
+            voteStatsMap.put(((Number) row[0]).longValue(), row);
+        }
+
+        Map<Long, ReviewWithVotesDto> result = new LinkedHashMap<>();
+        for (Review review : reviews) {
+            Long rid = review.getIdReview();
+            Object[] stats = voteStatsMap.get(rid);
+            
+            long likes = stats != null ? ((Number) stats[1]).longValue() : 0;
+            long dislikes = stats != null ? ((Number) stats[2]).longValue() : 0;
+            long voteScore = stats != null ? ((Number) stats[3]).longValue() : 0;
+
+            result.put(rid, new ReviewWithVotesDto(
+                    rid,
+                    review.getUser() != null ? review.getUser().getUsername() : "Аноним",
+                    review.getRating(),
+                    review.getComment(),
+                    review.getCreatedAt(),
+                    likes,
+                    dislikes,
+                    voteScore
+            ));
+        }
+
+        return result;
     }
 }

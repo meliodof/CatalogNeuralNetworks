@@ -1,20 +1,21 @@
 package project;
 
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import project.DTO.AddReviewRequest;
+import project.DTO.ReviewWithVotesDto;
 import project.Entity.Neuronet;
-import project.Entity.Review;
 import project.Entity.User;
 import project.Service.NeuronetService;
 import project.Service.ReviewService;
 import project.Service.UserService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ReviewController {
@@ -32,9 +33,8 @@ public class ReviewController {
     }
 
     @PostMapping("/reviews")
-    public String addReview(@RequestParam Long neuronetId,
-                            @RequestParam int rating,
-                            @RequestParam(required = false) String comment,
+    public String addReview(@Valid @ModelAttribute AddReviewRequest request,
+                            Errors errors,
                             Model model) {
         // Получаем текущего пользователя
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -42,13 +42,14 @@ public class ReviewController {
         User user = userService.getByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
-        Neuronet neuronet = neuronetService.getById(neuronetId)
+        Neuronet neuronet = neuronetService.getById(request.getNeuronetId())
                 .orElseThrow(() -> new RuntimeException("Нейросеть не найдена"));
 
-        reviewService.addReview(neuronet, user, rating, comment);
+        reviewService.addReview(neuronet, user, request.getRating(), request.getComment());
 
-        return getReviewsFragment(neuronetId, model);
+        return getReviewsFragment(request.getNeuronetId(), model);
     }
+
     @PostMapping("/reviews/vote")
     public String vote(@RequestParam Long reviewId,
                        @RequestParam Long userId,
@@ -56,29 +57,22 @@ public class ReviewController {
                        @RequestParam Long neuronetId,
                        Model model) {
         reviewService.vote(reviewId, userId, vote);
+        
         return getReviewsFragment(neuronetId, model);
     }
 
     private String getReviewsFragment(Long neuronetId, Model model) {
         Neuronet neuronet = neuronetService.getById(neuronetId)
                 .orElseThrow(() -> new RuntimeException("Нейросеть не найдена"));
-        List<Review> reviews = reviewService.getByNeuronetId(neuronetId);
-        reviews.sort((a, b) -> Long.compare(
-                reviewService.getVoteScore(b.getIdReview()),
-                reviewService.getVoteScore(a.getIdReview())
-        ));
-        Map<Long, Long> likeScores = new HashMap<>();
-        Map<Long, Long> dislikeScores = new HashMap<>();
-        for (Review r : reviews) {
-            likeScores.put(r.getIdReview(), reviewService.countLikes(r.getIdReview()));
-            dislikeScores.put(r.getIdReview(), reviewService.countDislikes(r.getIdReview()));
-        }
+        
+        List<ReviewWithVotesDto> reviewsWithVotes = reviewService.getReviewsWithVotes(neuronetId);
+
         model.addAttribute("neuronet", neuronet);
-        model.addAttribute("reviews", reviews);
-        model.addAttribute("likeScores", likeScores);
-        model.addAttribute("dislikeScores", dislikeScores);
-        model.addAttribute("avgRating", reviewService.getAverageRating(neuronetId));
-        model.addAttribute("reviewCount", reviewService.getReviewCount(neuronetId));
+        model.addAttribute("reviews", reviewsWithVotes);
+        model.addAttribute("avgRating", reviewService.getAverageRating(neuronetId) != null 
+                ? reviewService.getAverageRating(neuronetId) : 0.0);
+        model.addAttribute("reviewCount", reviewService.getReviewCount(neuronetId) != null 
+                ? reviewService.getReviewCount(neuronetId) : 0L);
 
         return "fragments/reviews :: reviews";
     }

@@ -19,7 +19,7 @@ public class CategoryService {
     }
 
     public List<Category> getAll() {
-        return repCategory.findAll();
+        return repCategory.findAllByOrderByNameAsc();
     }
 
     public Optional<Category> getById(Long id) {

@@ -1,13 +1,17 @@
 package project;
 
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+import project.DTO.AddReviewRequest;
+import project.DTO.ChangeEmailRequest;
+import project.DTO.ChangePasswordRequest;
+import project.DTO.RegisterRequest;
 import project.Entity.Review;
 import project.Entity.User;
 import project.Service.ReviewService;
@@ -27,26 +31,26 @@ public class UserController {
     }
 
     @GetMapping("/users/register")
-    public String registerForm() {
+    public String registerForm(@ModelAttribute("registerRequest") RegisterRequest request) {
         return "users/register";
     }
 
     @PostMapping("/users/register")
-    public String register(@RequestParam String username,
-                           @RequestParam String email,
-                           @RequestParam String password,
-                           @RequestParam String confirmPassword,
-                           Model model) {
-        if (!password.equals(confirmPassword)) {
+    public String register(@Valid @ModelAttribute("registerRequest") RegisterRequest request,
+                            Errors errors,
+                            Model model) {
+        if (errors.hasErrors()) {
+            model.addAttribute("error", errors.getAllErrors().get(0).getDefaultMessage());
+            return "users/register";
+        }
+        
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
             model.addAttribute("error", "Пароли не совпадают");
             return "users/register";
         }
-        if (password.length() < 6) {
-            model.addAttribute("error", "Пароль должен быть не менее 6 символов");
-            return "users/register";
-        }
+        
         try {
-            userService.register(username, email, password);
+            userService.register(request);
             return "redirect:/users/login?registered=true";
         } catch (IllegalStateException e) {
             model.addAttribute("error", e.getMessage());
@@ -113,21 +117,29 @@ public class UserController {
     public String profile(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName()).orElseThrow();
-        List<Review> reviews = reviewService.getByUserId(user.getIdUser()); // нужно создать метод
+        List<Review> reviews = reviewService.getByUserId(user.getIdUser());
         model.addAttribute("reviews", reviews);
         return "users/profile";
     }
 
     @GetMapping("/users/settings")
-    public String settingsForm() {
+    public String settingsForm(@ModelAttribute("changeEmailRequest") ChangeEmailRequest emailRequest,
+                               @ModelAttribute("changePasswordRequest") ChangePasswordRequest passwordRequest) {
         return "users/settings";
     }
 
     @PostMapping("/users/settings/email")
-    public String changeEmail(@RequestParam String newEmail, Model model) {
+    public String changeEmail(@Valid @ModelAttribute("changeEmailRequest") ChangeEmailRequest request,
+                              Errors errors,
+                              Model model) {
+        if (errors.hasErrors()) {
+            model.addAttribute("error", errors.getAllErrors().get(0).getDefaultMessage());
+            return "users/settings";
+        }
+        
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         try {
-            userService.changeEmail(auth.getName(), newEmail);
+            userService.changeEmail(auth.getName(), request);
             model.addAttribute("success", "Email успешно изменён");
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -136,17 +148,22 @@ public class UserController {
     }
 
     @PostMapping("/users/settings/password")
-    public String changePassword(@RequestParam String currentPassword,
-                                 @RequestParam String newPassword,
-                                 @RequestParam String confirmPassword,
-                                 Model model) {
-        if (!newPassword.equals(confirmPassword)) {
+    public String changePassword(@Valid @ModelAttribute("changePasswordRequest") ChangePasswordRequest request,
+                                  Errors errors,
+                                  Model model) {
+        if (errors.hasErrors()) {
+            model.addAttribute("error", errors.getAllErrors().get(0).getDefaultMessage());
+            return "users/settings";
+        }
+        
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             model.addAttribute("error", "Пароли не совпадают");
             return "users/settings";
         }
+        
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         try {
-            userService.changePassword(auth.getName(), currentPassword, newPassword);
+            userService.changePassword(auth.getName(), request);
             model.addAttribute("success", "Пароль успешно изменён");
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());

@@ -8,6 +8,10 @@
     <link rel="stylesheet" th:href="@{/css/account.css}">
     <link rel="stylesheet" th:href="@{/css/light.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    
+    <!-- CSRF-токен для HTMX -->
+    <meta name="_csrf" th:content="${_csrf?.token}" />
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
 </head>
 <body>
 <header class="header">
@@ -98,6 +102,21 @@
     </div>
 </footer>
 <script>
+    // ===== CSRF для HTMX =====
+    function getCsrfToken() {
+        const meta = document.querySelector('meta[name="_csrf"]');
+        return meta ? meta.content : '';
+    }
+    function getCsrfHeader() {
+        const meta = document.querySelector('meta[name="_csrf_header"]');
+        return meta ? meta.content : 'X-CSRF-TOKEN';
+    }
+
+    document.body.addEventListener('htmx:configRequest', function(event) {
+        event.detail.headers[getCsrfHeader()] = getCsrfToken();
+    });
+
+    // ===== Scroll handling =====
     var pendingScroll = null;
 
     document.body.addEventListener('htmx:beforeRequest', function(evt) {

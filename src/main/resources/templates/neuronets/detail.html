@@ -1,8 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[[${neuronet.name}]] — AI Catalog</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/light.css}">
+</head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo">
+                <span class="logo__icon">AI</span>
+                AI Catalog
+            </a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+            </nav>
+        </div>
+        <div class="header__right">
+            <!-- Кнопка переключения темы -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                <span class="theme-text theme-text--dark">Светлая сторона</span>
+                <span class="theme-text theme-text--light">Тёмная сторона</span>
+            </button>
+        </div>
+    </div>
+</header>
 
 <main class="container">
     <a href="/neuronets" class="back-link">← Назад к каталогу</a>
@@ -79,5 +104,6 @@
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script src="/js/theme.js"></script>
 </body>
 </html>

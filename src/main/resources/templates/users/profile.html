@@ -7,6 +7,8 @@
     <title>Мои отзывы — AI Catalog</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+    <link rel="stylesheet" th:href="@{/css/light.css}">
     <style>
         .profile-wrapper {
             max-width: 720px;
@@ -86,7 +88,8 @@
         }
     </style>
 </head>
-<body>
+<body class="user-page-body">
+<div class="network-glitter"></div>
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -96,6 +99,11 @@
             </nav>
         </div>
         <div class="header__right" sec:authorize="isAuthenticated()">
+            <!-- Кнопка переключения темы -->
+            <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                <span class="theme-text theme-text--dark">Светлая сторона</span>
+                <span class="theme-text theme-text--light">Тёмная сторона</span>
+            </button>
             <div class="user-menu" onclick="toggleUserMenu()">
                 <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
                 <div class="user-dropdown" id="userDropdown">
@@ -112,7 +120,7 @@
     </div>
 </header>
 
-<main class="profile-wrapper">
+<main class="main-wrapper profile-wrapper">
     <h1 class="profile-title">Мои отзывы</h1>
     <p class="profile-subtitle">Отзывы, которые вы оставили</p>
 
@@ -142,5 +150,6 @@
     <div class="footer__bottom"><span>&copy; 2026 AI Catalog</span></div>
 </footer>
 <script src="/js/account.js"></script>
+<script src="/js/theme.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import project.Entity.CustomUserDetails;
 import project.Entity.User;
 import project.Repository.RepUser;
 
@@ -21,13 +22,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        User appUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPasswordHash(),
+        UserDetails delegate = new org.springframework.security.core.userdetails.User(
+                appUser.getUsername(),
+                appUser.getPasswordHash(),
+                true, true, true, true,
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
+
+        return new CustomUserDetails(delegate, appUser);
     }
 }
