@@ -16,6 +16,7 @@ import project.Entity.Neuronet;
 import project.Service.CategoryService;
 import project.Service.NeuronetService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class HomeController {
             @RequestParam(required = false) Boolean availableInRussia,
             @RequestParam(required = false, defaultValue = "false") boolean sortByRating,
             @RequestParam(required = false) String pricing,
+            HttpServletRequest request,
             Model model) {
 
         // Данные для инлайн-подсказки: имя + количество отзывов
@@ -103,6 +105,12 @@ public class HomeController {
                 .sorted()
                 .toList();
         model.addAttribute("neuronetNames", allNames);
+
+        // Если это HTMX-запрос — возвращаем только фрагмент <main>, а не всю страницу
+        boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
+        if (isHtmx) {
+            return "fragments/main-area :: mainArea";
+        }
 
         return "index";
     }

@@ -5,14 +5,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import project.DTO.CategoryGroupDto;
+import project.DTO.NeuronetCardDto;
 import project.DTO.ReviewWithVotesDto;
 import project.Entity.Neuronet;
 import project.Service.CategoryService;
 import project.Service.NeuronetService;
 import project.Service.ReviewService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class NeuronetController {
@@ -35,6 +40,8 @@ public class NeuronetController {
             @RequestParam(required = false, defaultValue = "false") boolean sortByRating,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Boolean availableInRussia,
+            @RequestParam(required = false) String pricing,
+            HttpServletRequest request,
             Model model) {
 
         List<Neuronet> neuronets;
@@ -57,6 +64,25 @@ public class NeuronetController {
         model.addAttribute("sortByRating", sortByRating);
         model.addAttribute("search", search);
         model.addAttribute("availableInRussia", availableInRussia);
+        model.addAttribute("pricing", pricing);
+
+        // Если это HTMX-запрос — возвращаем только фрагмент <main>, а не всю страницу
+        boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
+        if (isHtmx) {
+            List<NeuronetCardDto> cardDtos = neuronets.stream()
+                    .map(this::toCardDto)
+                    .toList();
+            Map<String, List<NeuronetCardDto>> grouped = cardDtos.stream()
+                    .collect(Collectors.groupingBy(
+                            n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
+                            LinkedHashMap::new,
+                            Collectors.toList()
+                    ));
+            model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
+                    .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
+                    .toList());
+            return "fragments/main-area :: mainArea";
+        }
 
         return "neuronets/list";
     }
@@ -85,5 +111,21 @@ public class NeuronetController {
         model.addAttribute("reviewCount", reviewCount != null ? reviewCount : 0);
 
         return "neuronet-detail";
+    }
+
+    private NeuronetCardDto toCardDto(Neuronet n) {
+        List<String> tagNames = n.getTags() != null
+                ? n.getTags().stream().map(tag -> tag.getName()).toList()
+                : List.of();
+        String categoryName = n.getCategory() != null ? n.getCategory().getName() : null;
+        var ratingInfo = neuronetService.getRatingInfo(n.getIdNeuronet());
+        Double avg = ratingInfo.getAverageRating();
+        Long count = ratingInfo.getReviewCount();
+
+        return new NeuronetCardDto(
+                n.getIdNeuronet(), n.getName(), n.getDescriptionNetwork(),
+                n.getNeuronetIcon(), n.getAvailableInRussia(),
+                categoryName, tagNames, avg, count
+        );
     }
 }

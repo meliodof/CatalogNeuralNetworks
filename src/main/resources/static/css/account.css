@@ -683,7 +683,7 @@
 }
 
 .light-theme .auth-card__footer a {
-    color: #0071e3;
+    color: #1d1d1f;
 }
 
 /* Подсказки пароля */
@@ -728,11 +728,11 @@
 .light-theme .suggestion-btn {
     background: #fff;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    color: #0071e3;
+    color: #1d1d1f;
 }
 
 .light-theme .suggestion-btn:hover {
-    background: rgba(0, 113, 227, 0.08);
+    background: rgba(0, 0, 0, 0.06);
 }
 
 /* Пароль-глазик */
@@ -744,8 +744,23 @@
     color: rgba(0, 0, 0, 0.7);
 }
 
+/* ===== СВЕТЛАЯ ТЕМА: доп. элементы авторизации ===== */
+
+/* Поля ввода — фокус */
+.light-theme .auth-form .form-group input:focus {
+    border-color: #1d1d1f;
+    background: rgba(0, 0, 0, 0.04);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Кнопка primary в авторизации */
+.light-theme .btn--primary {
+    background: linear-gradient(135deg, #1d1d1f, #333336);
+    color: #fff;
+}
+
 /* ================================================================
-    ЕДИНЫЙ ФОН: НАСТРОЙКИ + МОИ ОТЗЫВЫ
+     ЕДИНЫЙ ФОН: НАСТРОЙКИ + МОИ ОТЗЫВЫ
     Интерактивная нейросеть — узлы, связи, мерцание, параллакс
     ================================================================ */
 

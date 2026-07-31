@@ -75,9 +75,9 @@ img { max-width: 100%; display: block; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
  /* ===== ХЕДЕР ===== */
         .header {
-            background: rgba(4, 8, 12, 0.8);
+            background: var(--header-bg, rgba(4, 8, 12, 0.8));
             backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid var(--header-border, rgba(255, 255, 255, 0.06));
             padding: 0 24px;
             position: sticky;
             top: 0;
@@ -108,13 +108,13 @@ img { max-width: 100%; display: block; }
             gap: 8px;
             font-size: 1.25rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--logo-color, #fff);
             text-decoration: none;
             letter-spacing: -0.3px;
         }
 
         .logo__icon {
-            background: linear-gradient(135deg, #4f8cff, #9f7aff);
+            background: linear-gradient(135deg, var(--accent, #58a6ff), #9f7aff);
             padding: 4px 10px;
             border-radius: 30px;
             font-size: 0.9rem;
@@ -128,18 +128,18 @@ img { max-width: 100%; display: block; }
         }
 
         .nav a {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--nav-color, rgba(255, 255, 255, 0.7));
             text-decoration: none;
             font-size: 0.95rem;
             transition: color 0.2s;
         }
 
         .nav a:hover {
-            color: #fff;
+            color: var(--nav-hover, #fff);
         }
 
         .header__right .btn {
-            background: linear-gradient(135deg, #4f8cff, #7a5cff);
+            background: linear-gradient(135deg, var(--accent, #58a6ff), #7a5cff);
             border: none;
             padding: 8px 20px;
             border-radius: 40px;
@@ -340,7 +340,7 @@ img { max-width: 100%; display: block; }
     border-color: var(--accent);
     background: var(--surface-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 24px var(--shadow-card, rgba(0,0,0,0.3));
 }
 .top-card__position { font-size: 15px; font-weight: 700; color: var(--text-muted); width: 20px; text-align: center; }
 .top-card__icon { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; background: var(--bg); }
@@ -376,7 +376,7 @@ img { max-width: 100%; display: block; }
     border-color: var(--accent);
     background: var(--surface-hover);
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    box-shadow: 0 12px 32px var(--shadow-card, rgba(0,0,0,0.35));
 }
 .card:hover .card__arrow { opacity: 1; transform: translateX(0); }
 .card__top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
@@ -457,9 +457,9 @@ img { max-width: 100%; display: block; }
 
 /* ===== ФУТЕР ===== */
         .footer {
-            background: rgba(4, 8, 12, 0.8);
+            background: var(--footer-bg, rgba(4, 8, 12, 0.8));
             backdrop-filter: blur(6px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--footer-border, rgba(255, 255, 255, 0.05));
             padding: 32px 24px 20px;
             margin-top: auto;
             z-index: 2;
@@ -477,7 +477,7 @@ img { max-width: 100%; display: block; }
         .footer__col h4 {
             font-size: 0.9rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--footer-heading, #fff);
             margin-bottom: 12px;
             letter-spacing: 0.3px;
         }
@@ -485,7 +485,7 @@ img { max-width: 100%; display: block; }
         .footer__col p,
         .footer__col a {
             font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--footer-text, rgba(255, 255, 255, 0.5));
             line-height: 1.6;
             text-decoration: none;
             display: block;
@@ -493,17 +493,17 @@ img { max-width: 100%; display: block; }
         }
 
         .footer__col a:hover {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--footer-text-hover, rgba(255, 255, 255, 0.8));
         }
 
         .footer__bottom {
             max-width: 1280px;
             margin: 20px auto 0;
             padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--footer-border, rgba(255, 255, 255, 0.05));
             text-align: center;
             font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.25);
+            color: var(--footer-muted, rgba(255, 255, 255, 0.25));
         }
 
 /* responsive */
