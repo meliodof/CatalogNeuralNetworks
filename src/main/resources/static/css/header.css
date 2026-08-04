@@ -1,0 +1,91 @@
+/* =================================================
+    HEADER
+    ================================================= */
+
+.header__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header {
+    background: var(--header-bg, rgba(4, 8, 12, 0.8));
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--header-border, rgba(255, 255, 255, 0.06));
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 64px;
+    display: flex;
+    align-items: center;
+}
+
+.header__inner {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__left {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--logo-color, #fff);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+}
+
+.logo__icon {
+    background: linear-gradient(135deg, var(--accent, #58a6ff), #9f7aff);
+    padding: 4px 10px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.nav {
+    display: flex;
+    gap: 24px;
+}
+
+.nav a {
+    color: var(--nav-color, rgba(255, 255, 255, 0.7));
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.nav a:hover {
+    color: var(--nav-hover, #fff);
+}
+
+.header__right .btn {
+    background: linear-gradient(135deg, var(--accent, #58a6ff), #7a5cff);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 40px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    display: inline-block;
+}
+
+.header__right .btn:hover {
+    opacity: 0.85;
+}

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Настройки — AI Catalog</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
     <link rel="stylesheet" th:href="@{/css/detail.css}">
     <link rel="stylesheet" th:href="@{/css/light.css}">
@@ -171,14 +171,7 @@
     </div>
 </main>
 
-<footer class="footer">
-    <div class="footer__inner">
-        <div class="footer__col"><h4>О проекте</h4><p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p></div>
-        <div class="footer__col"><h4>Навигация</h4><a href="/">Каталог</a><a href="/neuronets/top">Топ нейросетей</a></div>
-        <div class="footer__col"><h4>Контакты</h4><a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a></div>
-    </div>
-    <div class="footer__bottom"><span>&copy; 2026 AI Catalog</span></div>
-</footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
 <script>
     // ===== CSRF для HTMX =====
     function getCsrfToken() {

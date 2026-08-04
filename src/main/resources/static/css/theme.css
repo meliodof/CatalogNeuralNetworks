@@ -1,0 +1,98 @@
+/* =================================================
+    THEME TOGGLE + COOKIE + VALIDATION + GAME
+    ================================================= */
+
+/* ===== Theme Toggle ===== */
+.theme-toggle {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    padding: 6px 14px;
+    margin-right: 8px;
+    border-radius: 20px;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.theme-toggle:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.theme-text {
+    display: none;
+}
+
+/* В тёмной теме показываем "Светлая сторона" */
+body:not(.light-theme) .theme-text--dark {
+    display: inline;
+}
+
+/* В светлой теме показываем "Тёмная сторона" */
+body.light-theme .theme-text--light {
+    display: inline;
+}
+
+/* ===== Validation Hints ===== */
+.form-hint--success {
+    color: var(--green) !important;
+}
+
+.form-hint--error {
+    color: var(--red) !important;
+}
+
+/* ===== Username Suggestions ===== */
+.username-suggestions {
+    margin-top: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+}
+
+.suggestions-title {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.suggestions-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.suggestion-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    transition: all var(--transition);
+}
+
+.suggestion-btn:hover {
+    background: var(--accent-muted);
+    border-color: var(--accent);
+}
+
+/* ===== Game Score ===== */
+#game-score {
+    font-variant-numeric: tabular-nums;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}

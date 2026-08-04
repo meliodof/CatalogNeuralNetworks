@@ -346,6 +346,48 @@
     color: #1d1d1f;
 }
 
+/* =================================================
+    COOKIE-BANNER — светлая тема
+    ================================================= */
+.light-theme .cookie-banner__content {
+    background: #ffffff;
+    border-color: #d1d1d6;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .cookie-banner__text {
+    color: #6e6e73;
+}
+
+.light-theme .cookie-banner__btn {
+    background: #ffffff;
+    border-color: #d1d1d6;
+    color: #1d1d1f;
+}
+
+.light-theme .cookie-banner__btn--accept {
+    background: #1d1d1f;
+    border-color: #1d1d1f;
+    color: #fff;
+}
+
+.light-theme .cookie-banner__btn--accept:hover {
+    background: #333336;
+    border-color: #333336;
+}
+
+.light-theme .vote-style-toggle {
+    background: #ffffff;
+    border-color: #d1d1d6;
+    color: #1d1d1f;
+}
+
+.light-theme .vote-style-toggle:hover {
+    background: #f0f0f2;
+    border-color: #1d1d1f;
+    color: #1d1d1f;
+}
+
 /* Подсказки валидации */
 .light-theme .form-hint--success {
     color: #34c759 !important;

@@ -1,0 +1,32 @@
+/* =================================================
+    MAIN — Единый файл, импортирующий все модули
+    ================================================= */
+
+@import 'variables.css';
+@import 'header.css';
+@import 'footer.css';
+@import 'layout.css';
+@import 'cards.css';
+@import 'theme.css';
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+    .top-bar { grid-template-columns: repeat(3, 1fr); }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer__inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+    .layout { flex-direction: column; }
+    .sidebar {
+        width: 100%;
+        position: static;
+        max-height: none;
+        padding-right: 0;
+    }
+    .sidebar__list { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+    .sidebar__list a { font-size: 12px; padding: 6px 10px; }
+    .top-bar { grid-template-columns: 1fr 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .nav { display: none; }
+    .footer__inner { grid-template-columns: 1fr; gap: 20px; }
+}

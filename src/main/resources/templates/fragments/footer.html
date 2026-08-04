@@ -3,24 +3,36 @@
 <body>
 <th:block th:fragment="footer">
     <footer class="footer">
-        <div class="container footer__inner">
+        <div class="footer__inner">
             <div class="footer__col">
-                <h4>НейроКаталог</h4>
-                <p>Каталог нейросетей с отзывами и рейтингом. Найдите лучший инструмент для ваших задач.</p>
+                <h4>О проекте</h4>
+                <p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p>
             </div>
             <div class="footer__col">
                 <h4>Навигация</h4>
-                <a href="/neuronets">Каталог</a>
-                <a href="/neuronets/top">Топ нейросетей</a>
-                <a href="/categories">Категории</a>
+                <a href="/">Каталог</a>
             </div>
             <div class="footer__col">
                 <h4>Контакты</h4>
-                <p>info@neurocatalog.ru</p>
-                <p>© 2026 НейроКаталог</p>
+                <a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a>
             </div>
         </div>
+        <div class="footer__bottom">
+            <span>&copy; 2026 AI Catalog</span>
+        </div>
     </footer>
+
+    <!-- Cookie-баннер -->
+    <div class="cookie-banner" id="cookie-banner">
+        <div class="cookie-banner__content">
+            <p class="cookie-banner__text">
+                🍪 Мы используем cookie для безопасности (CSRF-защита). Это не отслеживание — только токен для защиты вашего аккаунта.
+            </p>
+            <div class="cookie-banner__actions">
+                <button class="cookie-banner__btn cookie-banner__btn--accept" onclick="acceptCookies()">Принять</button>
+            </div>
+        </div>
+    </div>
 </th:block>
 </body>
 </html>

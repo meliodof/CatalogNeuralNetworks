@@ -299,30 +299,91 @@
     border-radius: var(--radius);
 }
 
+/* =================================================
+    REVIEW VOTES — classic thumbs up/down
+    ================================================= */
+
 .review-votes {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding-top: 10px;
+    padding-top: 12px;
+    margin-top: 12px;
     border-top: 1px solid var(--border);
 }
-.vote-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 4px 10px;
-    font-size: 13px;
+
+/* Счётчики */
+.review-votes__display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.review-votes__likes,
+.review-votes__dislikes {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-muted);
+    cursor: default;
+}
+
+.vote-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    line-height: 1;
+    color: var(--text-muted);
+    transition: color var(--transition), transform var(--transition);
+}
+
+/* Кнопки голосования */
+.vote-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
     transition: all var(--transition);
 }
-.vote-btn:hover {
-    background: var(--surface-hover);
+
+.vote-btn svg {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--transition);
+}
+
+.vote-btn--up:hover {
     color: var(--text);
-    border-color: var(--text-muted);
+    background: var(--surface-hover);
+}
+.vote-btn--up:hover svg {
+    transform: scale(1.1);
+}
+
+.vote-btn--down:hover {
+    color: var(--text);
+    background: var(--surface-hover);
+}
+.vote-btn--down:hover svg {
+    transform: scale(1.1);
+}
+
+/* Анимация нажатия */
+@keyframes vote-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.vote-btn:active svg {
+    animation: vote-pulse 0.25s ease;
 }
 
 /* ---------- ФОРМА ОТЗЫВА ---------- */
