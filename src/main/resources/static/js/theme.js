@@ -1,26 +1,26 @@
 
-(function() {
-    // При загрузке проверяем сохранённую тему
-    var savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-    }
+// При загрузке проверяем сохранённую тему
+var savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+}
 
-    // При загрузке проверяем согласие на cookies
-    if (localStorage.getItem('cookiesAccepted') === 'true') {
-        document.getElementById('cookie-banner').classList.add('hidden');
-    }
+// При загрузке проверяем согласие на cookies
+if (localStorage.getItem('cookiesAccepted') === 'true') {
+    var banner = document.getElementById('cookie-banner');
+    if (banner) banner.classList.add('hidden');
+}
 
-    // Функция переключения (должна быть глобальной)
-    window.toggleTheme = function() {
-        document.body.classList.toggle('light-theme');
-        var isLight = document.body.classList.contains('light-theme');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    };
+// Функция переключения (глобальная)
+function toggleTheme() {
+    document.body.classList.toggle('light-theme');
+    var isLight = document.body.classList.contains('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
 
-    // Принятие cookies (глобальная функция)
-    window.acceptCookies = function() {
-        localStorage.setItem('cookiesAccepted', 'true');
-        document.getElementById('cookie-banner').classList.add('hidden');
-    };
-})();
+// Принятие cookies (глобальная функция)
+function acceptCookies() {
+    localStorage.setItem('cookiesAccepted', 'true');
+    var banner = document.getElementById('cookie-banner');
+    if (banner) banner.classList.add('hidden');
+}

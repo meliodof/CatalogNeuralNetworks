@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>AI-помощник — CatalogNeuralNetworks</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/chat.css}"/>
+    <link rel="stylesheet" th:href="@{/css/light.css}"/>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    
+    <!-- CSRF-токен для HTMX -->
+    <meta name="_csrf" th:content="${_csrf?.token}" />
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
+</head>
+<body>
+
+<!-- Хедер -->
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo">
+                <span class="logo__icon">AI</span>
+                AI Catalog
+            </a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+                <a href="/chat/ask" class="active">🤖 AI-помощник</a>
+            </nav>
+        </div>
+        <div class="header__right">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                <span class="theme-text theme-text--dark">Светлая сторона</span>
+                <span class="theme-text theme-text--light">Тёмная сторона</span>
+            </button>
+            <th:block sec:authorize="!isAuthenticated()">
+                <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регистрация</a>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+                <div class="user-menu" onclick="toggleUserMenu()">
+                    <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown__info">
+                            <div class="user-dropdown__name" th:text="${#authentication.name}">Username</div>
+                        </div>
+                        <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
+                        <a href="/users/settings" class="user-dropdown__link">Настройки</a>
+                        <div class="user-dropdown__divider"></div>
+                        <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</header>
+
+<!-- Основной контент -->
+<main class="main-content">
+    <div class="chat-page">
+
+        <div class="chat-page__hero">
+            <h1>🤖 AI-помощник</h1>
+            <p class="chat-page__subtitle">
+                Не знаете, какую нейросеть выбрать? Спросите — и я помогу!
+            </p>
+            <div class="chat-page__examples">
+                <span>Примеры:</span>
+                <button type="button" class="example-btn"
+                        hx-post="/chat/query"
+                        hx-vals='{"message": "Посоветуй нейросеть для генерации картинок"}'
+                        hx-target="#chat-result"
+                        hx-swap="innerHTML">
+                    🎨 Для генерации картинок
+                </button>
+                <button type="button" class="example-btn"
+                        hx-post="/chat/query"
+                        hx-vals='{"message": "Я хочу написать сочинение, посоветуй нейросеть пожалуйста"}'
+                        hx-target="#chat-result"
+                        hx-swap="innerHTML">
+                    ✍️ Для написания сочинения
+                </button>
+                <button type="button" class="example-btn"
+                        hx-post="/chat/query"
+                        hx-vals='{"message": "Какая нейросеть бесплатная и работает для перевода текстов?"}'
+                        hx-target="#chat-result"
+                        hx-swap="innerHTML">
+                    🌐 Для перевода текстов
+                </button>
+            </div>
+        </div>
+
+        <!-- Форма поиска -->
+        <form class="chat-form"
+              hx-post="/chat/query"
+              hx-target="#chat-result"
+              hx-swap="innerHTML"
+              hx-indicator=".chat-form">
+
+            <input type="text"
+                   name="message"
+                   class="chat-form__input"
+                   placeholder="Например: посоветуй нейросеть для генерации картинок..."
+                   required
+                   autocomplete="off"/>
+
+            <button type="submit" class="chat-form__btn">
+                <span class="chat-form__btn-text">Отправить</span>
+                <span class="chat-form__btn-loader">
+                    <svg width="20" height="20" viewBox="0 0 50 50">
+                        <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5">
+                            <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </span>
+            </button>
+
+        </form>
+
+        <!-- Результат чата -->
+        <div id="chat-result" class="chat-result-area">
+            <p class="chat-result-area__placeholder">
+                Введите ваш вопрос или выберите пример выше 👆
+            </p>
+        </div>
+
+    </div>
+</main>
+
+<!-- Футер -->
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__col">
+            <h4>О проекте</h4>
+            <p>AI Catalog — каталог нейросетей с честными оценками и отзывами.</p>
+        </div>
+        <div class="footer__col">
+            <h4>Навигация</h4>
+            <a href="/">Каталог</a>
+        </div>
+        <div class="footer__col">
+            <h4>Контакты</h4>
+            <a href="mailto:hello@aicatalog.ru">hello@aicatalog.ru</a>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <span>&copy; 2026 AI Catalog</span>
+    </div>
+</footer>
+
+<!-- Cookie-баннер -->
+<div class="cookie-banner" id="cookie-banner">
+    <div class="cookie-banner__content">
+        <p class="cookie-banner__text">
+            🍪 Мы используем cookie для безопасности (CSRF-защита). Это не отслеживание — только токен для защиты вашего аккаунта.
+        </p>
+        <div class="cookie-banner__actions">
+            <button class="cookie-banner__btn cookie-banner__btn--accept" onclick="acceptCookies()">Принять</button>
+        </div>
+    </div>
+</div>
+
+<!-- Скрипты для CSRF, темы и пользователя -->
+<script>
+    // ===== CSRF для HTMX =====
+    function getCsrfToken() {
+        const meta = document.querySelector('meta[name="_csrf"]');
+        return meta ? meta.content : '';
+    }
+    function getCsrfHeader() {
+        const meta = document.querySelector('meta[name="_csrf_header"]');
+        return meta ? meta.content : 'X-CSRF-TOKEN';
+    }
+
+    document.body.addEventListener('htmx:configRequest', function(event) {
+        event.detail.headers[getCsrfHeader()] = getCsrfToken();
+    });
+</script>
+<script src="/js/theme.js"></script>
+<script src="/js/account.js"></script>
+
+</body>
+</html>

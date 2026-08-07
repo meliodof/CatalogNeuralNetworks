@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="chat-result">
+
+    <div class="chat-result">
+
+        <!-- Сообщение от пользователя -->
+        <div class="chat-message chat-message--user">
+            <div class="chat-message__avatar">👤</div>
+            <div class="chat-message__content">
+                <strong>Вы:</strong>
+                <p th:text="${message}"></p>
+            </div>
+        </div>
+
+        <!-- Сообщение от бота -->
+        <div class="chat-message chat-message--bot">
+            <div class="chat-message__avatar">🤖</div>
+            <div class="chat-message__content">
+                <strong>AI-помощник:</strong>
+                <p th:if="${explanation}" th:text="${explanation}"></p>
+                <p th:if="${!explanation}">Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Рекомендации — карточки -->
+        <div class="chat-recommendations" th:if="${recommendations != null and !recommendations.isEmpty()}">
+            <h4>💡 Рекомендую:</h4>
+            <div class="chat-recommendations__list">
+
+                <div th:each="rec : ${recommendations}" class="chat-recommendation-card">
+                    <div class="chat-recommendation-card__header">
+                        <span class="chat-recommendation-card__name" th:text="${rec.name}"></span>
+                        <span class="chat-recommendation-card__price" th:if="${rec.price}" th:text="${rec.price}"></span>
+                    </div>
+                    <p class="chat-recommendation-card__reason" th:text="${rec.reason}"></p>
+
+                    <!-- Ссылка на страницу нейросети (если имя совпадает) -->
+                    <a class="chat-recommendation-card__link"
+                       th:href="@{/neuronet/{name}(name=${rec.name})}"
+                       th:text="'Подробнее о ' + ${rec.name}">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Если ничего не найдено -->
+        <div class="chat-no-results" th:if="${recommendations == null or recommendations.isEmpty()}">
+            <p>😕 К сожалению, я не смог подобрать подходящие нейросети. Попробуйте уточнить ваш вопрос.</p>
+        </div>
+
+    </div>
+
+</th:block>
+</body>
+</html>

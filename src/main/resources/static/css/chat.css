@@ -1,0 +1,301 @@
+/* =================================================
+     CHAT — Стили для AI-помощника
+     ================================================= */
+
+/* ===== Основной контент ===== */
+
+.main-content {
+    min-height: calc(100vh - 200px);
+    padding: 20px 0 40px;
+}
+
+/* ===== Страница чата ===== */
+
+.chat-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.chat-page__hero {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.chat-page__hero h1 {
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.chat-page__subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.chat-page__examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.chat-page__examples span {
+    color: var(--text-secondary);
+    align-self: center;
+}
+
+.example-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.example-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+/* ===== Форма ===== */
+
+.chat-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 32px;
+}
+
+.chat-form__input {
+    flex: 1;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.chat-form__input:focus {
+    border-color: var(--accent);
+}
+
+.chat-form__input::placeholder {
+    color: var(--text-secondary);
+}
+
+.chat-form__btn {
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), #7a5cff);
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-form__btn:hover {
+    opacity: 0.9;
+}
+
+/* ===== Область результатов ===== */
+
+.chat-result-area {
+    min-height: 100px;
+}
+
+.chat-result-area__placeholder {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px 0;
+    font-size: 1rem;
+}
+
+/* ===== Сообщения ===== */
+
+.chat-result {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chat-message {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.chat-message--user {
+    flex-direction: row-reverse;
+}
+
+.chat-message__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.chat-message--user .chat-message__avatar {
+    background: var(--accent);
+}
+
+.chat-message--bot .chat-message__avatar {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+
+.chat-message__content {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+}
+
+.chat-message--user .chat-message__content {
+    background: var(--accent-muted);
+    border-color: var(--accent);
+}
+
+.chat-message__content strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.chat-message__content p {
+    margin: 0;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* ===== Рекомендации ===== */
+
+.chat-recommendations {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.chat-recommendations h4 {
+    margin: 0 0 16px 0;
+    color: var(--text);
+    font-size: 1.1rem;
+}
+
+.chat-recommendations__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chat-recommendation-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+}
+
+.chat-recommendation-card:hover {
+    border-color: var(--accent);
+}
+
+.chat-recommendation-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.chat-recommendation-card__name {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 1rem;
+}
+
+.chat-recommendation-card__price {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--accent-muted);
+    padding: 2px 10px;
+    border-radius: 12px;
+}
+
+.chat-recommendation-card__reason {
+    margin: 0 0 10px 0;
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.chat-recommendation-card__link {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.chat-recommendation-card__link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* ===== Нет результатов ===== */
+
+.chat-no-results {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+    .chat-page {
+        padding: 20px 16px;
+    }
+
+    .chat-page__hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .chat-form {
+        flex-direction: column;
+    }
+
+    .chat-form__btn {
+        justify-content: center;
+    }
+
+    .chat-page__examples {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .example-btn {
+        text-align: left;
+    }
+}
