@@ -14,6 +14,7 @@ import project.DTO.NeuronetNameDto;
 import project.Entity.Category;
 import project.Entity.Neuronet;
 import project.Service.CategoryService;
+import project.Service.ChatService;
 import project.Service.NeuronetService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,11 +30,13 @@ public class HomeController {
 
     private final NeuronetService neuronetService;
     private final CategoryService categoryService;
+    private final ChatService chatService;
 
 
-    public HomeController(NeuronetService neuronetService, CategoryService categoryService) {
+    public HomeController(NeuronetService neuronetService, CategoryService categoryService, ChatService chatService) {
         this.neuronetService = neuronetService;
         this.categoryService = categoryService;
+        this.chatService = chatService;
     }
 
     @GetMapping("/")
@@ -44,6 +47,7 @@ public class HomeController {
             @RequestParam(required = false) Boolean availableInRussia,
             @RequestParam(required = false, defaultValue = "false") boolean sortByRating,
             @RequestParam(required = false) String pricing,
+            @RequestParam(required = false) String aiQuery,
             HttpServletRequest request,
             Model model) {
 
@@ -51,40 +55,73 @@ public class HomeController {
         List<NeuronetNameDto> namesWithReviews = neuronetService.getNeuronetNamesWithReviews();
         model.addAttribute("neuronetNamesData", namesWithReviews);
 
-        // Пагинация с фильтрами (N+1 FIX + пагинация + hardcoded FIX)
-        Pageable pageable = PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("name").ascending());
-        Page<NeuronetCardDto> neuronetPage;
-        
-        if (search != null && !search.isBlank()) {
-            // Поиск — без пагинации, возвращаем все результаты
-            List<Neuronet> results = neuronetService.search(search);
-            List<NeuronetCardDto> cardDtos = results.stream()
-                    .map(this::toCardDto)
-                    .toList();
-            Map<String, List<NeuronetCardDto>> grouped = cardDtos.stream()
-                    .collect(java.util.stream.Collectors.groupingBy(
-                            n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
-                            java.util.LinkedHashMap::new,
-                            java.util.stream.Collectors.toList()
-                    ));
-            model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
-                    .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
-                    .toList());
-            model.addAttribute("totalResults", cardDtos.size());
-        } else {
-            neuronetPage = neuronetService.getAllPaged(page, DEFAULT_PAGE_SIZE,
-                    categoryId, availableInRussia, pricing, sortByRating);
-            // Группировка по категориям для шаблона
-            Map<String, List<NeuronetCardDto>> grouped = neuronetPage.getContent().stream()
-                    .collect(Collectors.groupingBy(
-                            n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
-                            LinkedHashMap::new,
-                            Collectors.toList()
-                    ));
-            model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
-                    .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
-                    .toList());
-            model.addAttribute("totalResults", neuronetPage.getTotalElements());
+        // ===== AI-фильтр =====
+        List<NeuronetCardDto> aiFiltered = null;
+        if (aiQuery != null && !aiQuery.isBlank()) {
+            ChatService.ChatResult chatResult = chatService.chat(aiQuery);
+            if (chatResult.recommendations() != null && !chatResult.recommendations().isEmpty()) {
+                List<String> names = chatResult.recommendations().stream()
+                        .map(ChatService.Recommendation::name)
+                        .toList();
+                List<Neuronet> neuronets = neuronetService.findByNames(names);
+                aiFiltered = neuronets.stream()
+                        .map(this::toCardDto)
+                        .toList();
+                // Группировка по категориям
+                Map<String, List<NeuronetCardDto>> grouped = aiFiltered.stream()
+                        .collect(Collectors.groupingBy(
+                                n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
+                                LinkedHashMap::new,
+                                Collectors.toList()
+                        ));
+                model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
+                        .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
+                        .toList());
+                model.addAttribute("totalResults", aiFiltered.size());
+                model.addAttribute("aiQuery", aiQuery);
+            } else {
+                model.addAttribute("groupedNeuronets", List.of());
+                model.addAttribute("totalResults", 0);
+                model.addAttribute("aiQuery", aiQuery);
+            }
+        }
+
+        if (aiQuery == null || aiQuery.isBlank()) {
+            // Обычная фильтрация
+            Pageable pageable = PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by("name").ascending());
+            Page<NeuronetCardDto> neuronetPage;
+            
+            if (search != null && !search.isBlank()) {
+                // Поиск — без пагинации, возвращаем все результаты
+                List<Neuronet> results = neuronetService.search(search);
+                List<NeuronetCardDto> cardDtos = results.stream()
+                        .map(this::toCardDto)
+                        .toList();
+                Map<String, List<NeuronetCardDto>> grouped = cardDtos.stream()
+                        .collect(java.util.stream.Collectors.groupingBy(
+                                n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
+                                java.util.LinkedHashMap::new,
+                                java.util.stream.Collectors.toList()
+                        ));
+                model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
+                        .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
+                        .toList());
+                model.addAttribute("totalResults", cardDtos.size());
+            } else {
+                neuronetPage = neuronetService.getAllPaged(page, DEFAULT_PAGE_SIZE,
+                        categoryId, availableInRussia, pricing, sortByRating);
+                // Группировка по категориям для шаблона
+                Map<String, List<NeuronetCardDto>> grouped = neuronetPage.getContent().stream()
+                        .collect(Collectors.groupingBy(
+                                n -> n.getCategoryName() != null ? n.getCategoryName() : "Без категории",
+                                LinkedHashMap::new,
+                                Collectors.toList()
+                        ));
+                model.addAttribute("groupedNeuronets", grouped.entrySet().stream()
+                        .map(e -> new CategoryGroupDto(e.getKey(), e.getValue()))
+                        .toList());
+                model.addAttribute("totalResults", neuronetPage.getTotalElements());
+            }
         }
 
         // Топ-5 популярных

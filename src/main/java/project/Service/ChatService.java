@@ -78,7 +78,7 @@ public class ChatService {
 
         } catch (Exception e) {
             log.error("Ошибка при обработке запроса", e);
-            return new ChatResult(userMessage, "⚠️ Ошибка: " + e.getMessage() + " — проверьте логи сервера и убедитесь, что pgvector настроен и каталог загружен через /chat/admin/load", List.of());
+            return new ChatResult(userMessage, null, "Сервис временно недоступен. Попробуйте позже.", List.of());
         }
     }
 
@@ -132,11 +132,11 @@ public class ChatService {
 
             List<Recommendation> recs = parseRecommendations(recommendations);
 
-            return new ChatResult(userQuery, explanation, recs);
+            return new ChatResult(userQuery, explanation, null, recs);
 
         } catch (Exception e) {
             // Fallback — возвращаем сырой ответ
-            return new ChatResult(userQuery, response, List.of());
+            return new ChatResult(userQuery, response, null, List.of());
         }
     }
 
@@ -246,6 +246,7 @@ public class ChatService {
     public record ChatResult(
             String userMessage,
             String explanation,
+            String error,
             List<Recommendation> recommendations
     ) {}
 

@@ -46,6 +46,7 @@ public class ChatController {
 
         model.addAttribute("message", message);
         model.addAttribute("explanation", result.explanation());
+        model.addAttribute("error", result.error());
         model.addAttribute("recommendations", result.recommendations());
 
         // HTMX-ответ — только фрагмент

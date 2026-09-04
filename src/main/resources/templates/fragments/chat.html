@@ -19,8 +19,9 @@
             <div class="chat-message__avatar">🤖</div>
             <div class="chat-message__content">
                 <strong>AI-помощник:</strong>
-                <p th:if="${explanation}" th:text="${explanation}"></p>
-                <p th:if="${!explanation}">Загрузка...</p>
+                <p th:if="${error != null}" th:text="${error}" style="color: #e74c3c; font-weight: bold;"></p>
+                <p th:if="${error == null and explanation != null and !#strings.isEmpty(explanation)}" th:text="${explanation}"></p>
+                <p th:if="${error == null and (explanation == null or #strings.isEmpty(explanation))}">Загрузка...</p>
             </div>
         </div>
 
@@ -47,7 +48,7 @@
         </div>
 
         <!-- Если ничего не найдено -->
-        <div class="chat-no-results" th:if="${recommendations == null or recommendations.isEmpty()}">
+        <div class="chat-no-results" th:if="${error == null and (recommendations == null or recommendations.isEmpty())}">
             <p>😕 К сожалению, я не смог подобрать подходящие нейросети. Попробуйте уточнить ваш вопрос.</p>
         </div>
 

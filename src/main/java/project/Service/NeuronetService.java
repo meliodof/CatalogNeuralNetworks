@@ -74,6 +74,16 @@ public class NeuronetService {
         return repNeuronet.searchWithCategoryAndTags(query);
     }
 
+    /**
+     * Находит нейросети по списку имён (из рекомендаций AI-помощника)
+     */
+    public List<Neuronet> findByNames(List<String> names) {
+        if (names == null || names.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return repNeuronet.findByNameIn(names);
+    }
+
     public List<Neuronet> getByCategoryId(Long categoryId) {
         if (categoryId == null) {
             return Collections.emptyList();
