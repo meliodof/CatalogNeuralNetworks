@@ -101,6 +101,75 @@
 
             <th:block th:replace="~{fragments/catalog :: catalog}"></th:block>
         </section>
+
+        <!-- AI-помощник — справа -->
+        <aside class="ai-chat-right">
+            <!-- Заголовок с анимированным аватаром -->
+            <div class="ai-chat-right__header">
+                <div class="ai-chat-right__avatar">
+                    <div class="ai-chat-right__avatar-pulse"></div>
+                    <span class="ai-chat-right__avatar-icon">🤖</span>
+                </div>
+                <div class="ai-chat-right__title-wrap">
+                    <span class="ai-chat-right__title">AI-помощник</span>
+                    <span class="ai-chat-right__subtitle">Помогу подобрать нейросеть</span>
+                </div>
+            </div>
+
+            <!-- Подсказки-примеры -->
+            <div class="ai-chat-right__suggestions">
+                <span class="ai-chat-right__suggestions-label">Попробуйте спросить:</span>
+                <div class="ai-chat-right__suggestions-list">
+                    <button type="button"
+                            class="ai-chat-right__suggestion"
+                            onclick="document.querySelector('.ai-chat-right__form input').value='Посоветуй нейросеть для генерации картинок'"
+                            data-scroll-to="">🎨 Генерация картинок</button>
+                    <button type="button"
+                            class="ai-chat-right__suggestion"
+                            onclick="document.querySelector('.ai-chat-right__form input').value='Какая нейросеть для перевода текстов'"
+                            data-scroll-to="">🌐 Перевод текстов</button>
+                    <button type="button"
+                            class="ai-chat-right__suggestion"
+                            onclick="document.querySelector('.ai-chat-right__form input').value='Лучшая нейросеть для написания кода'"
+                            data-scroll-to="">💻 Написание кода</button>
+                </div>
+            </div>
+
+            <!-- Форма -->
+            <form th:attr="hx-get=@{/(availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing}, aiQuery=${aiQuery})},data-scroll-to=''"
+                  hx-target="#main-area"
+                  hx-swap="innerHTML"
+                  hx-push-url="true"
+                  class="ai-chat-right__form">
+                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+                <input type="hidden" name="availableInRussia" th:value="${availableInRussia}">
+                <input type="hidden" name="sortByRating" th:value="${sortByRating ? 'true' : ''}">
+                <input type="hidden" name="pricing" th:value="${pricing}">
+                <input type="text" name="aiQuery" th:value="${aiQuery}"
+                       th:placeholder="${aiQuery != null and !aiQuery.isEmpty()} ? 'Новый запрос...' : 'Спросите что-нибудь...'">
+                <button type="submit" class="ai-chat-right__submit">
+                    <svg class="ai-chat-right__submit-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    <span>Отправить</span>
+                </button>
+            </form>
+
+            <!-- Чип "От AI-помощника" -->
+            <div class="ai-chat-right__active-badge" th:if="${aiQuery != null and !aiQuery.isEmpty()}">
+                <span>
+                    🤖 Активный фильтр: <strong th:text="${aiQuery}"></strong>
+                </span>
+                <button type="button"
+                        th:attr="hx-get=@{/(availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing}, categoryId=${selectedCategoryId})},data-scroll-to=''"
+                        hx-target="#main-area"
+                        hx-swap="innerHTML"
+                        hx-push-url="true"
+                        class="ai-chat-right__active-badge__remove"
+                        title="Снять AI-фильтр">×</button>
+            </div>
+        </aside>
     </main>
 </th:block>
 </body>

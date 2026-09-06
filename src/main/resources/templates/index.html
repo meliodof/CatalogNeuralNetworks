@@ -55,60 +55,6 @@
     </div>
 </header>
 
-<!-- ТОП-5 статичный -->
-<div class="top-section" th:if="${topNeuronets != null && !topNeuronets.empty}">
-    <div class="section" style="margin-bottom: 0;">
-        <div class="section__header">
-            <h2 class="section__title">Лидеры рейтинга</h2>
-            <a href="/neuronets/top" class="section__link">Смотреть все</a>
-        </div>
-        <div class="top-bar">
-            <a th:each="neuronet, iterStat : ${topNeuronets}"
-               th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}"
-               class="top-card">
-                <span class="top-card__position" th:text="${iterStat.index + 1}">1</span>
-                <img th:src="${neuronet.neuronetIcon}" class="top-card__icon" alt="">
-                <div class="top-card__info">
-                    <div class="top-card__name" th:text="${neuronet.name}">Name</div>
-                    <div class="top-card__rating">★ 0.0</div>
-                </div>
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- AI-помощник — на главной, всегда виден -->
-<div class="ai-chat-main" id="ai-chat-main">
-    <div class="ai-chat-main__header">
-        <span class="ai-chat-main__icon">🤖</span>
-        <span>AI-помощник</span>
-        <!-- Чип "От AI-помощника" — показывается только при активном AI-фильтре -->
-        <span th:if="${aiQuery != null and !aiQuery.isEmpty()}" class="chip chip--ai active" title="AI-рекомендации">
-            🤖 От AI-помощника
-            <button type="button"
-                    th:attr="hx-get=@{/(availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing}, categoryId=${selectedCategoryId})},data-scroll-to=''"
-                    hx-target="#main-area"
-                    hx-swap="innerHTML"
-                    hx-push-url="true"
-                    class="chip--ai__remove"
-                    title="Снять AI-фильтр">×</button>
-        </span>
-    </div>
-    <form th:attr="hx-get=@{/(availableInRussia=${availableInRussia}, sortByRating=${sortByRating}, search=${search}, pricing=${pricing}, aiQuery=${aiQuery})},data-scroll-to=''"
-          hx-target="#main-area"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          class="ai-chat-main__form">
-        <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
-        <input type="hidden" name="availableInRussia" th:value="${availableInRussia}">
-        <input type="hidden" name="sortByRating" th:value="${sortByRating ? 'true' : ''}">
-        <input type="hidden" name="pricing" th:value="${pricing}">
-        <input type="text" name="aiQuery" th:value="${aiQuery}"
-               th:placeholder="${aiQuery != null and !aiQuery.isEmpty()} ? 'Новый запрос...' : 'Например: посоветуй нейросеть для генерации картинок...'">
-        <button type="submit">🔍</button>
-    </form>
-</div>
-
 <!-- ВСЁ ОСТАЛЬНОЕ — HTMX-фрагмент -->
 <div id="main-area">
     <th:block th:include="~{fragments/main-area :: mainArea}"></th:block>

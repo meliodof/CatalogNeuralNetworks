@@ -124,9 +124,6 @@ public class HomeController {
             }
         }
 
-        // Топ-5 популярных
-        model.addAttribute("topNeuronets", neuronetService.getTopPopular(5));
-        
         // Категории
         model.addAttribute("categories", categoryService.getAll());
         model.addAttribute("selectedCategoryId", categoryId);

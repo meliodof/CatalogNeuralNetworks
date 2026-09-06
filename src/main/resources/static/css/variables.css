@@ -55,6 +55,22 @@ html {
 
     /* Shadows */
     --shadow-card: rgba(0, 0, 0, 0.3);
+
+    /* AI Chat — тёмная тема */
+    --ai-bg: #141a20;
+    --ai-accent-1: #6366f1;
+    --ai-accent-2: #8b5cf6;
+    --ai-accent-3: #a855f7;
+    --ai-accent-hover-1: #4f46e5;
+    --ai-accent-hover-2: #7c3aed;
+    --ai-shadow: rgba(99, 102, 241, 0.3);
+    --ai-shadow-hover: rgba(99, 102, 241, 0.4);
+    --ai-shadow-light: rgba(99, 102, 241, 0.1);
+    --ai-focus: rgba(99, 102, 241, 0.12);
+    --ai-border: rgba(99, 102, 241, 0.4);
+    --ai-badge-1: rgba(99, 102, 241, 0.1);
+    --ai-badge-2: rgba(139, 92, 246, 0.08);
+    --ai-badge-border: rgba(99, 102, 241, 0.2);
 }
 
 /* ===== Base ===== */

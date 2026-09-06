@@ -422,3 +422,44 @@
 .light-theme ::-webkit-scrollbar-thumb {
     background: #d1d1d6;
 }
+
+/* =================================================
+     AI ЧАТ — светлая тема
+     ================================================= */
+.light-theme {
+    --ai-bg: #f0f0f2;
+    --ai-accent-1: #1d1d1f;
+    --ai-accent-2: #333336;
+    --ai-accent-3: #444447;
+    --ai-accent-hover-1: #333336;
+    --ai-accent-hover-2: #444447;
+    --ai-shadow: rgba(0, 0, 0, 0.2);
+    --ai-shadow-hover: rgba(0, 0, 0, 0.3);
+    --ai-shadow-light: rgba(0, 0, 0, 0.08);
+    --ai-focus: rgba(0, 0, 0, 0.1);
+    --ai-border: rgba(0, 0, 0, 0.3);
+    --ai-badge-1: rgba(0, 0, 0, 0.06);
+    --ai-badge-2: rgba(0, 0, 0, 0.03);
+    --ai-badge-border: rgba(0, 0, 0, 0.12);
+}
+
+/* AI Header — светлая тема */
+.light-theme .ai-chat-right__header {
+    background: linear-gradient(135deg, rgba(29, 29, 31, 0.08), rgba(51, 51, 54, 0.06));
+}
+
+.light-theme .ai-chat-right__title {
+    color: #1d1d1f;
+}
+
+.light-theme .ai-chat-right__subtitle {
+    color: #6e6e73;
+}
+
+.light-theme .ai-chat-right__avatar-icon {
+    background: linear-gradient(135deg, #1d1d1f, #333336, #444447);
+}
+
+.light-theme .ai-chat-right__avatar-pulse {
+    border-color: rgba(0, 0, 0, 0.3);
+}

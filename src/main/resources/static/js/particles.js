@@ -62,29 +62,8 @@
         }
     }
 
-    function attractBetweenParticles() {
-        for (var i = 0; i < particles.length; i++) {
-            for (var j = i + 1; j < particles.length; j++) {
-                var a = particles[i];
-                var b = particles[j];
-                var dx = a.x - b.x;
-                var dy = a.y - b.y;
-                var dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 120 && dist > 1) {
-                    var force = 0.002 * (1 - dist / 120);
-                    a.vx -= dx / dist * force;
-                    a.vy -= dy / dist * force;
-                    b.vx += dx / dist * force;
-                    b.vy += dy / dist * force;
-                }
-            }
-        }
-    }
-
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        attractBetweenParticles();
 
         // Линии
         for (var i = 0; i < particles.length; i++) {
@@ -113,8 +92,6 @@
             p.y += p.vy;
             if (p.x < 0 || p.x > canvas.width) p.vx = -p.vx;
             if (p.y < 0 || p.y > canvas.height) p.vy = -p.vy;
-            p.vx *= 0.999;
-            p.vy *= 0.999;
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
