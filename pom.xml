@@ -67,7 +67,9 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.40</version>   <!-- было 1.18.38, обновили до 1.18.40 -->
+            <!-- JDK 27: 1.18.40/1.18.46 не работают (в JDK 27 удалён com.sun.tools.javac.tree.EndPosTable),
+                 1.18.48 — проверенная рабочая версия -->
+            <version>1.18.48</version>
             <optional>true</optional>
         </dependency>
 
@@ -83,20 +85,6 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Spring AI OpenAI -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-            <version>1.0.0-M6</version>
-        </dependency>
-
-        <!-- Spring AI pgvector Store -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>
-            <version>1.0.0-M6</version>
         </dependency>
     </dependencies>
 
@@ -120,6 +108,15 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <!-- JDK 23+ не запускает процессоров, найденных в classpath (JEP 483),
+                         поэтому Lombok нужно объявлять как annotation processor path -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.48</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
         </plugins>

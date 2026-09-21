@@ -11,12 +11,10 @@
 
 /* ===== Responsive ===== */
 @media (max-width: 1200px) {
-    .ai-chat-right { width: 260px; }
     .cards-grid { grid-template-columns: repeat(2, 1fr); }
     .footer__inner { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 1024px) {
-    .ai-chat-right { display: none; }
     .cards-grid { grid-template-columns: repeat(2, 1fr); }
     .footer__inner { grid-template-columns: 1fr 1fr; }
 }

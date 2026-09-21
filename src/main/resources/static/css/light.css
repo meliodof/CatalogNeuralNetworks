@@ -1,8 +1,8 @@
-/* ================================================================
-   СВЕТЛАЯ ТЕМА — переопределение основных CSS-переменных
+﻿/* ================================================================
+   РЎР’Р•РўР›РђРЇ РўР•РњРђ вЂ” РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРёРµ РѕСЃРЅРѕРІРЅС‹С… CSS-РїРµСЂРµРјРµРЅРЅС‹С…
    ================================================================ */
 .light-theme {
-    /* Основной фон и поверхности */
+    /* РћСЃРЅРѕРІРЅРѕР№ С„РѕРЅ Рё РїРѕРІРµСЂС…РЅРѕСЃС‚Рё */
     --bg: #f5f5f7;
     --surface: #ffffff;
     --surface-hover: #f0f0f2;
@@ -14,23 +14,23 @@
     --accent-hover: #333336;
     --accent-muted: rgba(0, 0, 0, 0.06);
 
-    /* Дополнительные */
+    /* Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ */
     --green: #34c759;
     --green-bg: rgba(52, 199, 89, 0.1);
     --red: #ff3b30;
     --red-bg: rgba(255, 59, 48, 0.1);
 
-    /* Хедер */
+    /* РҐРµРґРµСЂ */
     --header-bg: rgba(245, 245, 247, 0.88);
     --header-border: rgba(0, 0, 0, 0.08);
     --logo-color: #1d1d1f;
     --nav-color: rgba(0, 0, 0, 0.6);
     --nav-hover: #1d1d1f;
 
-    /* Тени */
+    /* РўРµРЅРё */
     --shadow-card: rgba(0, 0, 0, 0.1);
 
-    /* Футер */
+    /* Р¤СѓС‚РµСЂ */
     --footer-bg: rgba(245, 245, 247, 0.92);
     --footer-border: rgba(0, 0, 0, 0.06);
     --footer-heading: #1d1d1f;
@@ -44,7 +44,7 @@
     background: var(--border);
 }
 
-/* Хедер */
+/* РҐРµРґРµСЂ */
 .light-theme .header {
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -62,7 +62,7 @@
     color: #fff;
 }
 
-/* Сайдбар */
+/* РЎР°Р№РґР±Р°СЂ */
 .light-theme .sidebar__list a {
     color: rgba(0, 0, 0, 0.6);
 }
@@ -78,7 +78,7 @@
     font-weight: 500;
 }
 
-/* Карточки — тени */
+/* РљР°СЂС‚РѕС‡РєРё вЂ” С‚РµРЅРё */
 .light-theme .card:hover {
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
@@ -91,7 +91,7 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* Футер */
+/* Р¤СѓС‚РµСЂ */
 .light-theme .footer {
     background: rgba(245, 245, 247, 0.92);
     border-top: 1px solid rgba(0, 0, 0, 0.06);
@@ -116,7 +116,7 @@
     border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* ===== Текстовые элементы ===== */
+/* ===== РўРµРєСЃС‚РѕРІС‹Рµ СЌР»РµРјРµРЅС‚С‹ ===== */
 .light-theme body {
     background: #f5f5f7 !important;
     color: #1d1d1f !important;
@@ -184,7 +184,7 @@
     color: #1d1d1f;
 }
 
-/* ===== Выпадающее меню пользователя ===== */
+/* ===== Р’С‹РїР°РґР°СЋС‰РµРµ РјРµРЅСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ ===== */
 .light-theme .user-dropdown {
     background: #ffffff;
     border-color: #d1d1d6;
@@ -214,9 +214,9 @@
     background: #d1d1d6;
 }
 
-/* ===== Элементы интерфейса — синие акценты ===== */
+/* ===== Р­Р»РµРјРµРЅС‚С‹ РёРЅС‚РµСЂС„РµР№СЃР° вЂ” СЃРёРЅРёРµ Р°РєС†РµРЅС‚С‹ ===== */
 
-/* Кнопки */
+/* РљРЅРѕРїРєРё */
 .light-theme .btn {
     background: #ffffff;
     border-color: #d1d1d6;
@@ -238,7 +238,7 @@
     color: #1d1d1f;
 }
 
-/* Поиск */
+/* РџРѕРёСЃРє */
 .light-theme .search-form {
     background: #ffffff;
     border-color: #d1d1d6;
@@ -265,7 +265,7 @@
     background: #333336;
 }
 
-/* Фильтры (чипсы) — явные цвета, без переменных */
+/* Р¤РёР»СЊС‚СЂС‹ (С‡РёРїСЃС‹) вЂ” СЏРІРЅС‹Рµ С†РІРµС‚Р°, Р±РµР· РїРµСЂРµРјРµРЅРЅС‹С… */
 .light-theme .chip {
     border-color: #d1d1d6;
     color: #6e6e73;
@@ -283,19 +283,19 @@
     color: #fff !important;
 }
 
-/* Ссылки секций */
+/* РЎСЃС‹Р»РєРё СЃРµРєС†РёР№ */
 .light-theme .section__link {
     color: #1d1d1f;
 }
 
-/* Сайдбар — категории */
+/* РЎР°Р№РґР±Р°СЂ вЂ” РєР°С‚РµРіРѕСЂРёРё */
 .light-theme .sidebar__list a.active {
     color: #1d1d1f !important;
     background: rgba(0, 0, 0, 0.06) !important;
     font-weight: 500 !important;
 }
 
-/* Бейджи */
+/* Р‘РµР№РґР¶Рё */
 .light-theme .badge--free {
     background: rgba(52, 199, 89, 0.1);
     color: #34c759;
@@ -326,14 +326,14 @@
     border: 1px solid rgba(255, 59, 48, 0.2);
 }
 
-/* Пустой результат */
+/* РџСѓСЃС‚РѕР№ СЂРµР·СѓР»СЊС‚Р°С‚ */
 .light-theme .empty__icon {
     background: #ffffff;
     border-color: #d1d1d6;
     color: #86868b;
 }
 
-/* Кнопка переключения темы */
+/* РљРЅРѕРїРєР° РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ С‚РµРјС‹ */
 .light-theme .theme-toggle {
     background: #ffffff;
     border-color: #d1d1d6;
@@ -344,122 +344,4 @@
     background: #f0f0f2;
     border-color: #1d1d1f;
     color: #1d1d1f;
-}
-
-/* =================================================
-    COOKIE-BANNER — светлая тема
-    ================================================= */
-.light-theme .cookie-banner__content {
-    background: #ffffff;
-    border-color: #d1d1d6;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.light-theme .cookie-banner__text {
-    color: #6e6e73;
-}
-
-.light-theme .cookie-banner__btn {
-    background: #ffffff;
-    border-color: #d1d1d6;
-    color: #1d1d1f;
-}
-
-.light-theme .cookie-banner__btn--accept {
-    background: #1d1d1f;
-    border-color: #1d1d1f;
-    color: #fff;
-}
-
-.light-theme .cookie-banner__btn--accept:hover {
-    background: #333336;
-    border-color: #333336;
-}
-
-.light-theme .vote-style-toggle {
-    background: #ffffff;
-    border-color: #d1d1d6;
-    color: #1d1d1f;
-}
-
-.light-theme .vote-style-toggle:hover {
-    background: #f0f0f2;
-    border-color: #1d1d1f;
-    color: #1d1d1f;
-}
-
-/* Подсказки валидации */
-.light-theme .form-hint--success {
-    color: #34c759 !important;
-}
-
-.light-theme .form-hint--error {
-    color: #ff3b30 !important;
-}
-
-/* Предложения имён */
-.light-theme .username-suggestions {
-    background: #f5f5f7;
-    border-color: #d1d1d6;
-}
-
-.light-theme .suggestions-title {
-    color: #86868b;
-}
-
-.light-theme .suggestion-btn {
-    background: #ffffff;
-    border-color: #d1d1d6;
-    color: #1d1d1f;
-}
-
-.light-theme .suggestion-btn:hover {
-    background: rgba(0, 0, 0, 0.06);
-    border-color: #1d1d1f;
-}
-
-/* Скроллбар */
-.light-theme ::-webkit-scrollbar-thumb {
-    background: #d1d1d6;
-}
-
-/* =================================================
-     AI ЧАТ — светлая тема
-     ================================================= */
-.light-theme {
-    --ai-bg: #f0f0f2;
-    --ai-accent-1: #1d1d1f;
-    --ai-accent-2: #333336;
-    --ai-accent-3: #444447;
-    --ai-accent-hover-1: #333336;
-    --ai-accent-hover-2: #444447;
-    --ai-shadow: rgba(0, 0, 0, 0.2);
-    --ai-shadow-hover: rgba(0, 0, 0, 0.3);
-    --ai-shadow-light: rgba(0, 0, 0, 0.08);
-    --ai-focus: rgba(0, 0, 0, 0.1);
-    --ai-border: rgba(0, 0, 0, 0.3);
-    --ai-badge-1: rgba(0, 0, 0, 0.06);
-    --ai-badge-2: rgba(0, 0, 0, 0.03);
-    --ai-badge-border: rgba(0, 0, 0, 0.12);
-}
-
-/* AI Header — светлая тема */
-.light-theme .ai-chat-right__header {
-    background: linear-gradient(135deg, rgba(29, 29, 31, 0.08), rgba(51, 51, 54, 0.06));
-}
-
-.light-theme .ai-chat-right__title {
-    color: #1d1d1f;
-}
-
-.light-theme .ai-chat-right__subtitle {
-    color: #6e6e73;
-}
-
-.light-theme .ai-chat-right__avatar-icon {
-    background: linear-gradient(135deg, #1d1d1f, #333336, #444447);
-}
-
-.light-theme .ai-chat-right__avatar-pulse {
-    border-color: rgba(0, 0, 0, 0.3);
 }

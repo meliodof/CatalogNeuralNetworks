@@ -105,9 +105,4 @@ public interface RepNeuronet extends JpaRepository<Neuronet,Long> {
     @Query("SELECT n FROM Neuronet n WHERE n.category.idCategories = :categoryId AND n.availableInRussia = :available")
     List<Neuronet> findByCategoryAndAvailability(@Param("categoryId") Long categoryId,
                                                    @Param("available") Boolean available);
-
-    // Фильтр по списку имён (для AI-рекомендаций)
-    @EntityGraph(attributePaths = {"category", "tags"})
-    @Query("SELECT n FROM Neuronet n LEFT JOIN FETCH n.category LEFT JOIN FETCH n.tags WHERE n.name IN :names")
-    List<Neuronet> findByNameIn(@Param("names") List<String> names);
 }
