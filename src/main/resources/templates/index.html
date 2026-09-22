@@ -8,6 +8,13 @@
     <link rel="stylesheet" th:href="@{/css/account.css}">
     <link rel="stylesheet" th:href="@{/css/compare.css}">
     <link rel="stylesheet" th:href="@{/css/light.css}">
+    <script>
+        try {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.add('light-theme');
+            }
+        } catch (e) {}
+    </script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     
     <!-- CSRF-токен для HTMX -->
@@ -24,6 +31,7 @@
             </a>
             <nav class="nav">
                 <a href="/">Каталог</a>
+                <a href="/neuronets/compare" data-compare-link>Сравнения<span class="nav__count" data-compare-count hidden></span></a>
             </nav>
         </div>
         <div class="header__right">

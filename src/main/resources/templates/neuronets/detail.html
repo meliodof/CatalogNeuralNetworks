@@ -6,8 +6,17 @@
     <title>[[${neuronet.name}]] — AI Catalog</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/light.css}">
+    <link rel="stylesheet" th:href="@{/css/backgrounds.css}">
+    <script>
+        try {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.add('light-theme');
+            }
+        } catch (e) {}
+    </script>
 </head>
-<body>
+<body class="detail-page-body">
+<div class="detail-data-points"></div>
 <header class="header">
     <div class="header__inner">
         <div class="header__left">
@@ -17,6 +26,7 @@
             </a>
             <nav class="nav">
                 <a href="/">Каталог</a>
+                <a href="/neuronets/compare" data-compare-link>Сравнения<span class="nav__count" data-compare-count hidden></span></a>
             </nav>
         </div>
         <div class="header__right">
@@ -105,5 +115,6 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script src="/js/theme.js"></script>
+<script src="/js/compare.js"></script>
 </body>
 </html>

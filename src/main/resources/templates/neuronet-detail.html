@@ -24,6 +24,7 @@
             </a>
             <nav class="nav">
                 <a href="/">Каталог</a>
+                <a href="/neuronets/compare" data-compare-link>Сравнения<span class="nav__count" data-compare-count hidden></span></a>
             </nav>
         </div>
         <div class="header__right">
@@ -79,8 +80,7 @@
                             <input type="checkbox"
                                    class="compare-checkbox"
                                    th:value="${neuronet.idNeuronet}"
-                                   th:attr="data-name=${neuronet.name}"
-                                   onchange="CompareWidget.toggle(this.value, this.dataset.name)">
+                                   th:attr="data-name=${neuronet.name}">
                             <span>Добавить к сравнению</span>
                         </label>
                     </div>

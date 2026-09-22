@@ -72,6 +72,22 @@
     color: var(--nav-hover, #fff);
 }
 
+.nav a.active {
+    color: var(--nav-hover, #fff);
+}
+
+.nav__count {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 7px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--accent, #58a6ff), #9f7aff);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
 .header__right .btn {
     background: linear-gradient(135deg, var(--accent, #58a6ff), #7a5cff);
     border: none;

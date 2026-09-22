@@ -32,11 +32,17 @@
 }
 
 /* В тёмной теме показываем "Светлая сторона" */
-body:not(.light-theme) .theme-text--dark {
+body:not(.light-theme) .theme-text--dark,
+html:not(.light-theme) .theme-text--dark {
     display: inline;
 }
 
-/* В светлой теме показываем "Тёмная сторона" */
+html.light-theme .theme-text--dark,
+body.light-theme .theme-text--dark {
+    display: none;
+}
+
+html.light-theme .theme-text--light,
 body.light-theme .theme-text--light {
     display: inline;
 }

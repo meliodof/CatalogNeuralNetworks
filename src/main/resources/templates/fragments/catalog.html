@@ -21,45 +21,42 @@
                 <h2 class="section__title" th:text="${group.categoryName}">Категория</h2>
             </div>
             <div class="cards-grid">
-                <a th:each="neuronet : ${group.neuronets}"
-                   th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}"
-                   class="card">
-                    <label class="card__compare" onclick="event.stopPropagation()">
+                <div th:each="neuronet : ${group.neuronets}"
+                     class="card"
+                     th:attr="data-compare-id=${neuronet.idNeuronet}">
+                    <label class="card__compare">
                         <input type="checkbox"
                                class="compare-checkbox"
                                th:value="${neuronet.idNeuronet}"
-                               th:attr="data-name=${neuronet.name}"
-                               onclick="event.stopPropagation()"
-                               onchange="CompareWidget.toggle(this.value, this.dataset.name)">
+                               th:attr="data-name=${neuronet.name}">
                         <span>Сравнить</span>
                     </label>
-                    <div class="card__top">
-                        <img th:src="${neuronet.neuronetIcon}" class="card__icon" alt="">
-                        <div class="card__header">
-                            <div class="card__name" th:text="${neuronet.name}">Name</div>
-                            <div class="card__category" th:text="${neuronet.categoryName}">Category</div>
+                    <a th:href="@{/neuronets/{id}(id=${neuronet.idNeuronet})}" class="card__hit">
+                        <div class="card__top">
+                            <img th:src="${neuronet.neuronetIcon}" class="card__icon" alt="">
+                            <div class="card__header">
+                                <div class="card__name" th:text="${neuronet.name}">Name</div>
+                                <div class="card__category" th:text="${neuronet.categoryName}">Category</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card__desc" th:text="${neuronet.descriptionNetwork}">Description</div>
-                    <div class="card__footer">
-                        <div class="card__rating">
-                            <span class="card__stars" th:if="${neuronet.averageRating > 0}">★ <span th:text="${#numbers.formatDecimal(neuronet.averageRating, 1, 1)}">0.0</span></span>
-                            <span class="card__stars" th:unless="${neuronet.averageRating > 0}">★ 0.0</span>
-                            <span class="card__reviews" th:text="${neuronet.reviewCount} + ' отзывов'">0 отзывов</span>
+                        <div class="card__desc" th:text="${neuronet.descriptionNetwork}">Description</div>
+                        <div class="card__footer">
+                            <div class="card__rating">
+                                <span class="card__stars" th:if="${neuronet.averageRating > 0}">★ <span th:text="${#numbers.formatDecimal(neuronet.averageRating, 1, 1)}">0.0</span></span>
+                                <span class="card__stars" th:unless="${neuronet.averageRating > 0}">★ 0.0</span>
+                                <span class="card__reviews" th:text="${neuronet.reviewCount} + ' отзывов'">0 отзывов</span>
+                            </div>
+                            <div class="card__badges">
+                                <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">Без VPN</span>
+                                <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">Требуется VPN</span>
+                                <span class="badge badge--free" th:if="${#lists.contains(neuronet.tagNames, 'Бесплатно')}">Бесплатно</span>
+                                <span class="badge badge--freemium" th:if="${#lists.contains(neuronet.tagNames, 'Частично бесплатно') or #lists.contains(neuronet.tagNames, 'Пробный период')}">Частично бесплатно</span>
+                                <span class="badge badge--paid" th:if="${#lists.contains(neuronet.tagNames, 'Платно')}">Только платно</span>
+                            </div>
                         </div>
-                        <div class="card__badges">
-                            <!-- Бейдж доступности -->
-                            <span class="badge badge--rf" th:if="${neuronet.availableInRussia}">Без VPN</span>
-                            <span class="badge badge--vpn" th:unless="${neuronet.availableInRussia}">Требуется VPN</span>
-
-                            <!-- Бейдж цены -->
-                            <span class="badge badge--free" th:if="${#lists.contains(neuronet.tagNames, 'Бесплатно')}">Бесплатно</span>
-                            <span class="badge badge--freemium" th:if="${#lists.contains(neuronet.tagNames, 'Частично бесплатно') or #lists.contains(neuronet.tagNames, 'Пробный период')}">Частично бесплатно</span>
-                            <span class="badge badge--paid" th:if="${#lists.contains(neuronet.tagNames, 'Платно')}">Только платно</span>
-                        </div>
-                    </div>
-                    <span class="card__arrow">→</span>
-                </a>
+                        <span class="card__arrow">→</span>
+                    </a>
+                </div>
             </div>
         </div>
     </th:block>

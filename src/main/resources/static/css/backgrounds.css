@@ -1,0 +1,300 @@
+/* ================================================================
+   УНИКАЛЬНЫЕ ФОНЫ ДЛЯ СТРАНИЦ (НЕЙРОСЕТИ)
+   ================================================================ */
+
+/* ================================================================
+   ФОН ДЛЯ СТРАНИЦЫ ДЕТАЛЕЙ НЕЙРОСЕТИ (detail-page)
+   Идея: более детализированная сеть с плотными соединениями
+   ================================================================ */
+
+.detail-page-body {
+    background: #0a0e1a;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* === УРОВЕНЬ 1: ОСНОВНАЯ СЕТКА ЛИНИЙ (ПЛОТНАЯ) === */
+.detail-page-body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        /* Основные диагональные линии (+45°) */
+        repeating-linear-gradient(45deg,
+            rgba(79, 195, 255, 0.18) 0px,
+            rgba(79, 195, 255, 0.18) 1px,
+            transparent 1px,
+            transparent 35px
+        ),
+        /* Диагональные линии (-45°) */
+        repeating-linear-gradient(-45deg,
+            rgba(41, 182, 246, 0.15) 0px,
+            rgba(41, 182, 246, 0.15) 1px,
+            transparent 1px,
+            transparent 35px
+        ),
+        /* Горизонтальные линии */
+        repeating-linear-gradient(0deg,
+            rgba(3, 169, 244, 0.08) 0px,
+            rgba(3, 169, 244, 0.08) 1px,
+            transparent 1px,
+            transparent 70px
+        ),
+        /* Вертикальные линии */
+        repeating-linear-gradient(90deg,
+            rgba(0, 188, 212, 0.08) 0px,
+            rgba(0, 188, 212, 0.08) 1px,
+            transparent 1px,
+            transparent 70px
+        ),
+        /* Дополнительные линии под углом 20° */
+        repeating-linear-gradient(20deg,
+            rgba(120, 80, 255, 0.06) 0px,
+            rgba(120, 80, 255, 0.06) 1px,
+            transparent 1px,
+            transparent 50px
+        ),
+        repeating-linear-gradient(-20deg,
+            rgba(120, 80, 255, 0.06) 0px,
+            rgba(120, 80, 255, 0.06) 1px,
+            transparent 1px,
+            transparent 50px
+        );
+    background-size: 50px 50px, 50px 50px, 100% 100%, 100% 100%, 70px 70px, 70px 70px;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+    animation: detailLinesDrift 30s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(0.3px);
+}
+
+@keyframes detailLinesDrift {
+    0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+    100% { background-position: 50px 50px, -50px -50px, 0 0, 0 0, 70px 70px, -70px -70px; }
+}
+
+/* === УРОВЕНЬ 2: УЗЛЫ СЕТКИ (БОЛЬШЕ И ГУЩЕ) === */
+.detail-page-body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        /* Крупные узлы с сильным свечением */
+        radial-gradient(circle at 12% 28%, rgba(79, 195, 255, 0.95) 0%, transparent 5%),
+        radial-gradient(circle at 68% 52%, rgba(41, 182, 246, 0.9) 0%, transparent 6%),
+        radial-gradient(circle at 88% 22%, rgba(3, 169, 244, 0.9) 0%, transparent 5%),
+        radial-gradient(circle at 35% 78%, rgba(0, 188, 212, 0.95) 0%, transparent 6%),
+        radial-gradient(circle at 8% 72%, rgba(79, 195, 255, 0.85) 0%, transparent 5%),
+        radial-gradient(circle at 58% 38%, rgba(41, 182, 246, 0.9) 0%, transparent 6%),
+        radial-gradient(circle at 95% 82%, rgba(3, 169, 244, 0.85) 0%, transparent 5%),
+        radial-gradient(circle at 42% 12%, rgba(0, 188, 212, 0.9) 0%, transparent 5%),
+        radial-gradient(circle at 78% 68%, rgba(120, 80, 255, 0.88) 0%, transparent 5%),
+        radial-gradient(circle at 22% 48%, rgba(79, 195, 255, 0.85) 0%, transparent 5%),
+        /* Средние узлы */
+        radial-gradient(circle at 32% 58%, rgba(79, 195, 255, 0.7) 0%, transparent 4%),
+        radial-gradient(circle at 62% 78%, rgba(41, 182, 246, 0.65) 0%, transparent 4%),
+        radial-gradient(circle at 85% 45%, rgba(3, 169, 244, 0.7) 0%, transparent 4%),
+        radial-gradient(circle at 45% 62%, rgba(0, 188, 212, 0.65) 0%, transparent 4%),
+        radial-gradient(circle at 18% 38%, rgba(120, 80, 255, 0.68) 0%, transparent 4%),
+        radial-gradient(circle at 72% 28%, rgba(79, 195, 255, 0.7) 0%, transparent 4%),
+        /* Мелкие узлы-искры */
+        radial-gradient(circle at 15% 85%, rgba(79, 195, 255, 0.5) 0%, transparent 3%),
+        radial-gradient(circle at 65% 15%, rgba(41, 182, 246, 0.5) 0%, transparent 3%),
+        radial-gradient(circle at 52% 52%, rgba(3, 169, 244, 0.5) 0%, transparent 3%),
+        radial-gradient(circle at 92% 62%, rgba(0, 188, 212, 0.5) 0%, transparent 3%),
+        radial-gradient(circle at 8% 18%, rgba(120, 80, 255, 0.45) 0%, transparent 3%),
+        radial-gradient(circle at 78% 92%, rgba(79, 195, 255, 0.45) 0%, transparent 3%);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    animation: detailPulseNodes 3.5s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(0.6px);
+}
+
+@keyframes detailPulseNodes {
+    0% { opacity: 0.65; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.05); }
+}
+
+/* === УРОВЕНЬ 3: МЕРЦАЮЩИЕ ТОЧКИ-ДАННЫЕ === */
+.detail-page-body .detail-data-points {
+    position: fixed;
+    inset: 0;
+    background-image:
+        radial-gradient(1.5px 1.5px at 10% 35%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1.5px 1.5px at 45% 25%, rgba(79, 195, 255, 0.7), transparent),
+        radial-gradient(1.5px 1.5px at 72% 75%, rgba(41, 182, 246, 0.8), transparent),
+        radial-gradient(1.5px 1.5px at 25% 88%, rgba(3, 169, 244, 0.7), transparent),
+        radial-gradient(1.5px 1.5px at 85% 45%, rgba(0, 188, 212, 0.8), transparent),
+        radial-gradient(1.5px 1.5px at 38% 55%, rgba(79, 195, 255, 0.6), transparent),
+        radial-gradient(1.5px 1.5px at 62% 18%, rgba(41, 182, 246, 0.7), transparent),
+        radial-gradient(1.5px 1.5px at 55% 92%, rgba(3, 169, 244, 0.8), transparent),
+        radial-gradient(1.5px 1.5px at 8% 65%, rgba(0, 188, 212, 0.6), transparent),
+        radial-gradient(1.5px 1.5px at 95% 88%, rgba(79, 195, 255, 0.7), transparent),
+        radial-gradient(1.5px 1.5px at 48% 72%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1.5px 1.5px at 82% 35%, rgba(41, 182, 246, 0.6), transparent),
+        radial-gradient(1.5px 1.5px at 18% 48%, rgba(120, 80, 255, 0.7), transparent),
+        radial-gradient(1.5px 1.5px at 68% 58%, rgba(79, 195, 255, 0.65), transparent);
+    pointer-events: none;
+    z-index: 0;
+    animation: detailTwinkle 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes detailTwinkle {
+    0% { opacity: 0.25; }
+    100% { opacity: 0.85; }
+}
+
+/* === Контент поверх фона === */
+.detail-page-body .header,
+.detail-page-body .container,
+.detail-page-body .footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* ================================================================
+   СВЕТЛАЯ ТЕМА — СТРАНИЦА ДЕТАЛЕЙ
+   ================================================================ */
+
+.light-theme .detail-page-body {
+    background: #f0f2f5;
+}
+
+.light-theme .detail-page-body::before {
+    background-image:
+        repeating-linear-gradient(45deg,
+            rgba(0, 0, 0, 0.08) 0px,
+            rgba(0, 0, 0, 0.08) 1px,
+            transparent 1px,
+            transparent 35px
+        ),
+        repeating-linear-gradient(-45deg,
+            rgba(0, 0, 0, 0.06) 0px,
+            rgba(0, 0, 0, 0.06) 1px,
+            transparent 1px,
+            transparent 35px
+        ),
+        repeating-linear-gradient(0deg,
+            rgba(0, 0, 0, 0.03) 0px,
+            rgba(0, 0, 0, 0.03) 1px,
+            transparent 1px,
+            transparent 70px
+        ),
+        repeating-linear-gradient(90deg,
+            rgba(0, 0, 0, 0.03) 0px,
+            rgba(0, 0, 0, 0.03) 1px,
+            transparent 1px,
+            transparent 70px
+        ),
+        repeating-linear-gradient(20deg,
+            rgba(0, 0, 0, 0.025) 0px,
+            rgba(0, 0, 0, 0.025) 1px,
+            transparent 1px,
+            transparent 50px
+        ),
+        repeating-linear-gradient(-20deg,
+            rgba(0, 0, 0, 0.025) 0px,
+            rgba(0, 0, 0, 0.025) 1px,
+            transparent 1px,
+            transparent 50px
+        );
+}
+
+.light-theme .detail-page-body::after {
+    background-image:
+        radial-gradient(circle at 12% 28%, rgba(0, 0, 0, 0.5) 0%, transparent 5%),
+        radial-gradient(circle at 68% 52%, rgba(0, 0, 0, 0.45) 0%, transparent 6%),
+        radial-gradient(circle at 88% 22%, rgba(0, 0, 0, 0.45) 0%, transparent 5%),
+        radial-gradient(circle at 35% 78%, rgba(0, 0, 0, 0.5) 0%, transparent 6%),
+        radial-gradient(circle at 8% 72%, rgba(0, 0, 0, 0.4) 0%, transparent 5%),
+        radial-gradient(circle at 58% 38%, rgba(0, 0, 0, 0.45) 0%, transparent 6%),
+        radial-gradient(circle at 95% 82%, rgba(0, 0, 0, 0.4) 0%, transparent 5%),
+        radial-gradient(circle at 42% 12%, rgba(0, 0, 0, 0.45) 0%, transparent 5%),
+        radial-gradient(circle at 78% 68%, rgba(0, 0, 0, 0.48) 0%, transparent 5%),
+        radial-gradient(circle at 22% 48%, rgba(0, 0, 0, 0.4) 0%, transparent 5%),
+        radial-gradient(circle at 32% 58%, rgba(0, 0, 0, 0.35) 0%, transparent 4%),
+        radial-gradient(circle at 62% 78%, rgba(0, 0, 0, 0.3) 0%, transparent 4%),
+        radial-gradient(circle at 85% 45%, rgba(0, 0, 0, 0.35) 0%, transparent 4%),
+        radial-gradient(circle at 45% 62%, rgba(0, 0, 0, 0.3) 0%, transparent 4%),
+        radial-gradient(circle at 18% 38%, rgba(0, 0, 0, 0.32) 0%, transparent 4%),
+        radial-gradient(circle at 72% 28%, rgba(0, 0, 0, 0.35) 0%, transparent 4%),
+        radial-gradient(circle at 15% 85%, rgba(0, 0, 0, 0.25) 0%, transparent 3%),
+        radial-gradient(circle at 65% 15%, rgba(0, 0, 0, 0.25) 0%, transparent 3%),
+        radial-gradient(circle at 52% 52%, rgba(0, 0, 0, 0.25) 0%, transparent 3%),
+        radial-gradient(circle at 92% 62%, rgba(0, 0, 0, 0.25) 0%, transparent 3%),
+        radial-gradient(circle at 8% 18%, rgba(0, 0, 0, 0.2) 0%, transparent 3%),
+        radial-gradient(circle at 78% 92%, rgba(0, 0, 0, 0.2) 0%, transparent 3%);
+}
+
+.light-theme .detail-page-body .detail-data-points {
+    background-image:
+        radial-gradient(1.5px 1.5px at 10% 35%, rgba(0, 0, 0, 0.5), transparent),
+        radial-gradient(1.5px 1.5px at 45% 25%, rgba(0, 0, 0, 0.4), transparent),
+        radial-gradient(1.5px 1.5px at 72% 75%, rgba(0, 0, 0, 0.45), transparent),
+        radial-gradient(1.5px 1.5px at 25% 88%, rgba(0, 0, 0, 0.4), transparent),
+        radial-gradient(1.5px 1.5px at 85% 45%, rgba(0, 0, 0, 0.45), transparent),
+        radial-gradient(1.5px 1.5px at 38% 55%, rgba(0, 0, 0, 0.35), transparent),
+        radial-gradient(1.5px 1.5px at 62% 18%, rgba(0, 0, 0, 0.4), transparent),
+        radial-gradient(1.5px 1.5px at 55% 92%, rgba(0, 0, 0, 0.45), transparent),
+        radial-gradient(1.5px 1.5px at 8% 65%, rgba(0, 0, 0, 0.35), transparent),
+        radial-gradient(1.5px 1.5px at 95% 88%, rgba(0, 0, 0, 0.4), transparent),
+        radial-gradient(1.5px 1.5px at 48% 72%, rgba(0, 0, 0, 0.3), transparent),
+        radial-gradient(1.5px 1.5px at 82% 35%, rgba(0, 0, 0, 0.35), transparent),
+        radial-gradient(1.5px 1.5px at 18% 48%, rgba(0, 0, 0, 0.4), transparent),
+        radial-gradient(1.5px 1.5px at 68% 58%, rgba(0, 0, 0, 0.38), transparent);
+}
+
+/* ================================================================
+   ФОН ДЛЯ СТРАНИЦЫ СРАВНЕНИЯ (compare-page)
+   Идея: рандомные ромбы с точками на углах и линиями соединения
+   ================================================================ */
+
+.compare-page-body {
+    background: #0b0f14;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* === УРОВЕНЬ 1: КАНАВАС ДЛЯ РАНДОМНЫХ РОМБОВ === */
+.compare-page-body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* === УРОВЕНЬ 2: КАНАВАС ДЛЯ ТОЧЕК И ЛИНИЙ === */
+.compare-page-body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* === УРОВЕНЬ 3: КАНАВАС ДЛЯ ЛИНИЙ === */
+.compare-page-body .compare-data-flow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* === Контент поверх фона === */
+.compare-page-body .header,
+.compare-page-body .compare-page,
+.compare-page-body .footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* ================================================================
+   СВЕТЛАЯ ТЕМА — СТРАНИЦА СРАВНЕНИЯ
+   ================================================================ */
+
+.light-theme .compare-page-body {
+    background: #ffffff;
+}

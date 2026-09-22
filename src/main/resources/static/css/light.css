@@ -1,8 +1,9 @@
 ﻿/* ================================================================
    РЎР’Р•РўР›РђРЇ РўР•РњРђ вЂ” РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅРёРµ РѕСЃРЅРѕРІРЅС‹С… CSS-РїРµСЂРµРјРµРЅРЅС‹С…
    ================================================================ */
-.light-theme {
-    /* РћСЃРЅРѕРІРЅРѕР№ С„РѕРЅ Рё РїРѕРІРµСЂС…РЅРѕСЃС‚Рё */
+.light-theme,
+html.light-theme {
+    /* Основной фон и поверхности */
     --bg: #f5f5f7;
     --surface: #ffffff;
     --surface-hover: #f0f0f2;
@@ -117,7 +118,8 @@
 }
 
 /* ===== РўРµРєСЃС‚РѕРІС‹Рµ СЌР»РµРјРµРЅС‚С‹ ===== */
-.light-theme body {
+html.light-theme body,
+body.light-theme {
     background: #f5f5f7 !important;
     color: #1d1d1f !important;
 }
@@ -141,6 +143,16 @@
 
 .light-theme a:hover {
     color: #333336;
+}
+
+.light-theme a.btn--primary,
+.light-theme a.btn--primary:hover {
+    color: #fff;
+}
+
+.light-theme a.compare-add-more:hover,
+.light-theme a.compare-links a:hover {
+    color: var(--accent);
 }
 
 .light-theme .card__name,
@@ -344,4 +356,141 @@
     background: #f0f0f2;
     border-color: #1d1d1f;
     color: #1d1d1f;
+}
+
+/* ============================================================
+   СРАВНЕНИЕ
+   ============================================================ */
+
+.light-theme .compare-bar {
+    background: #ffffff;
+    border-top-color: #d1d1d6;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.light-theme .compare-bar__chip {
+    background: rgba(0, 0, 0, 0.06);
+    color: #1d1d1f;
+}
+
+.light-theme .compare-bar__chip-remove:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .compare-empty {
+    background: #ffffff;
+    border-color: #d1d1d6;
+}
+
+.light-theme .compare-empty__icon {
+    background: #ffffff;
+    border: 1px solid #d1d1d6;
+    color: #86868b;
+}
+
+.light-theme .compare-note {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: #d1d1d6;
+}
+
+.light-theme .compare-table-wrap {
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.light-theme .compare-table th,
+.light-theme .compare-table td,
+.light-theme .compare-row-label,
+.light-theme .compare-table thead th,
+.light-theme .compare-table thead td {
+    background: #ffffff;
+    color: #1d1d1f;
+    border-color: #e8e8ed;
+}
+
+.light-theme .compare-row-label,
+.light-theme .compare-table th {
+    color: #6e6e73;
+    background: #f5f5f7;
+}
+
+.light-theme .compare-table tbody tr:nth-child(even) td {
+    background: #fafafa;
+}
+
+.light-theme .compare-table tbody tr:nth-child(even) th,
+.light-theme .compare-table tbody tr:nth-child(even) .compare-row-label {
+    background: #f0f0f2;
+}
+
+.light-theme .compare-empty-cell {
+    color: #86868b;
+}
+
+.light-theme .compare-col-header__name a {
+    color: #1d1d1f;
+}
+
+.light-theme .compare-col-header__meta {
+    color: #86868b;
+}
+
+.light-theme .compare-rich {
+    color: #6e6e73;
+}
+
+.light-theme .compare-rich h1,
+.light-theme .compare-rich h2,
+.light-theme .compare-rich h3,
+.light-theme .compare-rich h4 {
+    color: #1d1d1f;
+}
+
+.light-theme .compare-links a {
+    background: #f5f5f7;
+    border-color: #d1d1d6;
+    color: #1d1d1f;
+}
+
+.light-theme .compare-diffs-toggle {
+    background: #ffffff;
+    border-color: #d1d1d6;
+    color: #6e6e73;
+}
+
+.light-theme .compare-diffs-toggle:hover {
+    border-color: #1d1d1f;
+    color: #1d1d1f;
+}
+
+.light-theme .compare-diffs-toggle:has(input:checked) {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: #1d1d1f;
+    color: #1d1d1f;
+}
+
+.light-theme .compare-table tbody tr.compare-row--diff td.compare-cell--diff {
+    background: rgba(227, 179, 65, 0.12);
+    box-shadow: inset 3px 0 0 rgba(227, 179, 65, 0.85);
+}
+
+.light-theme .compare-add-more {
+    color: #6e6e73;
+}
+
+.light-theme .badge--free,
+.light-theme .badge--rf {
+    background: rgba(52, 199, 89, 0.1);
+    color: #248a3d;
+}
+
+.light-theme .badge--freemium {
+    background: rgba(227, 179, 65, 0.12);
+    color: #9a7500;
+}
+
+.light-theme .badge--paid,
+.light-theme .badge--vpn {
+    background: rgba(255, 59, 48, 0.08);
+    color: #d70015;
 }
