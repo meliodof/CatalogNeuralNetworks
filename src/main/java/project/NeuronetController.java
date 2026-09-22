@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import project.DTO.CategoryGroupDto;
 import project.DTO.NeuronetCardDto;
+import project.DTO.NeuronetCompareDto;
 import project.DTO.ReviewWithVotesDto;
 import project.Entity.Neuronet;
 import project.Service.CategoryService;
@@ -92,6 +93,17 @@ public class NeuronetController {
         model.addAttribute("neuronets", neuronetService.getTopPopular(limit));
         model.addAttribute("categories", categoryService.getAll());
         return "neuronets/list";
+    }
+
+    @GetMapping("/neuronets/compare")
+    public String compare(@RequestParam(required = false) List<Long> ids, Model model) {
+        List<NeuronetCompareDto> items = neuronetService.getForComparison(ids);
+
+        model.addAttribute("items", items);
+        model.addAttribute("maxCompare", neuronetService.getMaxCompareItems());
+        model.addAttribute("requestedCount", ids != null ? ids.size() : 0);
+
+        return "neuronets/compare";
     }
 
     @GetMapping("/neuronets/{id}")

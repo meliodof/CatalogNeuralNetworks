@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Сравнение нейросетей — AI Catalog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+    <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/compare.css}">
+    <link rel="stylesheet" th:href="@{/css/light.css}">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="logo">
+                <span class="logo__icon">AI</span>
+                AI Catalog
+            </a>
+            <nav class="nav">
+                <a href="/">Каталог</a>
+            </nav>
+        </div>
+        <div class="header__right">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                <span class="theme-text theme-text--dark">Светлая сторона</span>
+                <span class="theme-text theme-text--light">Тёмная сторона</span>
+            </button>
+
+            <th:block sec:authorize="!isAuthenticated()">
+                <a href="/users/login" class="btn btn--ghost btn--sm">Вход/Регестрация</a>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+                <div class="user-menu" onclick="toggleUserMenu()">
+                    <div class="user-avatar" th:text="${#strings.toUpperCase(#authentication.name.substring(0,1))}">U</div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown__info">
+                            <div class="user-dropdown__name" th:text="${#authentication.name}">Username</div>
+                        </div>
+                        <a href="/users/profile" class="user-dropdown__link">Мои отзывы</a>
+                        <a href="/users/settings" class="user-dropdown__link">Настройки</a>
+                        <div class="user-dropdown__divider"></div>
+                        <a href="/users/logout" class="user-dropdown__logout">Выйти</a>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</header>
+
+<main class="container compare-page">
+    <a href="/" class="back-link">← Назад к каталогу</a>
+    <h1 style="margin: 16px 0 6px; font-size: 22px;">Сравнение нейросетей</h1>
+
+    <!-- Пусто: ничего не выбрано -->
+    <div class="compare-empty" th:if="${items == null || items.empty}">
+        <p>Пока нечего сравнивать.</p>
+        <p>Отметьте галочкой «Сравнить» карточки нужных нейросетей в каталоге и вернитесь сюда.</p>
+        <a href="/" class="btn btn--primary" style="margin-top: 14px; display: inline-block;">Перейти в каталог</a>
+    </div>
+
+    <!-- Выбрана только одна — сравнивать не с чем -->
+    <div class="compare-empty" th:if="${items != null && items.size() == 1}">
+        <p>Выбрана только одна нейросеть — добавьте ещё хотя бы одну, чтобы увидеть сравнение.</p>
+        <a href="/" class="btn btn--primary" style="margin-top: 14px; display: inline-block;">Добавить ещё</a>
+    </div>
+
+    <!-- Таблица сравнения (от 2 позиций) -->
+    <div th:if="${items != null && items.size() >= 2}">
+        <p th:if="${requestedCount > maxCompare}" class="compare-empty-cell" style="margin-bottom: 12px;">
+            Показаны первые <span th:text="${maxCompare}">4</span> из выбранных — за один раз можно сравнить не более
+            <span th:text="${maxCompare}">4</span> нейросетей.
+        </p>
+
+        <div class="compare-table-wrap">
+            <table class="compare-table">
+                <tbody>
+                <!-- Заголовок: иконка, имя, кнопка убрать -->
+                <tr>
+                    <th>Нейросеть</th>
+                    <td th:each="item : ${items}">
+                        <div class="compare-col-header">
+                            <button type="button" class="compare-col-header__remove"
+                                    th:attr="onclick='removeFromComparePage(' + ${item.idNeuronet} + ')'">
+                                × убрать из сравнения
+                            </button>
+                            <div class="compare-col-header__top">
+                                <img th:src="${item.neuronetIcon}" alt="" onerror="this.style.display='none'">
+                                <div class="compare-col-header__name">
+                                    <a th:href="@{/neuronets/{id}(id=${item.idNeuronet})}" th:text="${item.name}">Название</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Категория -->
+                <tr>
+                    <th>Категория</th>
+                    <td th:each="item : ${items}">
+                        <span th:if="${item.categoryName}" th:text="${item.categoryName}">Категория</span>
+                        <span th:unless="${item.categoryName}" class="compare-empty-cell">—</span>
+                    </td>
+                </tr>
+
+                <!-- Рейтинг -->
+                <tr>
+                    <th>Рейтинг</th>
+                    <td th:each="item : ${items}">
+                        <span th:if="${item.averageRating > 0}">
+                            ★ <span th:text="${#numbers.formatDecimal(item.averageRating, 1, 1)}">0.0</span>
+                            <span class="compare-empty-cell" th:text="'(' + ${item.reviewCount} + ' отзывов)'">(0 отзывов)</span>
+                        </span>
+                        <span th:unless="${item.averageRating > 0}" class="compare-empty-cell">Пока нет отзывов</span>
+                    </td>
+                </tr>
+
+                <!-- Доступность в РФ -->
+                <tr>
+                    <th>Доступность</th>
+                    <td th:each="item : ${items}">
+                        <span class="badge badge--rf" th:if="${item.availableInRussia}">Без VPN</span>
+                        <span class="badge badge--vpn" th:unless="${item.availableInRussia}">Требуется VPN</span>
+                    </td>
+                </tr>
+
+                <!-- Цена -->
+                <tr>
+                    <th>Цена</th>
+                    <td th:each="item : ${items}">
+                        <div class="compare-tags" th:if="${!item.pricingTags.empty}">
+                            <span class="badge badge--free" th:each="tag : ${item.pricingTags}" th:text="${tag}">Тег</span>
+                        </div>
+                        <span th:if="${item.pricingTags.empty}" class="compare-empty-cell">—</span>
+                    </td>
+                </tr>
+
+                <!-- Особенности -->
+                <tr>
+                    <th>Особенности</th>
+                    <td th:each="item : ${items}">
+                        <div class="compare-tags" th:if="${!item.featureTags.empty}">
+                            <span class="badge" th:each="tag : ${item.featureTags}" th:text="${tag}">Тег</span>
+                        </div>
+                        <span th:if="${item.featureTags.empty}" class="compare-empty-cell">—</span>
+                    </td>
+                </tr>
+
+                <!-- Тарифы (подробно) -->
+                <tr>
+                    <th>Тарифы</th>
+                    <td th:each="item : ${items}">
+                        <div th:if="${item.pricingInfo}" th:utext="${item.pricingInfo}">Описание тарифов</div>
+                        <span th:unless="${item.pricingInfo}" class="compare-empty-cell">Нет данных</span>
+                    </td>
+                </tr>
+
+                <!-- Ссылки -->
+                <tr>
+                    <th>Ссылки</th>
+                    <td th:each="item : ${items}">
+                        <div class="compare-links">
+                            <a th:if="${item.officialUrl}" th:href="${item.officialUrl}" target="_blank">🌐 Официальный сайт</a>
+                            <a th:if="${item.apiUrl}" th:href="${item.apiUrl}" target="_blank">🔧 API-документация</a>
+                            <a th:if="${item.githubUrl}" th:href="${item.githubUrl}" target="_blank">📦 GitHub</a>
+                            <span th:if="${item.officialUrl == null and item.apiUrl == null and item.githubUrl == null}"
+                                  class="compare-empty-cell">Нет ссылок</span>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <a href="/" class="compare-add-more" th:if="${items.size() < maxCompare}">
+            + Добавить ещё нейросеть для сравнения (максимум <span th:text="${maxCompare}">4</span>)
+        </a>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/compare-bar :: compareBar}"></div>
+
+<script th:if="${items != null && !items.empty}" th:inline="javascript">
+    // Страница могла быть открыта напрямую по ссылке (не через плавающую панель) —
+    // синхронизируем localStorage с реально показанным набором id.
+    document.addEventListener('DOMContentLoaded', function () {
+        var shownIds = /*[[${items.![idNeuronet]}]]*/ [];
+        localStorage.setItem('ai-catalog:compare-ids', JSON.stringify(shownIds));
+    });
+</script>
+<script src="/js/theme.js"></script>
+<script src="/js/account.js"></script>
+<script src="/js/compare.js"></script>
+</body>
+</html>

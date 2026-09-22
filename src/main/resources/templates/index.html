@@ -6,6 +6,7 @@
     <title>AI Catalog — Каталог нейросетей</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/compare.css}">
     <link rel="stylesheet" th:href="@{/css/light.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     
@@ -60,6 +61,7 @@
     <th:block th:include="~{fragments/main-area :: mainArea}"></th:block>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/compare-bar :: compareBar}"></div>
 <script>
     // ===== CSRF для HTMX =====
     function getCsrfToken() {
@@ -100,5 +102,6 @@
 <script src="/js/particles.js"></script>
 <script src="/js/account.js"></script>
 <script src="/js/theme.js"></script>
+<script src="/js/compare.js"></script>
 </body>
 </html>

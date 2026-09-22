@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="compareBar">
+    <div id="compare-bar" class="compare-bar" hidden>
+        <div class="compare-bar__inner">
+            <span class="compare-bar__label">
+                Сравнение (<span id="compare-bar__count">0</span>)
+            </span>
+            <div id="compare-bar__items" class="compare-bar__items"></div>
+            <a id="compare-bar__go" href="#" class="btn btn--primary btn--sm">Сравнить</a>
+            <button type="button" class="btn btn--ghost btn--sm" onclick="CompareWidget.clearAll()">Очистить</button>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

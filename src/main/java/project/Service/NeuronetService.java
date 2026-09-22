@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class NeuronetService {
 
     private static final int DEFAULT_PAGE_SIZE = 12;
+    private static final int MAX_COMPARE = 4;
 
     private final RepNeuronet repNeuronet;
     private final ReviewService reviewService;
@@ -157,6 +158,75 @@ public class NeuronetService {
                 ));
     }
 
+    // ===== Сравнение нейросетей =====
+
+    /**
+     * Возвращает данные для сравнения нескольких нейросетей одним батч-запросом.
+     * Порядок результата соответствует порядку id в запросе (порядку выбора пользователем).
+     * Дубликаты убираются, список ограничивается MAX_COMPARE позициями.
+     */
+    public List<NeuronetCompareDto> getForComparison(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Long> distinctIds = ids.stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .limit(MAX_COMPARE)
+                .toList();
+
+        List<Neuronet> found = repNeuronet.findByIdInWithCategoryAndTags(distinctIds);
+        Map<Long, Neuronet> byId = found.stream()
+                .collect(Collectors.toMap(Neuronet::getIdNeuronet, n -> n));
+
+        return distinctIds.stream()
+                .map(byId::get)
+                .filter(Objects::nonNull)
+                .map(this::mapToCompareDto)
+                .toList();
+    }
+
+    public int getMaxCompareItems() {
+        return MAX_COMPARE;
+    }
+
+    private NeuronetCompareDto mapToCompareDto(Neuronet n) {
+        List<String> pricingTags = List.of();
+        List<String> featureTags = List.of();
+
+        if (n.getTags() != null) {
+            pricingTags = n.getTags().stream()
+                    .filter(t -> t.getTagGroup() != null && "pricing".equals(t.getTagGroup().getSlug()))
+                    .map(Tag::getName)
+                    .toList();
+            featureTags = n.getTags().stream()
+                    .filter(t -> t.getTagGroup() != null && "features".equals(t.getTagGroup().getSlug()))
+                    .map(Tag::getName)
+                    .toList();
+        }
+
+        String categoryName = n.getCategory() != null ? n.getCategory().getName() : null;
+        Double avg = reviewService.getAverageRating(n.getIdNeuronet());
+        Long count = reviewService.getReviewCount(n.getIdNeuronet());
+
+        return new NeuronetCompareDto(
+                n.getIdNeuronet(),
+                n.getName(),
+                n.getNeuronetIcon(),
+                categoryName,
+                n.getAvailableInRussia(),
+                pricingTags,
+                featureTags,
+                avg,
+                count,
+                n.getPricingInfo(),
+                n.getOfficialUrl(),
+                n.getApiUrl(),
+                n.getGithubUrl()
+        );
+    }
+
     // ===== CRUD =====
 
     @Transactional
@@ -184,7 +254,8 @@ public class NeuronetService {
         }
         return switch (pricing) {
             case "free" -> List.of("Бесплатно");
-            case "freemium" -> List.of("Условно-бесплатно", "Пробный период");
+            // В реальной БД тег называется "Частично бесплатно" (не "Условно-бесплатно")
+            case "freemium" -> List.of("Частично бесплатно", "Пробный период");
             case "paid" -> List.of("Платно");
             default -> Collections.emptyList();
         };

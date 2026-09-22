@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/detail.css}">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/compare.css}">
     <link rel="stylesheet" th:href="@{/css/light.css}">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
@@ -74,6 +75,14 @@
                             <span class="badge badge--freemium" th:if="${#lists.contains(neuronet.tags.![name], 'Частично бесплатно')}">Частично бесплатно</span>
                             <span class="badge badge--paid" th:if="${#lists.contains(neuronet.tags.![name], 'Платно')}">Только платно</span>
                         </div>
+                        <label class="card__compare" style="margin-top: 10px; display: inline-flex; position: static;">
+                            <input type="checkbox"
+                                   class="compare-checkbox"
+                                   th:value="${neuronet.idNeuronet}"
+                                   th:attr="data-name=${neuronet.name}"
+                                   onchange="CompareWidget.toggle(this.value, this.dataset.name)">
+                            <span>Добавить к сравнению</span>
+                        </label>
                     </div>
                 </div>
 
@@ -270,8 +279,10 @@
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/compare-bar :: compareBar}"></div>
 <script src="/js/detail.js"></script>
 <script src="/js/account.js"></script>
 <script src="/js/theme.js"></script>
+<script src="/js/compare.js"></script>
 </body>
 </html>
